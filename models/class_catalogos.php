@@ -10,42 +10,42 @@ class Catalogos extends Conexion
         $this->conectar();
         $key = $this->key;
     }
-    public function lista_agresiones()
+    public function lista_delitos()
     {
 
-        $sql = $this->dbh->prepare("select id_agresion,agresion from cat_tipos_agresion");
+        $sql = $this->dbh->prepare("select id_delito,delito from cat_tipos_delitos");
         $sql->execute(array());
         $row = $sql->fetchAll();
         return $row;
     }
-    public function insertar_agresion($agresion)
+    public function insertar_delito($delito)
     {
-        $sql = $this->dbh->prepare("insert into cat_tipos_agresion(agresion) VALUES(?)");
-        if ($sql->execute(array($agresion))) {
+        $sql = $this->dbh->prepare("insert into cat_tipos_delitos(delito) VALUES(?)");
+        if ($sql->execute(array($delito))) {
             return 'ok';
         } else
             return 'error';
     }
    
-    public function eliminar_agresion($id_agresion)
+    public function eliminar_delito($id_delito)
     {
-        $sql = $this->dbh->prepare("delete from cat_tipos_agresion where id_agresion = ?");
-        if ($sql->execute(array($id_agresion))) {
+        $sql = $this->dbh->prepare("delete from cat_tipos_delitos where id_delito = ?");
+        if ($sql->execute(array($id_delito))) {
             return 'ok';
         } else
             return 'error';
     }
-    public function editar_agresion($id, $agresion)
+    public function editar_delito($id, $delito)
 	{
-		$sql = $this->dbh->prepare("update cat_tipos_agresion set agresion = ? where id_agresion = ?");
-		if ($sql->execute(array($agresion,$id))) {
+		$sql = $this->dbh->prepare("update cat_tipos_delitos set delito = ? where id_delito = ?");
+		if ($sql->execute(array($delito,$id))) {
 			return 'ok';
 		} else
 			return 'error';
 	}
-    public function obtener_agresion($id)
+    public function obtener_delito($id)
     {
-        $sql = $this->dbh->prepare("select id_agresion, agresion from cat_tipos_agresion where id_agresion = ?");
+        $sql = $this->dbh->prepare("select id_delito, delito from cat_tipos_delitos where id_delito = ?");
         $sql->execute(array($id));
         $row = $sql->fetchAll();
         return $row;

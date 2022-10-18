@@ -4,68 +4,68 @@ var cargando =
 //Redireccionar 
 function redireccionar(dir) {
     if (dir == 1)// Catalogo Agresion 
-        setTimeout("location.href=' catalogo_agresion.php'", 1000);
-    fn_listar_agresiones();
+        setTimeout("location.href=' catalogo_delitos.php'", 1000);
+    fn_listar_delitos();
     if (dir == 2)// Catalogo Municipio 
         setTimeout("location.href=' catalogo_municipio.php'", 1000);
-    fn_listar_agresiones();
+    fn_listar_municipios();
 }
-//Boton Catalogo Agresiones
-function catalogo_agresion() {
+//Boton Catalogo Delitos
+function catalogo_delitos() {
     redireccionar(1);
-    fn_listar_agresiones();
+    fn_listar_delitos();
 
 }
 //Boton Catalogo Municipios
 function catalogo_municipio() {
     redireccionar(2);
-    fn_listar_agresiones();
+    fn_listar_municipios();
 }
 
 
-//Funciones Agresiones
-function fn_listar_agresiones() {
-    $("#ver_lista_agresiones").html(cargando);
-    $.post("../controllers/fun_catalogos.php", { accion: 'fn_listar_agresiones' }, function (data) {
-        $('#ver_lista_agresiones').html(data);
-        $('#tbl_a').DataTable({
+//Funciones Delito
+function fn_listar_delitos() {
+    $("#ver_lista_delitos").html(cargando);
+    $.post("../controllers/fun_catalogos.php", { accion: 'fn_listar_delitos' }, function (data) {
+        $('#ver_lista_delitos').html(data);
+        $('#tbl_d').DataTable({
             language: { "url": "../lib/datatables/Spanish.json" },
             order: [[0, "asc"]],
             searching: true,
         });
     });
 }
-function mod_cat_agresiones(origen, id) {
+function mod_cat_delitos(origen, id) {
     if (origen == 1) {
-        $('#tit_mod_agresiones').html('Nueva Agresión');
-        $('#id_agr_cat').val(0);
-        $('#agresion').val('');
+        $('#tit_mod_delitos').html('Nuevo Delito');
+        $('#id_del_cat').val(0);
+        $('#delito').val('');
 
     }
     else if (origen == 2) {
-        $('#tit_mod_agresiones').html('Modificar Agresiones');
-        $.post("../controllers/fun_catalogos.php", { accion: 'fn_obtener_agresion', id: id }, function (res) {
-            $('#id_agr_cat').val(id);
-            $('#agresion').val(res.agresion);
+        $('#tit_mod_delitos').html('Modificar Delito');
+        $.post("../controllers/fun_catalogos.php", { accion: 'fn_obtener_delito', id: id }, function (res) {
+            $('#id_del_cat').val(id);
+            $('#delito').val(res.delito);
 
         });
     }
     if (origen == 1 || origen == 2)
-        $('#mod_cat_agresiones').modal('show');
+        $('#mod_cat_delitos').modal('show');
 }
-function fn_guardar_agresion() {
-    id = $('#id_agr_cat').val();
-    agresion = $.trim($('#agresion').val());
-    if (agresion == '') {
+function fn_guardar_delito() {
+    id = $('#id_del_cat').val();
+    delito = $.trim($('#delito').val());
+    if (delito == '') {
         toastr.options.timeOut = 2500;
-        toastr.warning('¡Debes ingresar Tipo de Agresion!');
-        $('#agresion').focus();
+        toastr.warning('¡Debes ingresar Tipo de Delito!');
+        $('#delito').focus();
         return false;
     }
-    $('#btn_a').prop('disabled', true);
+    $('#btn_d').prop('disabled', true);
     swal({
         title: '¿Estás seguro?',
-        html: 'Los datos: <br>' + agresion + ' serán almacenados',
+        html: 'Los datos: <br>' + delito + ' serán almacenados',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -74,7 +74,7 @@ function fn_guardar_agresion() {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.value) {
-            datos = { accion: 'fn_guardar_agresion', id: id, agresion: agresion };
+            datos = { accion: 'fn_guardar_delito', id: id, delito: delito };
             $.ajax
                 ({
                     url: "../controllers/fun_catalogos.php",
@@ -83,25 +83,25 @@ function fn_guardar_agresion() {
                 }).done(function (res) {
                     if (res.estatus == 'ok') {
                         Swal({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
-                        $('#btn_a').prop('disabled', false);
-                        $('#mod_cat_agresiones').modal('hide');
-                        fn_listar_agresiones();
+                        $('#btn_d').prop('disabled', false);
+                        $('#mod_cat_delitos').modal('hide');
+                        fn_listar_delitos();
                     }
                     else {
                         Swal({ type: 'warning', title: 'Faltan Datos ', showConfirmButton: false, timer: 1500 });
                         $('#btn_a').prop('disabled', false);
-                        $('#mod_cat_agresiones').modal('hide');
-                        fn_listar_agresiones();
+                        $('#mod_cat_delitos').modal('hide');
+                        fn_listar_delitos();
 
                     }
                 });
         }
     })
 }
-function fn_eliminar_agresion(id, agresion) {
+function fn_eliminar_delito(id, delito) {
     swal({
         title: '¿Estás seguro?',
-        text: agresion + ' será eliminado',
+        text: delito + ' será eliminado',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -110,7 +110,7 @@ function fn_eliminar_agresion(id, agresion) {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.value) {
-            datos = { accion: 'fn_eliminar_agresion', id: id, agresion: agresion };
+            datos = { accion: 'fn_eliminar_delito', id: id, delito: delito };
 
             $.ajax({
                 url: "../controllers/fun_catalogos.php",
@@ -120,9 +120,9 @@ function fn_eliminar_agresion(id, agresion) {
 
                 if (res.estatus == 'ok') {
                     Swal({ type: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
-                    var tabla = $('#tbl_a').DataTable();
-                    tabla.row($('#l_agresion' + id)).remove().draw();
-                    fn_listar_agresiones();
+                    var tabla = $('#tbl_d').DataTable();
+                    tabla.row($('#l_delito' + id)).remove().draw();
+                    fn_listar_delitos();
 
                 }
                 else {

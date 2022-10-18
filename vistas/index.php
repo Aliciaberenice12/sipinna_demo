@@ -29,8 +29,8 @@
     <div class="container-fluid">
         <div class="col-md-3">
 
-            <button type="button" class="btn btn-primary  hint--bottom" aria-label="Catalogo Agresion" onclick="catalogo_agresion();">
-                Catálogo Agresiones
+            <button type="button" class="btn btn-primary  hint--bottom" aria-label="Catalogo Delitos" onclick="catalogo_delitos();">
+                Catálogo Delitos
             </button>
         </div>
         <br>

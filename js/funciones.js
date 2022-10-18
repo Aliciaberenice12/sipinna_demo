@@ -30,7 +30,7 @@ $(document).ready(function () {
       }
     }
   });
-  
+
   //Canalizacion 
   $(document).on('click', '#Crear', function () {
     $('#avancesCanalizacion').modal('show');
@@ -67,6 +67,7 @@ $(document).ready(function () {
   $(document).on('click', '#CrearUsuario', function () {
     $('#crearUsuarioModal').modal('show');
   });
+
 
 
 

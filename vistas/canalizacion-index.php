@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,8 +9,8 @@
     <!--CSS-->
     <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
     <?php include("../layout/sipinna.php"); ?>
-
-
+    <link rel="stylesheet" type="text/css" href="../lib/sweetalert2/dist/sweetalert2.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/toastr/toastr.css">
     <div class="div-al row">
 
         <div class="col-md-6">
@@ -32,59 +31,32 @@
     <!--Container -->
     <div class="container-fluid">
         <div class="row">
-            <div class="table-responsive col-md-12">
+            <div >
                 <div class="row col-md-12">
                     <div class="col-md-6">
                         <h3></h3>
                     </div>
                     <div class="col-md-6" align="right">
 
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearCanalizacion">
-                            <i class="fas fa-plus"></i> Nueva canalización
+                        <button type="button" class="btn btn-success" onclick="mod_canalizacion(1,0);">
+                            <i class="bi bi-plus-circle"></i> Crear Canalización
+                        </button>
+                        <button type="button" class="btn btn-success hint--top" aria-label="Actualizar listado" onclick="fn_listar_canalizaciones();">
+                            <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
                 </div>
-
+                <div class="card-body bg-light">
+                    <div id="ver_lista_canalizaciones"></div>
+                </div>
                 <br>
-           
-                <table class="table table-hover" id="table" style="width: 100%;">
-                    <thead class="tbl-estadisticas">
-                        <tr align="center">
-                            <th>Nombre Solicitante</th>
-                            <th>Fecha</th>
-                            <th>Via Recepción</th>
-                            <th>Municipio</th>
-                            <th>Estatus</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr align="center">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <button type="button" class="btn btn-secondary" id="Crear">
-                                    <i class="fas fa-file"></i> Avances
-                                </button>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarCanalizacion">
-                                    <i class="fas fa-pen"></i> Editar
-                                </button>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelarCanalizacion">
-                                    <i class="fas fa-trash"></i> Cancelar
-                                </button>
 
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
             </div>
         </div>
+        <br>
     </div>
+    <?php include("../layout/footer.php"); ?>
+
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
@@ -92,8 +64,11 @@
     <?php include("../vistas/canalizacion/modals-canalizacion.php"); ?>
     <?php include("../vistas/canalizacion/modals-avances.php"); ?>
     <script src="../js/funciones.js"></script>
+    <script src="../js/fun_canalizacion.js?x=<?php echo time(); ?>"></script>
+    <script src="../lib/toastr/toastr.min.js"></script>
+    <script src="../lib/sweetalert2/dist/sweetalert2.min.js"></script>
 
-    <?php include("../layout/footer.php"); ?>
+
 
 </body>
 

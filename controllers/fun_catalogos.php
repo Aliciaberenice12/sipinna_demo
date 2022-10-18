@@ -2,10 +2,10 @@
 require_once('../models/class_catalogos.php');
 $v = new Catalogos();
 
-if ($_REQUEST["accion"] == 'fn_listar_agresiones') 
+if ($_REQUEST["accion"] == 'fn_listar_delitos') 
 {
 
-	$arr_res = $v->lista_agresiones();
+	$arr_res = $v->lista_delitos();
 	$size = sizeof($arr_res);
 	if (empty($arr_res)) {
 		$html =
@@ -20,7 +20,7 @@ if ($_REQUEST["accion"] == 'fn_listar_agresiones')
 	        <th width="100%" align="center">
 				<div class="row" >
 					<div class="col-md-4">Id</div>
-					<div class="col-md-4">Tipo Agresión</div>
+					<div class="col-md-4">Tipo Delito o Falta</div>
 					<div class="col-md-4">Acciones</div>
 
 				<div>
@@ -32,24 +32,24 @@ if ($_REQUEST["accion"] == 'fn_listar_agresiones')
 	    <tbody>';
 		foreach ($arr_res as $row) {
 			$html .= '
-	        <tr class="text-11" id="l_agresiones' . $row["id_agresion"] . '">
+	        <tr class="text-11" id="l_delitos' . $row["id_delito"] . '">
 				<td align="center">
 					<div class="row">
 						<div class="col-md-4">
-								' . $row["id_agresion"] . '
+								' . $row["id_delito"] . '
 						</div>
 						<div class="col-md-4">
-								' . $row["agresion"] . '
+								' . $row["delito"] . '
 						</div>
 						<div class="col-md-4" aling="center">
 							
-							<button type="button" class="btn btn-dark btn-sm hint--bottom" aria-label="Editar usuario" onclick="mod_cat_agresiones(2,\'' . $row["id_agresion"] . '\');">
+							<button type="button" class="btn btn-dark btn-sm hint--bottom" aria-label="Editar Delito" onclick="mod_cat_delitos(2,\'' . $row["id_delito"] . '\');">
 								<i class="bi bi-pencil-square"></i>
-								<span class="etiq_cel">Editar</span>
+								<span>Editar</span>
 							</button>
-							<button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar Agresion" onclick="fn_eliminar_agresion(\'' . $row["id_agresion"] . '\',\'' . $row["agresion"] . '\');">
+							<button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar delito" onclick="fn_eliminar_delito(\'' . $row["id_delito"] . '\',\'' . $row["delito"] . '\');">
 								<i class="bi bi-trash"></i>
-								<span class="etiq_cel">Eliminar</span>
+								<span>Eliminar</span>
 							</button>
 						</div>              
 					</div>
@@ -62,31 +62,31 @@ if ($_REQUEST["accion"] == 'fn_listar_agresiones')
 	}
 	echo $html;
 }
-elseif ($_REQUEST["accion"] == 'fn_guardar_agresion') 
+elseif ($_REQUEST["accion"] == 'fn_guardar_delito') 
 {
 
 	if ($_REQUEST["id"] == "0") // nuevo registro
-		$estatus = $v->insertar_agresion($_REQUEST["agresion"]);
+		$estatus = $v->insertar_delito($_REQUEST["delito"]);
 	else
-		$estatus = $v->editar_agresion($_REQUEST["id"], $_REQUEST["agresion"]);
+		$estatus = $v->editar_delito($_REQUEST["id"], $_REQUEST["delito"]);
 
 	header('Content-Type: application/json');
 	$datos = array('estatus' => $estatus);
 	echo json_encode($datos, JSON_FORCE_OBJECT);
 }
- elseif ($_REQUEST["accion"] == 'fn_eliminar_agresion') 
+ elseif ($_REQUEST["accion"] == 'fn_eliminar_delito') 
 {
-	$estatus = $v->eliminar_agresion($_REQUEST["id"], $_REQUEST["agresion"]);
+	$estatus = $v->eliminar_delito($_REQUEST["id"], $_REQUEST["delito"]);
 	header('Content-Type: application/json');
 	$datos = array('estatus' => $estatus);
 	echo json_encode($datos, JSON_FORCE_OBJECT);
 } 
-elseif ($_REQUEST["accion"] == 'fn_obtener_agresion') {
-	$arr_res = $v->obtener_agresion($_REQUEST["id"]);
+elseif ($_REQUEST["accion"] == 'fn_obtener_delito') {
+	$arr_res = $v->obtener_delito($_REQUEST["id"]);
 	foreach ($arr_res as $row) {
 		header('Content-Type: application/json');
 		$datos = array(
-			'agresion'     => $row["agresion"],
+			'delito'     => $row["delito"],
 		
 		);
 		echo json_encode($datos, JSON_FORCE_OBJECT);

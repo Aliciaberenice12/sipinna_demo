@@ -33,7 +33,7 @@
     <input type="hidden" id="hoy" value="<?php echo date('Y-m-d'); ?>">
     <div class="container-fluid">
         <div class="row">
-            <!--Agresiones -->
+            <!--Delitos -->
             <div class="table-responsive col-md-12">
                 <div class="row col-md-12">
                     <div class="col-md-6">

@@ -16,7 +16,7 @@
     <div class="div-al row">
 
         <div class="col-md-6">
-            <h2 class="h2-titulo">Catálogo Agresiones</h2>
+            <h2 class="h2-titulo">Catálogo Delitos</h2>
         </div>
 
         <div class="col-md-6">
@@ -37,44 +37,44 @@
             <div class="table-responsive col-md-12">
                 <div class="row col-md-12">
                     <div class="col-md-6">
-                        <h3>Agresiones</h3>
+                        <h3>Delitos</h3>
                     </div>
                     <div class="col-md-6" align="right">
-                        <button type="button" class="btn btn-success" onclick="mod_cat_agresiones(1,0);">
+                        <button type="button" class="btn btn-success" onclick="mod_cat_delitos(1,0);">
                             <i class="bi bi-plus-circle"></i>
                         </button>
-                        <button type="button" class="btn btn-primary hint--top" aria-label="Actualizar" onclick="fn_listar_agresiones();">
+                        <button type="button" class="btn btn-primary hint--top" aria-label="Actualizar" onclick="fn_listar_delitos();">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
-                    <div id="ver_lista_agresiones"></div>
+                    <div id="ver_lista_delitos"></div>
                 </div>
                 <br>
             </div>
 
         </div>
         <!--Modal Crear-->
-        <div class="modal fade" id="mod_cat_agresiones" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="mod_cat_delitos" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-secondary">
-                        <h5 class="modal-title" id="tit_mod_agresiones" style="color:white"></h5>
+                        <h5 class="modal-title" id="tit_mod_delitos" style="color:white"></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" name="id_agr_cat" id="id_agr_cat" value="0">
+                        <input type="hidden" name="id_del_cat" id="id_del_cat" value="0">
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="agresion" value="" id="agresion" placeholder="Agresion *" maxlength="100">
-                                    <label for="agresion">Agresion *</label>
+                                    <input type="text" class="form-control" name="delito" value="" id="delito" placeholder="delito *" maxlength="100">
+                                    <label for="delito">Delito *</label>
                                 </div>
                             </div>
                             
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btn_user" class="btn btn-dark" onclick="fn_guardar_agresion();">Guardar</button>
+                        <button type="button" id="btn_d" class="btn btn-dark" onclick="fn_guardar_delito();">Guardar</button>
                     </div>
                 </div>
             </div>
