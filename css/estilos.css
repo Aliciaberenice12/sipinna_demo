@@ -1,0 +1,122 @@
+@font-face {
+    font-family: Ubuntu;
+    src: url(../lib/fonts/Ubuntu_Regular.ttf);
+}
+
+*{
+    font-family: Ubuntu;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+.logos{
+    background: url(../images/logo_SIPINNA.png) no-repeat;
+    background-position: center;
+    background-color: #EBE8E9;
+    height: 100vh;
+    width: 50%;
+    
+}
+img{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    justify-items:center;
+    margin-left: 3rem;
+}
+
+.formulario{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url(../images/hands-g79a9e53e3_1920.jpg) no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 50%;
+    height: 100vh;    
+    }
+
+.form{
+    width: 25rem;
+    height: 25rem;
+    background-color: rgba(58, 11, 59, 0.95);
+    color: aliceblue;
+    text-align: center;
+    border-radius: 0.5em;
+    font-size: 1.5rem;
+    padding: 1rem;
+    padding-top: 2rem;
+    }
+
+    
+
+    #division{
+        display: flex;
+    }
+
+    #usuario, #contrasena{
+        border-radius: 0.5em;
+        margin: 0.4rem;        
+        width: 350px; 
+        height: 50px;
+        font-size: 18px;
+        background: #EBE9E8;
+        padding: 10px;
+    }
+    #boton{
+        font-size: 20px;
+        border-radius: 0.3em;
+        width: 170px; 
+        height: 45px;
+        background: rgb(235, 110, 65);
+        border: none;
+        color: aliceblue;
+        cursor: pointer;
+    }
+    .log{    
+    display: flex;
+    justify-content: end;
+    margin-right: 2rem;
+    }
+    footer{
+        background-color: #626262;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: 40px;
+        color:white;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media screen and (max-width: 650px){
+        .logos {
+            background: none;
+            height: 15vh;
+            width: 100%;
+            background-color: #EBE8E9;
+        }
+        .formulario {
+            height: 85vh;
+            width: 100%;
+        }
+
+        #division{
+            display: block;
+            position: absolute;
+        }       
+        .form{
+            width: 75vh;
+            height: 75%;
+        }
+
+         h1, #usuario, #contrasena, #boton{
+            width: 100%;
+        }
+
+    }
+    
