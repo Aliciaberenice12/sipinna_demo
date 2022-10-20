@@ -12,7 +12,7 @@
                     <div class="row col-md-6">
                         <label>Vía de Recepción:</label><br>
                         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" class="btn-check" name="can_via_rec" id="can_via_telefonica" value="Telefonica" autocomplete="off" checked>
+                            <input type="radio" class="btn-check" name="can_via_rec" id="can_via_telefonica" value="Telefonica" autocomplete="off" >
                             <label class="btn btn-recepcion" for="can_via_telefonica">Telefónica</label>
 
                             <input type="radio" class="btn-check" name="can_via_rec" id="can_via_personal" value="Personal" autocomplete="off">
@@ -26,21 +26,21 @@
                         </div>
                     </div>
                     
-                    
                     <div class="col-md-2"></div>
+        
                     <div class="col-md-4">
                         <label>Solicitud de Canalización:</label>
                         <input type="file" class="form-control" id="can_ruta_sol_oficio" name="can_ruta_sol_oficio">
                     </div>
                     <div class="col-md-3">
                         <label>Número Oficio:</label>
-                        <input type="text" class="form-control" placeholder="can_no_oficio" id="can_no_oficio" name="can_no_oficio">
+                        <input type="text" class="form-control" placeholder="No.Oficio" id="can_no_oficio" name="can_no_oficio">
                     </div>
                     <div class="col-md-3">
                         <label>Fecha:</label>
                         <input type="date" class="form-control" placeholder="Fecha" id="can_fecha_inicio" name="can_fecha_inicio">
                     </div>
-          
+
                     <div class="col-3">
                         <label for="can_municipio">Estados</label>
                         <select name="can_estado" id="can_estado" class="form-select">
@@ -50,7 +50,7 @@
                     <div class="col-3">
                         <label for="can_municipio">Municipios</label>
                         <select name="can_municipio" id="can_municipio" class="form-select">
-                            <option value="0">Seleccionar</option>
+                            <option value="">Seleccionar</option>
                         </select>
                         <input id="can_mun_edo" name="can_mun_edo" class="form-control">
                         </input>
@@ -58,57 +58,79 @@
 
                     <h5><br><strong> Datos Reportante:</strong></h5>
                     <div class="col-md-4">
-                        <label>Institución Solicitante:</label>
-                        <input type="text" class="form-control" placeholder="Solicitante" id="can_inst_sol" name="can_inst_sol">
+                        <label>Institución Reportante:</label>
+                        <input type="text" class="form-control" placeholder="Solicitante" id="can_inst_rep" name="can_inst_rep">
                     </div>
                     <div class="col-md-4">
                         <label>Nombre Solicitante:</label>
-                        <input type="text" class="form-control" placeholder="can_nom_sol" id="can_nom_sol" name="can_nom_sol">
+                        <input type="text" class="form-control" placeholder="Nombre Solicitante" id="can_nom_rep" name="can_nom_rep">
                     </div>
+                    <div class="col-md-10">
+                        <label>Descripción Sucinta del caso :</label>
+                        <textarea name="textarea" id="des_rep" name="des_rep" placeholder ="Descripción..."class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <table>
+                            <tr class="">
+                                <th>Nombre Victima</th>
+                                <th>Edad Victima</th>
+                                <th>Genero</th>
 
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+                            </tr>
+                        </table>
+
+                    </div>
                     <h5><br><strong> Reporte:</strong></h5>
                     <div class="col-4">
                         <label>Tipo de Delito</label>
-                        <select name="cat_delitos" id="cat_delitos" class="form-select">
+                        <select name="can_delito" id="can_delito" class="form-select">
                             <option value="0">Seleccionar</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label>Derechos Vulnerados o restringidos:</label>
-                        <input type="text" class="form-control" placeholder="Derecho vulnerado" id="der_vul" name="der_vul">
+                        <input type="text" class="form-control" placeholder="Derecho vulnerado" id="can_rep_der" name="can_rep_der">
                     </div>
 
                     <div class="col-md-4">
                         <label>Nombre Victima:</label>
-                        <input type="text" class="form-control" placeholder="can_nom_vic" id="can_nom_vic" name="can_nom_vic">
+                        <input type="text" class="form-control" placeholder="Nombre Victima" id="can_rep_nom_vic" name="can_rep_nom_vic">
+                    </div>
+                    <div class="col-md-1">
+                        <label>Edad Victima:</label>
+                        <input type="number" class="form-control" placeholder="Edad Victima" id="can_edad_vic" name="can_edad_vic">
                     </div>
                     <div class="col-md-2">
                         <label><br>Genero:</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="can_gen_vic" id="can_gen_masculino">
+                            <input class="form-check-input" type="radio" name="can_rep_gen_vic" id="can_gen_masculino">
                             <label class="form-check-label" for="can_gen_masculino">
                                 Masculino
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="can_gen_vic" id="can_gen_femenino" checked>
+                            <input class="form-check-input" type="radio" name="can_rep_gen_vic" id="can_gen_femenino" checked>
                             <label class="form-check-label" for="can_gen_femenino">
                                 Femenino
                             </label>
                         </div>
                     </div>
 
-                    <div class="col-md-10">
-                        <label>Descripción Sucinta del caso :</label>
-                        <textarea name="textarea" id="des_suc_caso" name="des_suc_caso" class="form-control" rows="3"></textarea>
-                    </div>
+                    
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     Cancelar
                 </button>
-                <button type="submit" class="btn btn-success" id="btn_canalizacion" onclick="fun_agregarCanalizacion();">Agregar</button>
+                <button type="submit" class="btn btn-success" id="btn_create_can" onclick="fun_agregarCanalizacion();">Agregar</button>
             </div>
 
         </div>

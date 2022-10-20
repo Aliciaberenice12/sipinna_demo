@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-md-6" align="right">
 
-                        <button type="button" class="btn btn-success" onclick="mod_canalizacion(1,0);">
+                        <button type="button" class="btn btn-success" onclick="mod_canalizacion(1,0)">
                             <i class="bi bi-plus-circle"></i> Crear Canalización
                         </button>
                         <button type="button" class="btn btn-success hint--top" aria-label="Actualizar listado" onclick="fn_listar_canalizaciones();">
