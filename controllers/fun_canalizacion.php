@@ -28,17 +28,15 @@ function compressImage($source, $destination, $quality)
 
 
 if (isset($_REQUEST['func'])) {
-
-
 	switch ($_REQUEST['func']) {
-		case 'fn_guardar_reporte':
-			$estatus = $v->insertar_reporte($_REQUEST["can_delito"],$_REQUEST["can_rep_der"],$_REQUEST["can_des_per"]);
+		case 'fn_guardar_victima':
+			$estatus = $v->insertar_victima($_REQUEST["can_delitos"],$_REQUEST["can_nom_vic"],$_REQUEST["can_rep_der"],$_REQUEST["can_edad_vic"],$_REQUEST["can_gen_vic"],$_REQUEST["can_per_tercera_edad"],$_REQUEST["can_per_discapacidad"],$_REQUEST["can_per_violencia"]);
 			header('Content-Type: application/json');
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
 			break;
 		case 'fn_guardar_reportante':
-			$estatus = $v->insertar_reportante($_REQUEST["can_inst_rep"],$_REQUEST["can_nom_rep"]);
+			$estatus = $v->insertar_reportante($_REQUEST["can_inst_rep"],$_REQUEST["can_nom_rep"],$_REQUEST["can_des_suncita"]);
 			header('Content-Type: application/json');
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
@@ -97,7 +95,8 @@ if (isset($_REQUEST['func'])) {
 			echo $html;
 			break;
 		case 'fn_listar_canalizaciones':
-			$arr_res = $v->lista_canalizaciones();
+			$arr_res = $v->rel_estados();
+			
 			$size    = sizeof($arr_res);
 
 			if (empty($arr_res)) {
@@ -149,12 +148,13 @@ if (isset($_REQUEST['func'])) {
 										<td>
 											<div class="col-md-3">
 											
-											' . $row["can_estado"] . '
+											' . $row["estado"] . '
 											</div>
 										</td>
 										<td>
 											<div class="col-md-3">
-											' . $row["can_municipio"] . '
+											' . $row["municipio"] . '
+
 											' . $row["can_mun_edo"] . '
 
 									

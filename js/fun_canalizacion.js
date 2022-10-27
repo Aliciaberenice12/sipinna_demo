@@ -18,7 +18,7 @@ function mod_canalizacion(origen, id) {
     fn_carga_municipios('can_municipio');
     fn_carga_estados('can_estado');
 
-    fn_carga_delitos('cat_delitos');
+    fn_carga_delitos('can_delitos');
 
     if (origen == 1) {
         $('#id_can_exp').val(0);
@@ -29,7 +29,22 @@ function mod_canalizacion(origen, id) {
         $('#can_estado').val("");
         $('#can_municipio').val("");
         $('#can_mun_edo').val("");
-        $('#can_via_rec').prop('checked', false);
+        $('#can_via_telefonica').prop('checked', false).removeAttr('checked');
+        $('#can_via_personal').prop('checked', false).removeAttr('checked');
+        $('#can_via_correo').prop('checked', false).removeAttr('checked');
+        $('#can_via_redes').prop('checked', false).removeAttr('checked');
+        $('#masculino').prop('checked', false).removeAttr('checked');
+        $('#femenino').prop('checked', false).removeAttr('checked');
+        $('#can_per_tercera_edad').prop('checked', false).removeAttr('checked');
+        $('#can_per_discapacidad').prop('checked', false).removeAttr('checked');
+        $('#can_per_violencia').prop('checked', false).removeAttr('checked');
+        $('#can_inst_rep').val("");
+        $('#can_nom_rep').val("");
+        $('#can_des_suncita').val("");
+        $('#can_delito').val("");
+        $('#can_rep_der').val("");
+        $('#can_nom_vic').val("");
+        $('#can_edad_vic').val("");
 
         $('#modalCanalizacion').modal('show');
 
@@ -58,9 +73,130 @@ function fn_listar_canalizaciones() {
         });
     });
 }
-function fun_agregar_reportante(){
+function mod_can_victima(origen, id) {
+    fn_carga_delitos('can_delitos');
+
+    if (origen == 1) {
+        $('#id_victima').val(0);
+        $('#can_nom_victima').val("");
+        $('#can_edad_victima').val("");
+        $('#can_gen_victima').val("");
+        $('#modalCanVictima').modal('show');
+
+    }
+    else if (origen == 2) {
+        $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_grupo', id: id }, function (res) {
+            $('#id_gt').val(id);
+            $('#nom_gt').val(res.nom_grupo);
+            $('#sig_gt').val(res.siglas);
+            $('#municipio_gt').val(res.id_municipio);
+            $('#editarCanalizacion').modal('show');
+
+
+        });
+    }
+
+}
+function fun_agregar_victima() {
+    can_delitos = $.trim($('#can_delitos').val());
+    can_rep_der = $.trim($('#can_rep_der').val());
+    can_nom_vic = $.trim($('#can_nom_vic').val());
+    can_edad_vic = $.trim($('#can_edad_vic').val());
+    can_gen_vic = document.querySelector('input[name="can_gen_vic"]:checked').value;
+    if ($('#can_per_discapacidad').prop('checked'))
+    can_per_discapacidad = 1;
+    else
+    can_per_discapacidad = 0;
+
+    if ($('#can_per_tercera_edad').prop('checked'))
+    can_per_tercera_edad = 1;
+    else
+    can_per_tercera_edad = 0;
+        if ($('#can_per_violencia').prop('checked'))
+        can_per_violencia = 1;
+    else
+    can_per_violencia = 0;
+
+
+    if (can_rep_der == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Ingresa Descripción!');
+        $('#can_rep_der').focus();
+        return false;
+    }
+    else if (can_nom_vic == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Ingresa Nombre!');
+        $('#can_nom_vic').focus();
+        return false;
+    }
+    else if (can_edad_vic == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Ingresa Edad!');
+        $('#can_edad_vic').focus();
+        return false;
+    }
+
+    swal({
+        title: '¿Estás seguro?',
+        html: 'Los datos de la victima: <br>' + can_nom_vic + ' serán almacenados',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, Guardar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.value) {
+            var data = new FormData();
+            data.append('func', 'fn_guardar_victima');
+            data.append('can_delitos', can_delitos);
+            data.append('can_rep_der', can_rep_der);
+            data.append('can_nom_vic', can_nom_vic);
+            data.append('can_edad_vic', can_edad_vic);
+            data.append('can_per_tercera_edad', can_per_tercera_edad);
+            data.append('can_per_discapacidad', can_per_discapacidad);
+            data.append('can_per_violencia', can_per_violencia);
+            data.append('can_gen_vic', can_gen_vic);
+
+            $.ajax({
+                url: "../controllers/fun_canalizacion.php",
+                type: "POST",
+                data: data,
+                contentType: false,
+                processData: false,
+                cache: false
+            }).done(function (res) {
+                //console.log(res);
+                //var result = JSON.parse(res);
+                //console.log(result);
+                if (res.estatus === "ok") {
+                    Swal({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
+                    $('#modalCanalizacion').modal('hide');
+
+                }
+                else {
+                    Swal({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showCnfirmButton: false, timer: 1500 });
+                    $('#btn_create_can').prop('disabled', false);
+                    $('#modalCanalizacion').modal('hide');
+
+
+                    return false;
+                }
+
+
+            })
+        }
+        else
+            $('#btn_user').prop('disabled', false);
+    })
+}
+function fun_agregar_reportante() {
+    
     can_inst_rep = $.trim($('#can_inst_rep').val());
     can_nom_rep = $.trim($('#can_nom_rep').val());
+    can_des_suncita = $.trim($('#can_des_suncita').val());
+
     if (can_nom_rep == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Ingresa Nombre de Reportante Reportante!');
@@ -71,6 +207,12 @@ function fun_agregar_reportante(){
         toastr.options.timeOut = 2500;
         toastr.warning('¡Ingresa Institución Reportante!');
         $('#can_inst_rep').focus();
+        return false;
+    }
+    else if (can_des_suncita == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Ingresa Descripción!');
+        $('#can_des_suncita').focus();
         return false;
     }
     swal({
@@ -85,26 +227,25 @@ function fun_agregar_reportante(){
     }).then((result) => {
         if (result.value) {
             var data = new FormData();
-            data.append('func','fn_guardar_reportante');
-            data.append('can_inst_rep',can_inst_rep);
-            data.append('can_nom_rep',can_nom_rep);
-           
+            data.append('func', 'fn_guardar_reportante');
+            data.append('can_inst_rep', can_inst_rep);
+            data.append('can_nom_rep', can_nom_rep);
+            data.append('can_des_suncita', can_des_suncita);
+
             $.ajax({
                 url: "../controllers/fun_canalizacion.php",
                 type: "POST",
                 data: data,
-                contentType:false,
-                processData:false,
-                cache:false
+                contentType: false,
+                processData: false,
+                cache: false
             }).done(function (res) {
-                console.log(res);
-                var result = JSON.parse(res);
-                console.log(result);
-                if (result.estatus==="ok") {
+                //console.log(res);
+                //var result = JSON.parse(res);
+                //console.log(result);
+                if (res.estatus === "ok") {
                     Swal({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
-                    $('#btn_canalizacion').prop('disabled', false);
-                    $('#modalCanalizacion').modal('hide');
-                
+                    fun_agregar_victima();
 
                 }
                 else {
@@ -112,10 +253,10 @@ function fun_agregar_reportante(){
                     $('#btn_create_can').prop('disabled', false);
                     $('#modalCanalizacion').modal('hide');
 
-                    
-                return false;
-                } 
-                
+
+                    return false;
+                }
+
 
             })
         }
@@ -134,25 +275,18 @@ function fun_agregarCanalizacion() {
     file0 = document.getElementById('can_ruta_sol_oficio');
     file = file0.files[0];
     can_via_rec = document.querySelector('input[name="can_via_rec"]:checked').value;
-    if (can_no_oficio == '') {
-        toastr.options.timeOut = 2500;
-        toastr.warning('¡Debes ingresar el numero de oficio!');
-        $('#can_no_oficio').focus();
-        return false;
-    }
-    else if (can_fecha_inicio == '') {
-        toastr.options.timeOut = 2500;
-        toastr.warning('¡Seleccione una Fecha!');
-        $('#can_fecha_inicio').focus();
-        return false;
-    }
-    else if (can_estado == '') {
-        toastr.options.timeOut = 2500;
-        toastr.warning('¡Seleccione un Estado!');
-        $('#can_estado').focus();
-        return false;
-    }
-    else if (typeof (file) != "undefined")//Si trae un archivo
+    can_inst_rep = $.trim($('#can_inst_rep').val());
+    can_nom_rep = $.trim($('#can_nom_rep').val());
+    can_des_suncita = $.trim($('#can_des_suncita').val());
+    can_per_tercera_edad = $.trim($('#can_per_tercera_edad').val());
+    can_per_discapacidad = $.trim($('#can_per_discapacidad').val());
+    can_per_violencia = $.trim($('#can_per_violencia').val());
+    can_delitos = $.trim($('#can_delitos').val());
+    can_gen_vic = document.querySelector('input[name="can_gen_vic"]:checked').value;
+
+
+
+    if (typeof (file) != "undefined")//Si trae un archivo
     {
         if (file.size > 500000) {
             toastr.options.timeOut = 2500;
@@ -175,6 +309,57 @@ function fun_agregarCanalizacion() {
         return false;
     }
 
+    if (can_no_oficio == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes ingresar el numero de oficio!');
+        $('#can_no_oficio').focus();
+        return false;
+    }
+    else if (can_fecha_inicio == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Seleccione una Fecha!');
+        $('#can_fecha_inicio').focus();
+        return false;
+    }
+    else if (can_estado == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Seleccione un Estado!');
+        $('#can_estado').focus();
+        return false;
+    }
+    else if (can_inst_rep == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes ingresar Institución que reporta!');
+        $('#can_inst_rep').focus();
+        return false;
+    }
+    else if (can_nom_rep == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Ingresar nombre de reportante!');
+        $('#can_nom_rep').focus();
+        return false;
+    }
+    else if (can_des_suncita == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Ingresar descripción del reporte!');
+        $('#can_des_suncita').focus();
+        return false;
+    }
+    else if (can_delitos == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Seleccionar tipo de Delito!');
+        $('#can_delitos').focus();
+        return false;
+    }
+    else if (can_rep_der == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Ingresar Derecho vulnerado!');
+        $('#can_rep_der').focus();
+        return false;
+    }
+
+
+
     swal({
         title: '¿Estás seguro?',
         html: 'Los datos de la canalización: <br>' + can_no_oficio + ' serán almacenados',
@@ -187,31 +372,31 @@ function fun_agregarCanalizacion() {
     }).then((result) => {
         if (result.value) {
             var data = new FormData();
-            data.append('func','fn_guardar_canalizacion');
-            data.append('can_ruta_sol_oficio',can_ruta_sol_oficio);
-            data.append('can_no_oficio',can_no_oficio);
-            data.append('can_fecha_inicio',can_fecha_inicio);
-            data.append('can_estado',can_estado);
-            data.append('can_municipio',can_municipio);
-            data.append('can_mun_edo',can_mun_edo);
-            data.append('can_via_rec',can_via_rec);
-            data.append('archivo',file);
+            data.append('func', 'fn_guardar_canalizacion');
+            data.append('can_ruta_sol_oficio', can_ruta_sol_oficio);
+            data.append('can_no_oficio', can_no_oficio);
+            data.append('can_fecha_inicio', can_fecha_inicio);
+            data.append('can_estado', can_estado);
+            data.append('can_municipio', can_municipio);
+            data.append('can_mun_edo', can_mun_edo);
+            data.append('can_via_rec', can_via_rec);
+
+            data.append('archivo', file);
             $.ajax({
                 url: "../controllers/fun_canalizacion.php",
                 type: "POST",
                 data: data,
-                contentType:false,
-                processData:false,
-                cache:false
+                contentType: false,
+                processData: false,
+                cache: false
             }).done(function (res) {
                 console.log(res);
                 var result = JSON.parse(res);
                 console.log(result);
-                if (result.estatus==="ok") {
+                if (result.estatus === "ok") {
                     Swal({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
-                    $('#btn_canalizacion').prop('disabled', false);  
                     fun_agregar_reportante();
-                
+
 
                 }
                 else {
@@ -219,10 +404,10 @@ function fun_agregarCanalizacion() {
                     $('#btn_create_can').prop('disabled', false);
                     $('#modalCanalizacion').modal('hide');
 
-                    
-                return false;
-                } 
-                
+
+                    return false;
+                }
+
 
             })
         }

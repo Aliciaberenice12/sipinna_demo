@@ -12,7 +12,7 @@
                     <div class="row col-md-6">
                         <label>Vía de Recepción:</label><br>
                         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" class="btn-check" name="can_via_rec" id="can_via_telefonica" value="Telefonica" autocomplete="off" >
+                            <input type="radio" class="btn-check" name="can_via_rec" id="can_via_telefonica" value="Telefonica" autocomplete="off">
                             <label class="btn btn-recepcion" for="can_via_telefonica">Telefónica</label>
 
                             <input type="radio" class="btn-check" name="can_via_rec" id="can_via_personal" value="Personal" autocomplete="off">
@@ -25,9 +25,9 @@
                             <label class="btn btn-recepcion" for="can_via_redes">Redes Sociales</label>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-2"></div>
-        
+
                     <div class="col-md-4">
                         <label>Solicitud de Canalización:</label>
                         <input type="file" class="form-control" id="can_ruta_sol_oficio" name="can_ruta_sol_oficio">
@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-3">
                         <label for="can_municipio">Municipios</label>
-                        <select name="can_municipio" id="can_municipio" class="form-select">
+                        <select name="can_municipio" id="can_municipio" class="form-select" required>
                             <option value="">Seleccionar</option>
                         </select>
                         <input id="can_mun_edo" name="can_mun_edo" class="form-control">
@@ -59,69 +59,75 @@
                     <h5><br><strong> Datos Reportante:</strong></h5>
                     <div class="col-md-4">
                         <label>Institución Reportante:</label>
-                        <input type="text" class="form-control" placeholder="Solicitante" id="can_inst_rep" name="can_inst_rep">
+                        <input type="text" class="form-control" placeholder="Solicitante" id="can_inst_rep" name="can_inst_rep" required>
                     </div>
                     <div class="col-md-4">
                         <label>Nombre Solicitante:</label>
-                        <input type="text" class="form-control" placeholder="Nombre Solicitante" id="can_nom_rep" name="can_nom_rep">
+                        <input type="text" class="form-control" placeholder="Nombre Solicitante" id="can_nom_rep" name="can_nom_rep" required>
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-4">
+                        <label>Agresión extraordinaria</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="can_per_tercera_edad" id="can_per_tercera_edad">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                Persona Tercera Edad
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="can_per_violencia" id="can_per_violencia">
+                            <label class="form-check-label" for="flexCheckChecked">
+                            Violencia Contra la mujer
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="can_per_discapacidad" id="can_per_discapacidad">
+                            <label class="form-check-label" for="flexCheckChecked">
+                            Persona con Alguna Discapacidad
+                            </label>
+                        </div>
+                      
+                    </div>
+                    <div class="col-md-4">
                         <label>Descripción Sucinta del caso :</label>
-                        <textarea name="textarea" id="des_rep" name="des_rep" placeholder ="Descripción..."class="form-control" rows="3"></textarea>
+                        <textarea name="textarea" id="can_des_suncita" name="can_des_suncita" placeholder="Descripción..." class="form-control" rows="3"></textarea required>
                     </div>
+                  
+                   
+                    <h5><br><strong> Victima:</strong></h5>
                     
-                    <div class="col-md-12">
-                        <table>
-                            <tr class="">
-                                <th>Nombre Victima</th>
-                                <th>Edad Victima</th>
-                                <th>Genero</th>
-
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-
-                            </tr>
-                        </table>
-
-                    </div>
-                    <h5><br><strong> Reporte:</strong></h5>
                     <div class="col-4">
                         <label>Tipo de Delito</label>
-                        <select name="can_delito" id="can_delito" class="form-select">
+                        <select name="can_delitos" id="can_delitos" class="form-select" required>
                             <option value="0">Seleccionar</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label>Derechos Vulnerados o restringidos:</label>
-                        <input type="text" class="form-control" placeholder="Derecho vulnerado" id="can_rep_der" name="can_rep_der">
+                        <input type="text" class="form-control" placeholder="Derecho vulnerado" id="can_rep_der" name="can_rep_der" required>
                     </div>
 
                     <div class="col-md-4">
                         <label>Nombre Victima:</label>
-                        <input type="text" class="form-control" placeholder="Nombre Victima" id="can_rep_nom_vic" name="can_rep_nom_vic">
-                    </div>
-                    <div class="col-md-1">
-                        <label>Edad Victima:</label>
-                        <input type="number" class="form-control" placeholder="Edad Victima" id="can_edad_vic" name="can_edad_vic">
+                        <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic" name="can_nom_vic" required>
                     </div>
                     <div class="col-md-2">
-                        <label><br>Genero:</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="can_rep_gen_vic" id="can_gen_masculino">
-                            <label class="form-check-label" for="can_gen_masculino">
-                                Masculino
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="can_rep_gen_vic" id="can_gen_femenino" checked>
-                            <label class="form-check-label" for="can_gen_femenino">
-                                Femenino
-                            </label>
+                        <label>Edad Victima:</label>
+                        <input type="number" class="form-control" placeholder="Edad Victima" id="can_edad_vic" name="can_edad_vic" required>
+                    </div>
+                   
+                    <div class="row col-md-3">
+                        <label>Género:</label><br>
+                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                            <input type="radio" class="btn-check" name="can_gen_vic" id="masculino" value="Masculino" autocomplete="off" >
+                            <label class="btn btn-recepcion" for="masculino">Masculino</label>
+
+                            <input type="radio" class="btn-check" name="can_gen_vic" id="femenino" value="Femenino" autocomplete="off">
+                            <label class="btn btn-recepcion" for="femenino">Femenino</label>
+
+                           
                         </div>
                     </div>
+                   
 
                     
                 </div>
@@ -186,20 +192,20 @@
                             <div class="col-md-12">
                                 <label>Avance(Descripción):</label>
                                 <textarea name="textarea" class="form-control" rows="3"></textarea>
-                            </div>
-                        </div>
                     </div>
-                </form>
+                </div>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancelar
-                </button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-
+            </form>
         </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+
     </div>
+</div>
 </div>
 <!--Modal Cancelar-->
 <div class="modal fade" id="cancelarCanalizacion">
