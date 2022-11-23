@@ -1,3 +1,11 @@
+<?php
+session_start();
+if(isset($_SESSION['nombre'])){
+    $user = $_SESSION['nombre'];
+}else{
+    header('location: ../index.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -181,7 +189,6 @@
     </div>
     <?php include("../layout/footer.php"); ?>
 
-    <?php include("../vistas/casos-c4/modals-casos-c4.php"); ?>
 
     <!--script-->
     <script src="../js/funciones.js"></script>

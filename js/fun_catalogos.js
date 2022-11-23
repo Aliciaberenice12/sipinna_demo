@@ -10,6 +10,38 @@ function redireccionar(dir) {
         setTimeout("location.href=' catalogo_municipio.php'", 1000);
     fn_listar_municipios();
 }
+
+//funcion show catalogos
+function mostrar_tablas(tbl){
+    if(tbl==1){
+    fn_listar_municipios();
+    $("#ver_lista_delitos").hide();
+    $("#ver_lista_municipios").hide();
+    $("#ver_lista_parentescos").hide();
+    $("#delitos_fun").hide();
+
+    $("#ver_lista_municipios").show();
+
+    }
+    else if(tbl==2){
+        fn_listar_delitos();
+        $("#ver_lista_delitos").hide();
+        $("#ver_lista_municipios").hide();
+        $("#ver_lista_parentescos").hide();
+        $("#ver_lista_delitos").show();
+    }
+    else if(tbl==3){
+        fn_listar_parentesco();
+        $("#ver_lista_delitos").hide();
+        $("#ver_lista_municipios").hide();
+        $("#ver_lista_parentescos").hide();
+        $("#ver_lista_parentescos").show();
+    }
+
+}
+
+
+
 //Boton Catalogo Delitos
 function catalogo_delitos() {
     redireccionar(1);
@@ -28,7 +60,7 @@ function fn_listar_delitos() {
     $("#ver_lista_delitos").html(cargando);
     $.post("../controllers/fun_catalogos.php", { accion: 'fn_listar_delitos' }, function (data) {
         $('#ver_lista_delitos').html(data);
-        $('#tbl_d').DataTable({
+        $('#tbl_del').DataTable({
             language: { "url": "../lib/datatables/Spanish.json" },
             order: [[0, "asc"]],
             searching: true,

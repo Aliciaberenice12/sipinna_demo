@@ -1,3 +1,11 @@
+<?php
+session_start();
+if(isset($_SESSION['nombre'])){
+    $user = $_SESSION['nombre'];
+}else{
+    header('location: ../index.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,13 +17,14 @@
     <!--CSS-->
     <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
     <?php include("../layout/sipinna.php"); ?>
-
+    <link rel="stylesheet" type="text/css" href="../lib/sweetalert2/dist/sweetalert2.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/toastr/toastr.css">
     <div class="div-al row">
 
+      
         <div class="col-md-6">
             <h2 class="h2-titulo">Casos turnados por C4</h2>
         </div>
-
         <div class="col-md-6">
             <img src="../images/imagen.png" class="img-log" align="right">
         </div>
@@ -25,76 +34,49 @@
 </head>
 
 <body>
-
     <!--Head-->
     <input type="hidden" id="hoy" value="<?php echo date('Y-m-d'); ?>">
     <!--Container -->
     <div class="container-fluid">
         <div class="row">
-            <div class="table-responsive col-md-12">
+            <div >
                 <div class="row col-md-12">
                     <div class="col-md-6">
                         <h3></h3>
                     </div>
                     <div class="col-md-6" align="right">
 
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearCaso-c4">
-                            <i class="fas fa-plus"></i> Nuevo Caso
+                        <button type="button" class="btn btn-success" onclick="mod_caso_c4(1,0);">
+                            <i class="bi bi-plus-circle"></i> Crear Caso
+                        </button>
+                        <button type="button" class="btn btn-success hint--top" aria-label="actualizar_listado" id="actualizar_listado"onclick="fn_listar_casos_c4();">
+                            <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
                 </div>
-
+                <div class="card-body">
+                    <div id="ver_lista_casos_c4"></div>
+                </div>
                 <br>
-                <table class="table table-hover" id="table" style="width:100%">
-                    <thead class="tbl-estadisticas">
-                        <tr align="center">
-                            <th>Código</th>
-                            <th>Fecha</th>
-                            <th>Número</th>
-                            <th>Dirigido</th>
-                            <th>Tipo Violencia</th>
-                            <th>Nombre Sujeto(Victima)</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr align="center">
-                            <td>01</td>
-                            <td>27/08/2022</td>
-                            <td>DG</td>
-                            <td></td>
-                            <td>AMENAZA</td>
-                            <td>JOSE PEREZ GARCIA </td>
-                            <td>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarCaso-c4">
-                                    <i class="fas fa-pen"></i> Editar Caso
-                                </button>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelarCaso-c4">
-                                    <i class="fas fa-trash"></i> Cancelar Caso
-                                </button>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
 
             </div>
         </div>
-        <br></br>
-        <br></br>
-
+        <br>
     </div>
     <?php include("../layout/footer.php"); ?>
 
-    <?php include("../vistas/casos-c4/modals-casos-c4.php"); ?>
-
-    <!--script-->
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
+    <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
     <script src="../lib/datatables/jquery.dataTables.min.js"></script>
+    <?php include("../vistas/casos-c4/modals-c4.php"); ?>
     <script src="../js/funciones.js"></script>
-    
-</body>
+    <script src="../js/fun_caso_c4.js?x=<?php echo time(); ?>"></script>
+    <script src="../lib/toastr/toastr.min.js"></script>
+    <script src="../lib/sweetalert2/dist/sweetalert2.min.js"></script>
 
+
+
+</body>
 
 </html>

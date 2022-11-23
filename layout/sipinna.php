@@ -10,6 +10,9 @@
     <link href="../lib/bootstrap-5.2.1-dist/css/bootstrap.min.css" rel='stylesheet'>
     <script type='text/javascript' src='../lib/jquery.min.js'></script>
     <link type="text/css" href="../css/sipinna.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../siceb_v2/lib/sweetalert2/dist/sweetalert2.min.css" />
+    <link rel="stylesheet" href="../lib/sweetalert2/dist/sweetalert2.min.css" />
+
 
 </head>
 
@@ -20,10 +23,19 @@
     <nav class="sidebar">
         <div class="sidebar" align="center">
             <ul>
-                <li>
-                    <img src="../images/sipinna.png" class="img-perfil">
-                    <div class="name"><strong>Jose Perez Garcia<br>Departamento Tecnologias</strong></div>
+                <li class="imgUser"><br>
+                    <?php
+                    if (isset($_SESSION['imagen'])) {
+                        $imagen = $_SESSION['imagen'];
+                    } else {
+                    }
+
+                    echo '<img src="../vistas/usuario/imgUser/' . $imagen . ' " alt="">';
+                    ?>
+                    <div class="name"><strong><?php echo $_SESSION["nombre"] . ' ' . $_SESSION["apellidos"] ?><br><?php echo $_SESSION["departamento"] ?></strong></div>
                 </li>
+
+                
                 <li>
 
                     <a href="../vistas/canalizacion-index.php">
@@ -32,7 +44,7 @@
                 </li>
                 <li>
                     <a href="../vistas/casos-c4.php">
-                        <button type="button" class="btn btn-nav ">Casos turnados por C4</button>
+                        <button type="button" class="btn btn-nav" id="caso_turnado">Casos turnados por C4</button>
                     </a>
                 </li>
                 <li>
@@ -47,11 +59,17 @@
 
                     </a>
                 </li>
+                <li>
+                    <a href="../vistas/index.php">
+                        <button type="button" class="btn btn-nav">Catálogos</button>
+
+                    </a>
+                </li>
                 <li></li>
                 <li>
-                    <a href="../index.php">
-                        <button type="button" id="salir" class="btn btn-nav2 ">Salir</button>
-                        <a>
+                    <button type="button" id="salir" class="btn btn-nav2" onclick="fn_cerrar_sesion()">Salir</button>
+
+
                 </li>
             </ul>
         </div>
@@ -76,6 +94,10 @@
             $(this).addClass("active").siblings().removeClass("active");
         });
     </script>
+     <script src="../lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+    <script src="../js/script.js"></script>
+
 
 
 </body>

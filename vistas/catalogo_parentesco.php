@@ -1,3 +1,11 @@
+<?php
+session_start();
+if(isset($_SESSION['nombre'])){
+    $user = $_SESSION['nombre'];
+}else{
+    header('location: ../index.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -46,7 +54,7 @@
                         <button type="button" class="btn btn-success" onclick="mod_cat_parentesco(1,0);">
                             <i class="fas fa-plus"></i> Agregar Parentesco
                         </button>
-                        <button type="button" class="btn btn-primary hint--top" aria-label="Actualizar listado" onclick="fn_listar_parentesco();">
+                        <button type="button" class="btn btn-primary hint--top" aria-label="listado_parentesco" id="listado_parentesco" onclick="fn_listar_parentesco();">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>

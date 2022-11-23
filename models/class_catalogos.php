@@ -69,7 +69,7 @@ class Catalogos extends Conexion
 	}
     public function lista_parentescos()
 	{
-		$sql = $this->dbh->prepare("select id_parentesco, parentesco from cat_tipos_parentescos ");
+		$sql = $this->dbh->prepare("select id_parentesco, parentesco from cat_parentescos ");
 		$sql->execute(array());
 		$row = $sql->fetchAll();
 		return $row;
@@ -84,7 +84,7 @@ class Catalogos extends Conexion
 	}
     public function obtener_parentesco($id)
 	{
-		$sql = $this->dbh->prepare("select id_parentesco, parentesco from cat_tipos_parentescos where id_parentesco = ?");
+		$sql = $this->dbh->prepare("select id_parentesco, parentesco from cat_parentescos where id_parentesco = ?");
 		$sql->execute(array($id));
 		$row = $sql->fetchAll();
 		return $row;

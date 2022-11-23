@@ -13,8 +13,11 @@ if ($_REQUEST["accion"] == 'fn_listar_delitos')
         <p>!No Hay Datos</p>
         ';
 	} else {
-		$html = '  		
-		<table id="tbl_a" class="table table-hover table-striped table-sm table-responsive-sm">
+		$html = ' 
+		<button type="button" class="btn btn-success  hint--bottom" aria-label="Editar Delitos" onclick="mod_cat_delitos(1,0);">
+			<i class="bi bi-plus"></i>
+		</button> &nbsp; 		
+		<table id="tbl_del" class="table table-hover table-striped table-sm table-responsive-sm">
 	    <thead class="tbl-estadisticas">
 	      <tr align="center">
 	        <th width="100%" align="center">
@@ -81,7 +84,8 @@ elseif ($_REQUEST["accion"] == 'fn_guardar_delito')
 	$datos = array('estatus' => $estatus);
 	echo json_encode($datos, JSON_FORCE_OBJECT);
 } 
-elseif ($_REQUEST["accion"] == 'fn_obtener_delito') {
+elseif ($_REQUEST["accion"] == 'fn_obtener_delito')
+ {
 	$arr_res = $v->obtener_delito($_REQUEST["id"]);
 	foreach ($arr_res as $row) {
 		header('Content-Type: application/json');
@@ -117,7 +121,10 @@ if ($_REQUEST["accion"] == 'fn_listar_parentescos')
         <p>!No Hay Datos</p>
         ';
 	} else {
-		$html = '  		
+		$html = '  	
+		<button type="button" class="btn btn-success  hint--bottom" aria-label="Editar Parentesco" onclick="mod_cat_parentesco(1,0);">
+			<i class="bi bi-plus"></i>
+		</button> &nbsp;	
 		<table id="tbl_parentescos" class="table table-hover table-striped table-sm table-responsive-sm">
 	    <thead class="tbl-estadisticas">
 	      <tr align="center">
@@ -149,11 +156,11 @@ if ($_REQUEST["accion"] == 'fn_listar_parentescos')
 							
 							<button type="button" class="btn btn-dark btn-sm hint--bottom" aria-label="Editar Parentesco" onclick="mod_cat_parentesco(2,\'' . $row["id_parentesco"] . '\');">
 								<i class="bi bi-pencil-square"></i>
-								<span class="etiq_cel">Editar</span>
+								<span>Editar</span>
 							</button>
 							<button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar Parentesco" onclick="fn_eliminar_parentesco(\'' . $row["id_parentesco"] . '\',\'' . $row["parentesco"] . '\');">
 								<i class="bi bi-trash"></i>
-								<span class="etiq_cel">Eliminar</span>
+								<span>Eliminar</span>
 							</button>
 						</div>              
 					</div>
@@ -210,7 +217,11 @@ if ($_REQUEST["accion"] == 'fn_listar_municipios')
         <p>!No Hay Datos</p>
         ';
 	} else {
-		$html = '  		
+		$html = '
+		
+		<button type="button" class="btn btn-success  hint--bottom" aria-label="Editar Municipio" onclick="mod_cat_municipio(1,0);">
+			<i class="bi bi-plus"></i>
+		</button> &nbsp;
 		<table id="tbl_mun" class="table table-hover table-striped table-sm table-responsive-sm">
 	    <thead class="tbl-estadisticas">
 	      <tr align="center">
@@ -240,13 +251,11 @@ if ($_REQUEST["accion"] == 'fn_listar_municipios')
 						</div>
 						<div class="col-md-4" aling="center">
 							
-							<button type="button" class="btn btn-dark btn-sm hint--bottom" aria-label="Editar Municipio" onclick="mod_cat_municipio(2,\'' . $row["id_municipio"] . '\');">
+							<button type="button" class="btn btn-primary  hint--bottom" aria-label="Editar Municipio" onclick="mod_cat_municipio(2,\'' . $row["id_municipio"] . '\');">
 								<i class="bi bi-pencil-square"></i>
-								<span class="etiq_cel">Editar</span>
-							</button>
-							<button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar MUnicipio" onclick="fn_eliminar_municipio(\'' . $row["id_municipio"] . '\',\'' . $row["municipio"] . '\');">
+							</button> &nbsp;
+							<button type="button" class="btn btn-danger hint--bottom" aria-label="Eliminar MUnicipio" onclick="fn_eliminar_municipio(\'' . $row["id_municipio"] . '\',\'' . $row["municipio"] . '\');">
 								<i class="bi bi-trash"></i>
-								<span class="etiq_cel">Eliminar</span>
 							</button>
 						</div>              
 					</div>
@@ -254,6 +263,7 @@ if ($_REQUEST["accion"] == 'fn_listar_municipios')
 	        </tr>';
 		}
 		$html .= '
+		
     	</tbody>
   	</table>';
 	}

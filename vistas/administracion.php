@@ -1,3 +1,11 @@
+<?php
+session_start();
+if(isset($_SESSION['nombre'])){
+    $user = $_SESSION['nombre'];
+}else{
+    header('location: ../index.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -8,9 +16,16 @@
     <title>Sipinna</title>
     <!--CSS-->
     <link type="text/css" href="../css/sipinna.css" rel="stylesheet" />
-
-    <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
+    <link rel="stylesheet" href="../lib/sweetalert_efren/sweetalert2.min.css">
     <link rel="stylesheet" type="text/css" href="../lib/bootstrap-5.2.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
+    <script src="../lib/sweetalert2.all.min.js"></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"> -->
 
     <?php include("../layout/sipinna.php"); ?>
 
@@ -28,131 +43,112 @@
 
 </head>
 
-<body>
+<body style="margin-bottom: 45px;">
 
     <!--Head-->
     <input type="hidden" id="hoy" value="<?php echo date('Y-m-d'); ?>">
     <!--Container -->
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
-            <div class="table-responsive col-md-12">
-                <div class="row col-md-12">
-                    <div class="col-md-6">
-                        <h3>Usuarios</h3>
-                    </div>
-                    <div class="col-md-6" align="right">
+            <div class="col-2 offset-10">
+                <div class="text-center">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#modalUsuario" id="btnAgregar">
+                        <i class="bi bi-plus-circle-fill"></i> Crear Usuario
 
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearUsuario-modal">
-                            <i class="fas fa-plus"></i> Agregar Usuario
-                        </button>
-                    </div>
+                    </button>
+
                 </div>
-                <br>
-                <table class="table table-hover" id="table" style="width: 100%;">
-                    <thead class="tbl-estadisticas">
-                        <tr align="center">
-                            <th>Fotografia</th>
-                            <th>Nombre Usuario</th>
-                            <th>Acciones</th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr align="center">
-                            <td><img src="../images/sipinna.png" class="img-user"></td>
-                            <td>Usuario 1</td>
-                            <td>
-
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal">
-                                    <i class="fas fa-pen"></i>Editar
-                                </button>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarUsuarioModal">
-                                    <i class="fas fa-trash"></i>Eliminar
-                                </button>
-
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
             </div>
-            <div class="col-md-2"></div>
+        </div><br>
+
+        <div class="table-responsive">
+            <table id="datos_usuario" class="table">
+                <thead class="tbl-estadisticas">
+                    <tr>
+                        <!-- <th>Id</th> -->
+                        <th>Nombre </th>
+                        <th>Apellidos</th>
+                        <th>Departamento</th>
+                        <th>Usuario</th>
+                        <!-- <th>Contraseña</th> -->
+                        <th>Email</th>
+                        <th>Imagen</th>
+                        <th>Editar</th>
+                        <th>Borrar</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
-        <!--Modal Crear-->
-        <div class="modal fade" id="crearUsuario-modal">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-success">
-                        <h5 class="modal-title" style="color:white;">Agregar Usuario</h5>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" method="POST">
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color:white;">Crear Usuario</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form method="POST" id="formulario" enctype="multipart/form-data">
+                    <div class="modal-content">
+                        <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="">Imagen:</label><br>
-                                    <img src="../images/sipinna.png" height="50%">
-                                    <br></br>
-                                    <input class="form-control" type="file" name="" id="">
+                                    <label for="imagen_usuario">Selecciona una imagen</label>
+                                    <input type="file" name="imagen_usuario" id="imagen_usuario" class="form-control"><br>
+                                    <span id="imagen_subida"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="">Nombre:</label>
-
-                                    <input class="form-control" type="text" name="" id="">
-                                    <label for="">Apellidos:</label>
-                                    <input class="form-control" type="text" name="" id="">
-                                    <label for="">Departamento:</label>
-                                    <input class="form-control" type="text" name="" id="">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Completa el campo..." required><br>
+                                    <label for="usuario">Usuario</label>
+                                    <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Completa el campo..." required><br>
+                                    <label for="contrasena">Contraseña</label>
+                                    <input type="text" name="contrasena" id="contrasena" class="form-control" placeholder="Completa el campo..." required><br>
                                 </div>
-
                                 <div class="col-md-4">
-                                    <label for="">Usuario:</label>
-                                    <input class="form-control" type="text" name="" id="">
-
-                                    <label for="">Contraseña</label>
-                                    <input class="form-control" type="password" name="" id="">
-
-                                    <label for="">Repite Contraseña</label>
-                                    <input class="form-control" type="password" name="" id="">
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label for="">Correo Electronico:</label>
-                                    <input class="form-control" type="text" name="" id="">
+                                    <label for="apellidos">Apellidos</label>
+                                    <input type="text" name="apellidos" id="apellidos" class="form-control" placeholder="Completa el campo..." required><br>
+                                    <label for="departamento">Departamento</label>
+                                    <input type="text" name="departamento" id="departamento" class="form-control" placeholder="Completa el campo..." required><br>
+                                    <label for="email">Correo</label>
+                                    <input type="email" name="email" id="email" class="form-control" placeholder="Completa el campo..." required><br>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="id_usuario" id="id_usuario">
+                            <input type="hidden" name="operacion" id="operacion">
+                            <input type="submit" name="action" id="action" class="btn btn-success" value="Crear">
+                        </div>
                     </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-success">Agregar</button>
-                    </div>
-
-                </div>
+                </form>
             </div>
         </div>
-        <br></br>
-        <br></br>
     </div>
+
+
 
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
     <script src="../lib/datatables/jquery.dataTables.min.js"></script>
+    <script src="../lib/sweetalert_efren/sweetalert2.all.min.js"></script>
 
-    </script>
-    <script src="../js/funciones.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="../lib/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+ -->
+    <script src="../js/usuarios.js"></script>
+
     <?php include('../layout/footer.php'); ?>
 
-    <!--modal-->
-    <?php include('../vistas/usuario/modals-usuario.php'); ?>
 
 
 
 
 </body>
-<!--footer-->
 
 </html>
