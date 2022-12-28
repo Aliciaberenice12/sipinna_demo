@@ -214,10 +214,10 @@ function fn_guardar_parentesco() {
 
     $('#btn_par').prop('disabled', true);
 
-    swal({
+    swal.fire({
         title: '¿Estás seguro?',
         html: 'Los datos de Parentesco: <br>' + parentesco + ' serán almacenados',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -250,10 +250,10 @@ function fn_guardar_parentesco() {
     })
 }
 function fn_eliminar_parentesco(id, parentesco) {
-    swal({
+    swal.fire({
         title: '¿Estás seguro?',
         text: 'El parentesco ' + parentesco + ' será eliminado',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -320,10 +320,10 @@ function fn_guardar_municipio() {
 
     $('#btn_mun').prop('disabled', true);
 
-    swal({
+    swal.fire({
         title: '¿Estás seguro?',
         html: 'Los datos de Municipio: <br>' + municipio + ' serán almacenados',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -339,13 +339,13 @@ function fn_guardar_municipio() {
                 data: datos
             }).done(function (res) {
                 if (res.estatus == 'ok') {
-                    Swal({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
                     $('#btn_mun').prop('disabled', false);
                     $('#mod_cat_municipios').modal('hide');
                     fn_listar_municipios();
                 }
                 else {
-                    Swal({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
                     $('#btn_mun').prop('disabled', false);
                     return false;
                 }
@@ -366,10 +366,10 @@ function fn_listar_municipios() {
     });
 }
 function fn_eliminar_municipio(id, municipio) {
-    swal({
+    swal.fire({
         title: '¿Estás seguro?',
         text: 'El municipio ' + municipio + ' será eliminado',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -386,13 +386,13 @@ function fn_eliminar_municipio(id, municipio) {
             }).done(function (res) {
 
                 if (res.estatus == 'ok') {
-                    Swal({ type: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ icon: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
                     var tabla = $('#tbl_mun').DataTable();
                     fn_listar_municipios();
 
                 }
                 else {
-                    Swal({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
                     $('#btn_mun').prop('disabled', false);
                     return false;
                 }

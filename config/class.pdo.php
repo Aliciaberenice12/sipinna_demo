@@ -19,10 +19,14 @@ class Conexion
 {
 	var $db   = "sipinna";
 	var $host = "localhost";
+	// var $us   = "usr_sipinna";
 	var $us   = "root";
-	var $pw   = "";
+	 var $pw   = "";
+
+	// var $pw   = "sipinna";
 	var $key  = '51c3b22!';
 	var $dbh;
+	const KEY = "$2a$07$125Rdvlaptdf98112dsrqpwsaZxde9$";
 
 	function conectar()
 	{
@@ -42,29 +46,18 @@ class Conexion
 		if (isset($_FILES['imagen_usuario'])) {
 			$extension = explode('.', $_FILES["imagen_usuario"]['name']);
 			$nombre = rand() . '.' . $extension[1];
-			$ubicacion = "../usuario/imgUser/" . $nombre;
+			$ubicacion = "../vistas/usuario/imgUser/" . $nombre;
 			move_uploaded_file($_FILES["imagen_usuario"]['tmp_name'], $ubicacion);
 			return $nombre;
 		}
 	}
 
-	function nombre_img($id_user)
-	{
-		//include "../../config/class.pdo.php";
-		$stmt = $this->dbh->prepare("SELECT imagen FROM usuarios WHERE id ='$id_user'");
-		$stmt->execute();
-		$resultado = $stmt->fetchAll();
-		foreach ($resultado as $fila) {
-			return $fila["imagen"];
-		}
-	}
+	public static function criptpass( $data ) {
 
-	function contarDatos(){
-		$stmt = $this->dbh->prepare("SELECT * FROM usuarios WHERE estado = 1 ");
-		$stmt->execute();
-		$resultado = $stmt->fetchAll();
-		return $stmt->rowCount();
-	}
-	function retornaDatosUsuario($id){}
+		$passBlowfish = crypt($data, self::KEY);
 
+		return $passBlowfish;
+
+	}
+	
 }

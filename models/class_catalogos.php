@@ -53,7 +53,7 @@ class Catalogos extends Conexion
     ///parentesco
     public function insertar_parentesco($parentesco)
     {
-        $sql = $this->dbh->prepare("insert into cat_tipos_parentescos (parentesco) VALUES(?)");
+        $sql = $this->dbh->prepare("insert into cat_parentescos (parentesco) VALUES(?)");
         if ($sql->execute(array($parentesco))) {
             return 'ok';
         } else

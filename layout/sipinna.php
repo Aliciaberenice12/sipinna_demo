@@ -1,3 +1,7 @@
+<?php if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+} 
+?>
 <!doctype html>
 <html>
 
@@ -5,13 +9,14 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <!--css-->
-
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
     <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>
     <link href="../lib/bootstrap-5.2.1-dist/css/bootstrap.min.css" rel='stylesheet'>
     <script type='text/javascript' src='../lib/jquery.min.js'></script>
     <link type="text/css" href="../css/sipinna.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../../siceb_v2/lib/sweetalert2/dist/sweetalert2.min.css" />
-    <link rel="stylesheet" href="../lib/sweetalert2/dist/sweetalert2.min.css" />
+    <link rel="stylesheet" type="text/css" href="../lib/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
+
 
 
 </head>
@@ -35,7 +40,7 @@
                     <div class="name"><strong><?php echo $_SESSION["nombre"] . ' ' . $_SESSION["apellidos"] ?><br><?php echo $_SESSION["departamento"] ?></strong></div>
                 </li>
 
-                
+
                 <li>
 
                     <a href="../vistas/canalizacion-index.php">
@@ -60,14 +65,14 @@
                     </a>
                 </li>
                 <li>
-                    <a href="../vistas/index.php">
+                    <a href="../vistas/catalogos.php">
                         <button type="button" class="btn btn-nav">Catálogos</button>
 
                     </a>
                 </li>
                 <li></li>
                 <li>
-                    <button type="button" id="salir" class="btn btn-nav2" onclick="fn_cerrar_sesion()">Salir</button>
+                    <button type="button" id="salir" class="btn btn-nav2" onclick="close_sesion()">Salir</button>
 
 
                 </li>
@@ -94,9 +99,13 @@
             $(this).addClass("active").siblings().removeClass("active");
         });
     </script>
-     <script src="../lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
-
-    <script src="../js/script.js"></script>
+    <script src="../js/login.js"></script>
+    <script src="../lib/swetalert/sweetalert2.min.js"></script>
+    <script src="../lib/toastr/toastr.min.js"></script>
+    <script src="../lib/datatables/jquery.dataTables.min.js"></script>
+    <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
+    <script src="../js/fun_canalizacion.js?x=<?php echo time(); ?>"></script>
 
 
 

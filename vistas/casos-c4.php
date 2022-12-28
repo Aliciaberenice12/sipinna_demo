@@ -1,5 +1,6 @@
 <?php
-session_start();
+if(session_status() == PHP_SESSION_NONE){session_start();}
+
 if(isset($_SESSION['nombre'])){
     $user = $_SESSION['nombre'];
 }else{
@@ -17,7 +18,6 @@ if(isset($_SESSION['nombre'])){
     <!--CSS-->
     <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
     <?php include("../layout/sipinna.php"); ?>
-    <link rel="stylesheet" type="text/css" href="../lib/sweetalert2/dist/sweetalert2.css" />
     <link rel="stylesheet" type="text/css" href="../lib/toastr/toastr.css">
     <div class="div-al row">
 
@@ -64,16 +64,12 @@ if(isset($_SESSION['nombre'])){
         <br>
     </div>
     <?php include("../layout/footer.php"); ?>
-
-    <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../lib/jquery.min.js"></script>
-    <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
+    <!--Scripts-->
     <script src="../lib/datatables/jquery.dataTables.min.js"></script>
     <?php include("../vistas/casos-c4/modals-c4.php"); ?>
-    <script src="../js/funciones.js"></script>
     <script src="../js/fun_caso_c4.js?x=<?php echo time(); ?>"></script>
-    <script src="../lib/toastr/toastr.min.js"></script>
-    <script src="../lib/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="../js/fun_carrito.js?x=<?php echo time(); ?>"></script>
+
 
 
 

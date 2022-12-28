@@ -1,5 +1,6 @@
 <?php
-session_start();
+if(session_status() == PHP_SESSION_NONE){session_start();}
+
 if(isset($_SESSION['nombre'])){
     $user = $_SESSION['nombre'];
 }else{
@@ -16,6 +17,7 @@ if(isset($_SESSION['nombre'])){
     <title>Sipinna</title>
     <!--CSS-->
     <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
+    <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
     <?php include("../layout/sipinna.php"); ?>
 
     <div class="div-al row">
@@ -191,7 +193,7 @@ if(isset($_SESSION['nombre'])){
 
 
     <!--script-->
-    <script src="../js/funciones.js"></script>
+    <script src="../lib/swetalert/sweetalert2.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/datatables/jquery.dataTables.min.js"></script>

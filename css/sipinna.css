@@ -1,5 +1,5 @@
 ::-webkit-scrollbar {
-    width: 4px;
+    width: 8px;
 }
 
 
@@ -21,14 +21,6 @@
 
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
-}
-
-.puntero {
-    cursor: pointer;
-}
-
-.ocultar {
-    display: none;
 }
 
 @font-face {
@@ -66,7 +58,9 @@ body {
     text-align: justify;
     color: #590F0F;
     font-size: 1.25em;
-    margin: 0rem 3.5em;
+    margin: 1rem 1.5em;
+    width: 75%;
+    
 }
 
 footer {
@@ -114,6 +108,9 @@ footer {
     align-items: center;
     justify-content: center;
 }
+.tbl-estadisticas {
+    background-color: #626262;
+    color: white;}
 
 .button-bars {
     position: absolute;
@@ -122,22 +119,104 @@ footer {
     background: #EBE9E8;
     border-radius: 3px;
     cursor: pointer;
-    transition: left 0.4s ease;
+    transition: left 0.5s ease;
+    left: 1px;
 }
-table{
-    --bs-bg-opacity:none;
+/* Titulo */
+.div-al {
+    /* border-bottom: 1px solid rgba(85, 85, 85, 0.089); */
+/*     -webkit-box-shadow: 0px 3px 3px -3px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 3px 3px -3px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 3px -3px rgba(0,0,0,0.75); */
+}
 
+/* Container */
+
+.container, .container-fluid {
+    margin-top: 10px;
 }
-.tbl-estadisticas {
-    background-color: #626262;
-    color: white;
+
+
+/* Theme table update */
+
+.tbl-users-head {
+    background-color: rgba(136, 136, 136, 0.055);
     align-items: center;
     text-align: center;
-    margin: 1em 1em 1em;
 }
 
+.tbl-users-head tr {
+    color:gray;
+    font-size: 14px;
+}
+
+.tbl-users-head  th:hover {
+    color: #1e1e1e;
+}
+
+.tbl-users-body tr td {
+    color: #353535;
+    font-size: 15px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#datos_usuario_filter, #datos_usuario_length {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+td .editar_ {
+    color:#DF844C;
+}
+
+td .editar_:hover {
+    cursor: pointer;
+    color:hsla(23, 70%, 59%, 0.486);
+}
+
+td .eliminar_ {
+    color: crimson;
+}
+
+td .eliminar_:hover {
+    cursor: pointer;
+    color: rgba(220, 20, 60, 0.486);
+}
+
+#datos_usuario_paginate, #datos_usuario_info {
+    font-size: 13px;
+}
+
+.img_user {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border: 1px solid black;
+}
+
+.img_userForm {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 1px solid black;
+}
+
+.img_formUser {
+    margin: 20px;
+}
+
+/* Theme table update */
+
+
+
 .button-bars.click {
-    left: 27%;
+    left: 24.5%;
+    padding: 10px 10px 10px 10px;
+    background-color: #CDCDCD;
+    border-radius: 0 5px 5px 0;
 }
 
 .button-bars span {
@@ -187,7 +266,6 @@ table{
     --bs-btn-disabled-bg: #6c757d;
     --bs-btn-disabled-border-color: #6c757d
 }
-
 .btn-catalogo {
     --bs-btn-color: #fff;
     --bs-btn-bg: #3F2340;
@@ -209,7 +287,6 @@ table{
 
 
 }
-
 /* Transicion de barra al desplegar */
 
 .sidebar {
@@ -224,7 +301,9 @@ table{
     overflow-x: scroll;
     z-index: 1000;
 
+
 }
+
 
 @media(max-width:600px) {
     .sidebar {
@@ -239,7 +318,9 @@ table{
     }
 
     .button-bars.click {
-        left: 60%;
+        left: 52%;
+        background-color: transparent;
+        border-radius: 0 5px 5px 0;
     }
 
     .btn-nav1 {
@@ -394,7 +475,7 @@ nav ul li.active ul li a {
 
 .btn-nav1:active {
     border: solid 1px #df844c;
-    height: 5.5rem;
+    height: 5.5rem;   
     font-size: 14px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -558,8 +639,14 @@ a:hover {
     position: flex;
     text-align: center;
 }
+
 li>img{
-    width: 10rem;
-    height: 10rem;
+    width: 7rem;
+    height: 7rem;
     border-radius: 50%;
+}
+
+
+.administracion {
+    display: none;
 }

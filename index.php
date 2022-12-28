@@ -11,8 +11,8 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login SIPINNA</title>
     <link rel="stylesheet" href="./css/estilos.css">
-    <link rel="stylesheet" href="lib/sweetalert2.min.css">
-    <link rel="stylesheet" href="lib/toastr/toastr.css">
+    <link rel="stylesheet" href="./lib/swetalert/sweetalert2.min.css">
+    <link rel="stylesheet" href="./lib/toastr/toastr.css">
 </head>
 
 <body>
@@ -27,7 +27,7 @@ session_start();
                 <input type="text" name="usuario" id="usuario" placeholder="Usuario"><br /><br />
                 <input type="password" name="contrasena" id="contrasena" placeholder="Contraseña"><br /><br />
                 <div class="log">
-                    <button type="button" class="btn" id="boton" onclick="fn_login()">Entrar</button>
+                    <button type="button" class="btn" id="boton" onclick="login_roles()">Entrar</button>
                 </div>
             </form>
         </div>
@@ -35,11 +35,10 @@ session_start();
     <footer>
         <p>2022 &reg; Algunos derechos reservados</p>
     </footer>
-    <script src="lib/jquery.min.js"></script>
-    <script src="lib/toastr/toastr.min.js"></script>
-    <!-- <script src="lib/sweetalert2.all.min.js"></script> -->
-    <script src="lib/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="./lib/jquery.min.js"></script>
+    <script src="./lib/toastr/toastr.min.js"></script>
+    <script src="./lib/swetalert/sweetalert2.min.js"></script>
+    <script src="./js/login.js"></script>
 </body>
 
 </html>
