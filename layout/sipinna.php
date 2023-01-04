@@ -16,6 +16,8 @@
     <link type="text/css" href="../css/sipinna.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="../lib/toastr/toastr.min.css">
     <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
+    <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
+
 
 
 

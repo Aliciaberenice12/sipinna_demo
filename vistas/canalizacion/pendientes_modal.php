@@ -167,9 +167,7 @@
                                     <i class="bi bi-plus"></i>
                                     <span>Agregar</span>
                                 </button>
-                                <strong>
-                                    <h5 class="modal-title" id="tit_mod_can_add_avance" style="color:black;"></h5>
-                                </strong>
+                                
 
                                 <input type="hidden" class="form-control" name="id_can_avance" id="id_can_avance" value="0" disabled>
                             </div>

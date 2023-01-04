@@ -18,6 +18,7 @@ function mostrar_tablas(tbl){
     $("#ver_lista_delitos").hide();
     $("#ver_lista_municipios").hide();
     $("#ver_lista_parentescos").hide();
+    $("#ver_lista_derechos").hide();
     $("#delitos_fun").hide();
 
     $("#ver_lista_municipios").show();
@@ -27,6 +28,7 @@ function mostrar_tablas(tbl){
         fn_listar_delitos();
         $("#ver_lista_delitos").hide();
         $("#ver_lista_municipios").hide();
+        $("#ver_lista_derechos").hide();
         $("#ver_lista_parentescos").hide();
         $("#ver_lista_delitos").show();
     }
@@ -34,13 +36,21 @@ function mostrar_tablas(tbl){
         fn_listar_parentesco();
         $("#ver_lista_delitos").hide();
         $("#ver_lista_municipios").hide();
+        $("#ver_lista_derechos").hide();
         $("#ver_lista_parentescos").hide();
         $("#ver_lista_parentescos").show();
     }
+    else if(tbl==4){
+        fn_listar_derecho();
+        $("#ver_lista_delitos").hide();
+        $("#ver_lista_municipios").hide();
+        $("#ver_lista_parentescos").hide();
+        $("#ver_lista_derechos").hide();
+        $("#ver_lista_derechos").show();
+    }
+    
 
 }
-
-
 
 //Boton Catalogo Delitos
 function catalogo_delitos() {
@@ -48,6 +58,7 @@ function catalogo_delitos() {
     fn_listar_delitos();
 
 }
+
 //Boton Catalogo Municipios
 function catalogo_municipio() {
     redireccionar(2);
@@ -95,7 +106,7 @@ function fn_guardar_delito() {
         return false;
     }
     $('#btn_d').prop('disabled', true);
-    swal({
+    Swal.fire({
         title: '¿Estás seguro?',
         html: 'Los datos: <br>' + delito + ' serán almacenados',
         type: 'warning',
@@ -114,13 +125,13 @@ function fn_guardar_delito() {
                     data: datos
                 }).done(function (res) {
                     if (res.estatus == 'ok') {
-                        Swal({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
+                        Swal.fire({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
                         $('#btn_d').prop('disabled', false);
                         $('#mod_cat_delitos').modal('hide');
                         fn_listar_delitos();
                     }
                     else {
-                        Swal({ type: 'warning', title: 'Faltan Datos ', showConfirmButton: false, timer: 1500 });
+                        Swal.fire({ type: 'warning', title: 'Faltan Datos ', showConfirmButton: false, timer: 1500 });
                         $('#btn_a').prop('disabled', false);
                         $('#mod_cat_delitos').modal('hide');
                         fn_listar_delitos();
@@ -131,7 +142,7 @@ function fn_guardar_delito() {
     })
 }
 function fn_eliminar_delito(id, delito) {
-    swal({
+    Swal.fire({
         title: '¿Estás seguro?',
         text: delito + ' será eliminado',
         type: 'warning',
@@ -151,14 +162,14 @@ function fn_eliminar_delito(id, delito) {
             }).done(function (res) {
 
                 if (res.estatus == 'ok') {
-                    Swal({ type: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ type: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
                     var tabla = $('#tbl_d').DataTable();
                     tabla.row($('#l_delito' + id)).remove().draw();
                     fn_listar_delitos();
 
                 }
                 else {
-                    Swal({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
                     $('#btn_user').prop('disabled', false);
                     return false;
                 }
@@ -233,13 +244,13 @@ function fn_guardar_parentesco() {
                 data: datos
             }).done(function (res) {
                 if (res.estatus == 'ok') {
-                    Swal({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
                     $('#btn_par').prop('disabled', false);
                     $('#mod_cat_parentescos').modal('hide');
                     fn_listar_parentesco();
                 }
                 else {
-                    Swal({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
                     $('#btn_par').prop('disabled', false);
                     return false;
                 }
@@ -270,13 +281,13 @@ function fn_eliminar_parentesco(id, parentesco) {
             }).done(function (res) {
 
                 if (res.estatus == 'ok') {
-                    Swal({ type: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ type: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
                     var tabla = $('#tbl_parentesco').DataTable();
                     fn_listar_parentesco();
 
                 }
                 else {
-                    Swal({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
                     $('#btn_par').prop('disabled', false);
                     return false;
                 }
@@ -402,3 +413,122 @@ function fn_eliminar_municipio(id, municipio) {
             $('#btn_par').prop('disabled', false);
     })
 }
+
+
+
+//Funciones Derechos Vulnerados
+function mod_cat_derecho(origen, id) {
+    if (origen == 1) {
+        $('#tit_mod_der').html('Nuevo derecho');
+        $('#id_par_cat').val(0);
+        $('#derecho').val('');
+
+    }
+    else if (origen == 2) {
+        $('#tit_mod_der').html('Modificar derecho');
+        $.post("../controllers/fun_catalogos.php", { accion: 'fn_obtener_derecho', id: id }, function (res) {
+            $('#id_der_cat').val(id);
+            $('#derecho').val(res.derecho);
+
+        });
+    }
+    if (origen == 1 || origen == 2)
+        $('#mod_cat_derechos').modal('show');
+}
+function fn_listar_derecho() {
+    $("#ver_lista_derechos").html(cargando);
+    $.post("../controllers/fun_catalogos.php", { accion: 'fn_listar_derechos' }, function (data) {
+        $('#ver_lista_derechos').html(data);
+        $('#tbl_der').DataTable({
+            language: { "url": "../lib/datatables/Spanish.json" },
+
+            order: [[0, "asc"]],
+            searching: true,
+        });
+    });
+}
+function fn_guardar_derecho() {
+    id = $('#id_der_cat').val();
+    derecho = $.trim($('#derecho').val());
+
+    if (derecho == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes ingresar el nombre!');
+        $('#derecho').focus();
+        return false;
+    }
+
+    $('#btn_der').prop('disabled', true);
+
+    swal.fire({
+        title: '¿Estás seguro?',
+        html: 'Los datos de derecho: <br>' + derecho + ' serán almacenados',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, Guardar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.value) {
+            datos = { accion: 'fn_guardar_derecho', id: id, derecho: derecho };
+
+            $.ajax({
+                url: "../controllers/fun_catalogos.php",
+                type: "POST",
+                data: datos
+            }).done(function (res) {
+                if (res.estatus == 'ok') {
+                    Swal.fire({ type: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
+                    $('#btn_der').prop('disabled', false);
+                    $('#mod_cat_derechos').modal('hide');
+                    fn_listar_derecho();
+                }
+                else {
+                    Swal.fire({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
+                    $('#btn_der').prop('disabled', false);
+                    return false;
+                }
+            })
+        }
+        else
+            $('#btn_der').prop('disabled', false);
+    })
+}
+function fn_eliminar_derecho(id, derecho) {
+    swal.fire({
+        title: '¿Estás seguro?',
+        text: 'El derecho ' + derecho + ' será eliminado',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, Eliminar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.value) {
+            datos = { accion: 'fn_eliminar_derechos', id: id, derecho: derecho };
+
+            $.ajax({
+                url: "../controllers/fun_catalogos.php",
+                type: "POST",
+                data: datos
+            }).done(function (res) {
+
+                if (res.estatus == 'ok') {
+                    Swal.fire({ type: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
+                    var tabla = $('#tbl_der').DataTable();
+                    fn_listar_derecho();
+
+                }
+                else {
+                    Swal.fire({ type: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
+                    $('#btn_der').prop('disabled', false);
+                    return false;
+                }
+            })
+        }
+        else
+            $('#btn_der').prop('disabled', false);
+    })
+} 

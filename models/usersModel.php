@@ -1,10 +1,10 @@
 <?php
 
-    session_start();
+session_start();
 
 class UserModel
 {
-    public function getUsuarios() {
+    public function getUsuarios(){
 
         include_once "../config/class.pdo.php";
 
@@ -68,10 +68,11 @@ class UserModel
 
         $conexion = new Conexion();
         $conexion->conectar();
+        
 
         try {
 
-            $sqlQuery = "SELECT id_usuario, nombre, apellidos, departamento, usuario, email, imagen, estado, perfil FROM usuarios WHERE estado = 1 AND id_usuario = :id_usuario";
+            $sqlQuery = "SELECT id_usuario, nombre, apellidos, departamento, usuario, email, imagen, estado, perfil, rol_id FROM usuarios WHERE estado = 1 AND id_usuario = :id_usuario";
 
             $stmt = $conexion->dbh->prepare($sqlQuery);
             $stmt->bindParam(":id_usuario", $data['id_usuario']);
@@ -99,7 +100,8 @@ class UserModel
     public function crearUsuario($data) {
 
         include_once "../config/class.pdo.php";
-       
+
+
         $conexion = new Conexion();
         $conexion->conectar();
 
@@ -122,9 +124,10 @@ class UserModel
             $usuario        = $_POST['usuario'];
             $contrasena     = $cont;
             $email          = $_POST['email'];
+            $rol            = (int)$_POST['rol_usuario'];
 
-            $sqlQuery = "INSERT INTO usuarios (nombre, apellidos, departamento, usuario, contrasena, email, imagen) 
-                         VALUES (:nombre, :apellidos, :departamento, :usuario, :contrasena, :email, :imagen)";
+            $sqlQuery = "INSERT INTO usuarios (nombre, apellidos, departamento, usuario, contrasena, email, imagen, rol_id) 
+                         VALUES (:nombre, :apellidos, :departamento, :usuario, :contrasena, :email, :imagen, :rol_id)";
 
             $stmt = $conexion->dbh->prepare($sqlQuery);
             $stmt->bindParam(":nombre", $nombre);
@@ -134,6 +137,7 @@ class UserModel
             $stmt->bindParam(":contrasena", $contrasena);
             $stmt->bindParam(":email", $email);
             $stmt->bindParam(':imagen', $imagen);
+            $stmt->bindParam(':rol_id', $rol);
 
             $stmt->execute();
 
@@ -169,7 +173,7 @@ class UserModel
                 $imagen = $_POST["img_user"];
             }
 
-            $sqlQuery = "UPDATE usuarios SET nombre=:nombre, apellidos=:apellidos, departamento=:departamento, usuario=:usuario, email=:email, imagen=:imagen WHERE id_usuario=:id";
+            $sqlQuery = "UPDATE usuarios SET nombre=:nombre, apellidos=:apellidos, departamento=:departamento, usuario=:usuario, email=:email, rol_id=:rol_id imagen=:imagen WHERE id_usuario=:id";
 
             $stmt = $conexion->dbh->prepare($sqlQuery);
 
@@ -179,13 +183,14 @@ class UserModel
             $stmt->bindParam(':usuario', $_POST["usuario"]);
             $stmt->bindParam(':email', $_POST["email"]);
             $stmt->bindParam(':imagen', $imagen);
+            $stmt->bindParam(':rol_id', $_POST["rol_id"]);
             $stmt->bindParam(':id', $_POST["id_usuario"]);
 
             $stmt->execute();
 
             $arreglo = array(
                 "estatus"   => 200,
-                "lastId" => 1,
+                "lastId"    => 1,
                 "imagen"    => $imagen,
                 "message"   => "Usuario Actualizado Correctamente"
             );
@@ -199,7 +204,7 @@ class UserModel
         echo json_encode($arreglo);
     }
 
-    public function eliminarUsuario($data) {
+    public function eliminarUsuario($data){
         include_once "../config/class.pdo.php";
 
         $conexion = new Conexion();
@@ -236,7 +241,7 @@ class UserModel
 
         try {
 
-            $sqlQuery = "SELECT id_usuario, nombre, apellidos, departamento, usuario, imagen, contrasena, estado, perfil FROM usuarios WHERE estado = 1 AND usuario = :usuario AND contrasena = :pass";
+            $sqlQuery = "SELECT id_usuario, nombre, apellidos, departamento, usuario, imagen, contrasena, estado,rol_id, perfil FROM usuarios WHERE estado = 1 AND usuario = :usuario AND contrasena = :pass";
 
             /* Encripta el acceso antes de buscar en la base de datos */
             $pass = $conexion->criptpass($data['pass']);
@@ -256,7 +261,7 @@ class UserModel
 
                 $picture = empty($results[0]["imagen"]) ? 'avatar.jpg' : $results[0]["imagen"];
 
-                if(session_status() == PHP_SESSION_NONE){
+                if (session_status() == PHP_SESSION_NONE) {
                     session_start();
                 }
 
@@ -266,9 +271,11 @@ class UserModel
                 $_SESSION["apellidos"]     = $results[0]["apellidos"];
                 $_SESSION["departamento"]  = $results[0]["departamento"];
                 $_SESSION["perfil"]        = $results[0]["perfil"];
+                $_SESSION["rol_id"]        = $results[0]["rol_id"];
+
                 $_SESSION["imagen"]        = $picture;
 
-                
+
 
                 $arreglo = array(
                     "estatus"        => 200,
@@ -291,7 +298,44 @@ class UserModel
         echo json_encode($arreglo);
     }
 
-    public function getPerfil() {
+    public function lista_roles()
+    {
+        include_once "../config/class.pdo.php";
+
+        $conexion = new Conexion();
+        $conexion->conectar();
+
+        try {
+
+
+            // Preparar la consulta
+            $stmt = $conexion->dbh->prepare('SELECT * FROM roles');
+            
+            // Ejecutar la consulta
+            $stmt->execute();
+
+            // Recuperar los resultados
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                $arreglo = array(
+                    "estatus"        => 200,
+                    "message"        => "Login Exitoso",
+                    "total"          => count($results),
+                    "data"           => $results
+                );
+            
+        } catch (PDOException $e) {
+
+            $arreglo = array(
+                "estatus"   => 400,
+                "message"   =>  $e->getMessage()
+            );
+        }
+
+        echo json_encode($arreglo);
+    }
+
+    public function getPerfil(){
 
 
         $perfil = $_SESSION["perfil"];
@@ -304,16 +348,19 @@ class UserModel
         echo json_encode($arreglo);
     }
 
-    public function close_sesion() {
-    if(session_status() == PHP_SESSION_NONE){session_start();}
-    session_unset();
-    session_destroy();
+    public function close_sesion()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        session_unset();
+        session_destroy();
 
-    $arreglo = array(
-        "estatus"        => 200,
-        "message"        => "Close Exitoso",
-    );
+        $arreglo = array(
+            "estatus"        => 200,
+            "message"        => "Close Exitoso",
+        );
 
-    echo json_encode($arreglo);
+        echo json_encode($arreglo);
     }
 }

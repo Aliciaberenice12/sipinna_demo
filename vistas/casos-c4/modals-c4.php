@@ -12,9 +12,31 @@
                     <input type="hidden" name="c4_exp_folio" id="c4_exp_folio" value="0">
 
                     <div class="row">
-                        <div class="card">
-                            <div class=" row card-body">
+                        <div class="row col-md-12">
+                            <div class="col-md-6">
                                 <h4><strong>Rellene los siguientes campos</strong></h4>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="estatus">
+                                    <strong>Estatus del caso:</strong>
+                                </label>
+                                <div class="btn-group" role="group" aria-label="Boton Estatus">
+
+                                    <input type="radio" class="btn-check" name="c4_estatus_caso" id="pendiente_c4" value="Pendiente" autocomplete="off">
+                                    <label class="btn btn-recepcion" for="pendiente_c4">Pendiente</label>
+
+                                    <input type="radio" class="btn-check" name="c4_estatus_caso" id="en_proceso_c4" value="En proceso" autocomplete="off">
+                                    <label class="btn btn-recepcion" for="en_proceso_c4">En proceso</label>
+
+                                    <input type="radio" class="btn-check" name="c4_estatus_caso" id="concluido_c4" value="Concluido" autocomplete="off">
+                                    <label class="btn btn-recepcion" for="concluido_c4">Concluido</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+
+                            <div class=" row card-body">
+
                                 <div class="col-md-2">
                                     <label for="c4_codigo">Codigo *</label>
                                     <input class="form-control" name="c4_codigo" id="c4_codigo" placeholder="Codigo *" rows="1">
@@ -34,7 +56,11 @@
                                 <div class="col-md-4">
                                     <label for="c4_ruta_sol_oficio">Archivo Solicitud de Canalización:</label>
                                     <input type="file" class="form-control" id="c4_ruta_sol_oficio" name="c4_ruta_sol_oficio" accept="image/*">
+                                    <div id="imagen_c4">
+                                        <span class="" id="imagen_subida_c4"></span>
+                                    </div>
                                 </div>
+
                                 <div class="col-md-3">
                                     <label for="c4_fecha_inicio">Fecha:</label>
                                     <input type="date" class="form-control" placeholder="Fecha" id="c4_fecha_inicio" name="c4_fecha_inicio">
@@ -322,7 +348,7 @@
             <div class="modal-header bg-secondary">
                 <h5 class="modal-title" id="tit_mod_victima_c4" style="color:white;">Agregar Victima</h5>
             </div>
-            
+
             <div class="row modal-body">
                 <div>
                     <div class="col-md-12">
@@ -406,13 +432,13 @@
                             <label for="masculino_edit">Masculino</label><br>
                             <input type="radio" id="femenino_edit" name="c4_sexo_victima_edit" value="Femenino">
                             <label for="femenino_edit">Femenino</label><br>
-                            <input type="radio" id="n_i_edit" name="c4_sexo_victima_edit" value="N/I" >
+                            <input type="radio" id="n_i_edit" name="c4_sexo_victima_edit" value="N/I">
                             <label for="n_i_edit">N/I</label>
 
                         </div>
 
                     </div>
-                  
+
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
@@ -421,7 +447,7 @@
                 </button>
                 <button type="button" class="btn btn-success" onclick="fun_editar_victima_c4();">Agregar</button>
             </div>
- 
+
         </div>
     </div>
 </div>

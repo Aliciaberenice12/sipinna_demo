@@ -1,11 +1,13 @@
 <?php
-if(session_status() == PHP_SESSION_NONE){session_start();}
-
-if(isset($_SESSION['nombre'])){
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if (isset($_SESSION['nombre'])) {
     $user = $_SESSION['nombre'];
-}else{
+} else {
     header('location: ../index.php');
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -15,8 +17,9 @@ if(isset($_SESSION['nombre'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Sipinna</title>
+
     <!--CSS-->
-    <link rel="stylesheet" href="../css/sipinna.css"  />
+    <link rel="stylesheet" href="../css/sipinna.css" />
     <link rel="stylesheet" href="../lib/bootstrap-5.2.1-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
     <link rel="stylesheet" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
@@ -48,7 +51,7 @@ if(isset($_SESSION['nombre'])){
             <div class="col-2 offset-10">
                 <div class="text-center">
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalUsuario" id="btnAgregar" > 
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalUsuario" id="btnAgregar">
                         <i class="bi bi-plus-circle-fill"></i> Crear Usuario
                     </button>
                 </div>
@@ -70,14 +73,14 @@ if(isset($_SESSION['nombre'])){
                         <th>Eliminar</th>
                     </tr>
                 </thead>
-                <tbody >
+                <tbody>
                 </tbody>
             </table>
         </div>
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-secondary">
@@ -91,9 +94,9 @@ if(isset($_SESSION['nombre'])){
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="imagen_usuario">Selecciona una imagen</label>
-                                    <input type="file" name="imagen_usuario" id="imagen_usuario" class="form-control"  accept="image*/"><br>
+                                    <input type="file" name="imagen_usuario" id="imagen_usuario" class="form-control" accept="image*/"><br>
                                     <div>
-                                        <span class = "img_formUser"  id="imagen_subida"></span>
+                                        <span class="img_formUser" id="imagen_subida"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -101,8 +104,10 @@ if(isset($_SESSION['nombre'])){
                                     <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Completa el campo..."><br>
                                     <label for="usuario">Usuario</label>
                                     <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Completa el campo..."><br>
-                                    <label for="contrasena">Contraseña</label>
-                                    <input type="text" name="contrasena" id="contrasena" class="form-control" placeholder="Completa el campo..."><br>
+                                    <label for="rol" class="form-label">Rol: </label>
+                                    <select name="rol_usuario" id="rol_usuario" class="form-select" required>
+                                    
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="apellidos">Apellidos</label>
@@ -112,6 +117,16 @@ if(isset($_SESSION['nombre'])){
                                     <label for="email">Correo</label>
                                     <input type="email" name="email" id="email" class="form-control" placeholder="Completa el campo..."><br>
                                 </div>
+                                <div class="col-md-4">
+
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="contrasena">Contraseña</label>
+                                    <input type="password" name="contrasena" id="contrasena" class="form-control" placeholder="Completa el campo..."><br>
+                                    <label for="contrasena"> Repite Contraseña</label>
+                                    <input type="password" name="contrasena" id="d_contrasena" class="form-control" placeholder="Completa el campo..."><br>
+
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -119,13 +134,15 @@ if(isset($_SESSION['nombre'])){
                             <input type="hidden" name="operacion" id="operacion">
                             <input type="hidden" name="img_user" id="img_user">
                             <input type="hidden" name="idRow" id="idRow">
-                            <input  name="action" id="action" class="btn btn-success" value="Crear" >
+                            <input name="action" id="action" class="btn btn-success" value="Crear">
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+
 
 
 
@@ -146,3 +163,8 @@ if(isset($_SESSION['nombre'])){
 </body>
 
 </html>
+
+
+
+
+

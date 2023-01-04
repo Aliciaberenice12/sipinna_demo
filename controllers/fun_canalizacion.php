@@ -139,7 +139,7 @@ if (isset($_REQUEST['func'])) {
 					</table>';						
 				}
 				else
-					$html='<br><div class="alert alert-secondary textmd" align="center"><b>No hay datos</b></div>';
+					$html='<br><div class="alert alert-secondary textmd" align="center"><b>No hay datos de victimas por registrar</b></div>';
 
 				echo $html;
 			}
@@ -151,7 +151,7 @@ if (isset($_REQUEST['func'])) {
 			{
 				if(isset($_SESSION['victima']) and !empty($_SESSION['victima']))
 				{	
-					$estatus= $v->insertar_victima_can($_SESSION["nombre"]);
+					// $estatus= $v->insertar_victima_can($_SESSION["nombre"]);
 					
 				}
 				else
@@ -166,9 +166,9 @@ if (isset($_REQUEST['func'])) {
 			 	$_REQUEST["can_per_indigena_edit"],$_REQUEST["can_per_transgenero_edit"],$_REQUEST["can_sexo_victima_edit"],
 				$_SESSION["nombre"]);
 
-				
-				 $estatus2 = $v->editar_delito_victima_can($_REQUEST["id_can_del_victima_edit"],$_REQUEST["can_delito_edit"],$_SESSION["nombre"]);
-				 $estatus3 = $v->editar_derecho_victima_can($_REQUEST["id_can_der_victima_edit"],$_REQUEST["can_der_vul_vic_edit"],$_SESSION["nombre"]);
+				$estatus2 = $v->editar_delito_victima_can($_REQUEST["id_can_del_victima_edit"],$_REQUEST["can_delito_edit"],$_SESSION["nombre"]);
+				 
+				$estatus3 = $v->editar_derecho_victima_can($_REQUEST["id_can_der_victima_edit"],$_REQUEST["can_der_vul_vic_edit"],$_SESSION["nombre"]);
 			}
 			
 			header('Content-Type: application/json');
@@ -211,7 +211,7 @@ if (isset($_REQUEST['func'])) {
 				$html =
 					'
 				<center>
-					<h2>¡ No hay datos !</h2>
+					<h2>¡ No hay datos de victimas !</h2>
 
 				</center>';
 			} else {
@@ -335,81 +335,6 @@ if (isset($_REQUEST['func'])) {
 	
 	
 	
-		case 'fn_listar_reportantes':
-			$arr_res = $v->lista_reportantes($_POST["folio_exp"]);
-
-			$size    = sizeof($arr_res);
-
-			if (empty($arr_res)) {
-				$html =
-					'
-				<center>
-					<h2>¡ No hay datos !</h2>
-				</center>';
-			} else {
-				$html = '  
-				<div class="row">
-					<div class="col-12">
-						<table id="tbl_reportados" class="table">
-							<thead class="tbl-estadisticas">
-							<tr align="center">
-								<th>
-									Institución Reportante
-								</th>
-								<th>
-									Nombre Reportante
-								</th>
-								
-								<th>
-									Acciones
-								</th>
-								
-							</tr>
-							</thead>
-							<tbody>';
-				foreach ($arr_res as $row) {
-					$session  = 3;
-					
-					$html .= '
-								<tr class="text-11" align="center" id="lreportantes' . $row["id_reportante"] . '">
-									<div class="row">
-										<td class="col-md-2">
-											<div>
-											
-											' . $row["can_inst_reportante"] . '
-											</div>
-										</td>
-										<td class="col-md-2">
-											<div>
-											' . $row["can_nom_reportante"] . '
-											</div>
-										</td>
-										
-										<td class="col-md-2">								
-											<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(5,' . $row["id_reportante"] . ');">
-												<i class="bi bi-pencil-square"></i>
-												<span></span>
-											</button>
-										</td>   
-												
-									</div>
-								</tr>';
-				}
-				$html .= '
-							</tbody>
-						</table>
-					</div>
-				</div>';
-			}
-			echo $html;
-			break;
-			
-		
-
-		
-		
-			
-		//Canalizacion Reportante
 		case 'fun_guardar_delito_victima':
 			if($_REQUEST["id"]=='0')
 			{		
@@ -424,12 +349,20 @@ if (isset($_REQUEST['func'])) {
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
 			break;
+				
+		
+
+		
+		
+			
+	
+		//Canalizacion Reportante
 		case 'fn_guardar_reportante':
 			if($_REQUEST["id"]=='0')
 			{
 				if(isset($_SESSION['reportante']) and !empty($_SESSION['reportante']))
 				{	
-					$estatus= $v->insertar_reportante($_SESSION["nombre"]);	
+					// $estatus= $v->insertar_reportante($_SESSION["nombre"]);	
 				}
 				else
 				{
@@ -505,7 +438,7 @@ if (isset($_REQUEST['func'])) {
 					</table>';						
 				}
 				else
-					$html='<br><div class="alert alert-secondary textmd" align="center"><b>No hay datos</b></div>';
+					$html='<br><div class="alert alert-secondary textmd" align="center"><b>No hay datos de Reportantes por registar</b></div>';
 
 				echo $html;
 			}
@@ -513,9 +446,80 @@ if (isset($_REQUEST['func'])) {
 			
 			break;
 		
+		case 'fn_listar_reportantes':
+			$arr_res = $v->lista_reportantes($_POST["folio_exp"]);
+
+			$size    = sizeof($arr_res);
+
+			if (empty($arr_res)) {
+				$html =
+					'
+				<center>
+				
+					<h2>¡ No hay datos de reportantes!</h2>
+				</center>';
+			} else {
+				$html = '  
+				<div class="row">
+					<div class="col-12">
+						<table id="tbl_reportados" class="table">
+							<thead class="tbl-estadisticas">
+							<tr align="center">
+								<th>
+									Institución Reportante
+								</th>
+								<th>
+									Nombre Reportante
+								</th>
+								
+								<th>
+									Acciones
+								</th>
+								
+							</tr>
+							</thead>
+							<tbody>';
+				foreach ($arr_res as $row) {
+					$session  = 3;
+					
+					$html .= '
+								<tr class="text-11" align="center" id="lreportantes' . $row["id_reportante"] . '">
+									<div class="row">
+										<td class="col-md-2">
+											<div>
+											
+											' . $row["can_inst_reportante"] . '
+											</div>
+										</td>
+										<td class="col-md-2">
+											<div>
+											' . $row["can_nom_reportante"] . '
+											</div>
+										</td>
+										
+										<td class="col-md-2">								
+											<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(5,' . $row["id_reportante"] . ');">
+												<i class="bi bi-pencil-square"></i>
+												<span></span>
+											</button>
+										</td>   
+												
+									</div>
+								</tr>';
+				}
+				$html .= '
+							</tbody>
+						</table>
+					</div>
+				</div>';
+			}
+			echo $html;
+			break;
+			
 		case'fn_reportante':
 			unset($_SESSION['reportante']);
 			unset($_SESSION['victima']);
+			
 			break;
 		
 		
@@ -523,7 +527,7 @@ if (isset($_REQUEST['func'])) {
 		case 'fn_guardar_solicitante':
 			if($_REQUEST["id"]=='0')
 			{
-				$estatus = $v->insertar_solicitante($_REQUEST["can_inst_sol"], $_REQUEST["can_nom_sol"],$_SESSION["nombre"]);
+				// $estatus = $v->insertar_solicitante($_REQUEST["can_inst_sol"], $_REQUEST["can_nom_sol"],$_SESSION["nombre"]);
 			}
 			else
 			{
@@ -538,8 +542,8 @@ if (isset($_REQUEST['func'])) {
 		case 'fn_guardar_caso_reportado':
 			if($_REQUEST["id"]=='0')//Nuevo Caso
 			{
-				$estatus = $v->insertar_caso_reportado($_REQUEST["can_des_suncita_rep"],
-				 $_REQUEST["can_ges_reporte"], $_REQUEST["ins_con_hechos"],$_SESSION["nombre"]);
+				// $estatus = $v->insertar_caso_reportado($_REQUEST["can_des_suncita_rep"],
+				//  $_REQUEST["can_ges_reporte"], $_REQUEST["ins_con_hechos"],$_SESSION["nombre"]);
 
 			}
 			else
@@ -619,14 +623,10 @@ if (isset($_REQUEST['func'])) {
 					$nom_archivo_can    = $folio_img . '_' . rand() . '.' . $extension;
 					$upload_folder  = '../images/canalizacion/';
 					$archivador     = $upload_folder . $nom_archivo_can;
-
+					$nom_gd=$nom_archivo_can;
 					if (compressImage($tmp_archivo, $archivador, 30)) {
-						$estatus = $v->insertar_canalizacion(	
-							$nom_archivo_can,$_REQUEST["can_num_oficio"],$_REQUEST["can_folio"],$_REQUEST["can_numero"], 
-							$_REQUEST["can_fecha"], $_REQUEST["can_pais"], $_REQUEST["can_estado"],
-							$_REQUEST["can_municipio"],$_REQUEST["can_mun_edo"],$_REQUEST["can_via_rec"],
-							$_SESSION["nombre"]
-						);
+						$datos_expediente=$_POST;
+						$estatus = $v->insertar_canalizacion($nom_gd,$datos_expediente);
 						if ($estatus == 'error_registro') {
 							if (file_exists($archivador));
 							unlink($archivador);
@@ -640,8 +640,14 @@ if (isset($_REQUEST['func'])) {
 				$estatus = $v->editar_canalizacion($_REQUEST["id"]
 				, $_REQUEST["can_via_rec"], $_REQUEST["can_numero"], $_REQUEST["can_folio"], $_REQUEST["can_pais"]
 				, $_REQUEST["can_num_oficio"], $_REQUEST["can_fecha"], $_REQUEST["can_estado"]
-				, $_REQUEST["can_municipio"], $_REQUEST["can_mun_edo"]
-			);
+				, $_REQUEST["can_municipio"], $_REQUEST["can_mun_edo"],$_REQUEST["estatus_expediente"],$_SESSION["nombre"]
+				);
+				$estatus2 = $v->editar_caso_reportado($_REQUEST["id_caso"],$_REQUEST["can_des_suncita_rep"], $_REQUEST["can_ges_reporte"],
+				$_REQUEST["ins_con_hechos"],$_SESSION["nombre"]);
+
+				$estatus3 = $v->editar_solicitante($_REQUEST["id_solicitante"],$_REQUEST["can_inst_sol"], $_REQUEST["can_nom_sol"],$_SESSION["nombre"]);
+
+
 
 
 			header('Content-Type: application/json');
@@ -658,7 +664,7 @@ if (isset($_REQUEST['func'])) {
 				$html =
 					'
 				<center>
-					<h2>¡ No hay datos !</h2>
+					<h2>¡ No hay datos Registrados !</h2>
 				</center>';
 			} else {
 				$html = '  
@@ -688,6 +694,9 @@ if (isset($_REQUEST['func'])) {
 								</th>
 								<th>
 									Acciones
+								</th>
+								<th>
+									Avance
 								</th>
 								
 							</tr>
@@ -747,9 +756,16 @@ if (isset($_REQUEST['func'])) {
 													<i class="bi bi-trash"></i>
 													<span></span>
 												</button>
+												
 											
 											</div>
 										</td>   
+										<td class="col-md-1">
+											<button type="button" class="btn btn-sm btn-secondary " aria-label="Avance Canalizacion" onclick="fn_modal_avance(1,\'' . $row["can_folio_expediente"] . '\',0);">
+												<i class="bi bi-eye"></i>
+												<span></span>
+											</button>
+										</td>
 										        
 									</div>
 								</tr>';
@@ -784,6 +800,9 @@ if (isset($_REQUEST['func'])) {
 					'can_via_rec'       => $row["can_via_rec"],
 					'can_folio_expediente'=> $row["can_folio_expediente"],
 					'can_ruta_sol_oficio'=>$row["can_ruta_sol_oficio"],
+					'estatus_expediente'=>$row["estatus_expediente"],
+
+					
 				);
 				echo json_encode($datos, JSON_FORCE_OBJECT);
 			}
@@ -824,47 +843,40 @@ if (isset($_REQUEST['func'])) {
 				);
 				echo json_encode($datos, JSON_FORCE_OBJECT);
 			}
-			break;
-					
-				
-					
-			
-		
-		
-		
+			break;	
 		
 		//Avances 
 		case 'fn_guardar_avance':
 			if ($_REQUEST['id'] == 0) // nuevo registro
-				$estatus = $v->insertar_avance($_REQUEST["can_tipo_avance"], $_REQUEST["can_fecha_avance"], $_REQUEST["can_estatus_avance"], $_REQUEST["can_desc_avance"]);
+				$estatus = $v->insertar_avance($_REQUEST["can_fecha_avance"],$_REQUEST["can_desc_avance"],$_SESSION["nombre"],$_REQUEST["folio_can"]);
 			else
-				$estatus = $v->editar_avance($_REQUEST["id"], $_REQUEST["can_tipo_avance"], $_REQUEST["can_fecha_avance"], $_REQUEST["can_estatus_avance"], $_REQUEST["can_desc_avance"]);
+				$estatus = $v->editar_avance($_REQUEST["id"], $_REQUEST["can_fecha_avance"],  $_REQUEST["can_desc_avance"],$_REQUEST["folio_can"],$_SESSION["nombre"]);
 
 			header('Content-Type: application/json');
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
 			break;
 		case 'fn_eliminar_avance':
-			$estatus = $v->eliminar_avance($_REQUEST["id"], $_REQUEST["can_tipo_avance"]);
+			$estatus = $v->eliminar_avance($_REQUEST["id"], $_REQUEST["can_desc_avance"]);
 			header('Content-Type: application/json');
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
 			break;
 		case 'fn_obtener_avance':
-			$arr_res = $v->obtener_avance($_REQUEST["id"]);
+			$arr_res = $v->obtener_avance($_REQUEST["id_avance"]);
 			foreach ($arr_res as $row) {
 				header('Content-Type: application/json');
 				$datos = array(
-					'can_tipo_avance'	=> $row["can_tipo_avance"],
 					'can_fecha_avance'	=> $row["can_fecha_avance"],
-					'can_estatus_avance' => $row["can_estatus_avance"],
 					'can_desc_avance'	=> $row["can_desc_avance"],
+					'can_exp_folio_avance'	=> $row["can_exp_folio_avance"],
+
 				);
 				echo json_encode($datos, JSON_FORCE_OBJECT);
 			}
 			break;
 		case 'fn_listar_avances':
-			$arr_res = $v->lista_avances();
+			$arr_res = $v->lista_avances($_POST["folio_exp"]);
 
 			$size    = sizeof($arr_res);
 
@@ -877,22 +889,18 @@ if (isset($_REQUEST['func'])) {
 			} else {
 				$html = '  
 				<div class="row">
-					<div class="col-12" align="left">
-						<table id="tbl_avances" class="table table-hover table-striped table-sm table-responsive-sm">
+					<div class="col-12">
+						<table id="tbl_avances" class="table-hover">
 							<thead class="tbl-estadisticas">
-							<tr align="center">
-								<th>
+							<tr class="text-11" align="center">
+								<th align="center">
 									Fecha Avance
 								</th>
-								<th>
-									Tipo Avance
-								</th>
+							
 								<th>
 									Descripción avance
 								</th>
-								<th>
-									Estatus
-								</th>
+								
 								<th>
 									Acciones
 								</th>
@@ -906,50 +914,31 @@ if (isset($_REQUEST['func'])) {
 								<tr class="text-11" align="center" id="l_avance' . $row["id_can_avance"] . '">
 									<div class="row">
 										<td>
-										<div class="col-md-5">
-											' . $row["id_can_avance"] . '
-											</div>
-											<div class="col-md-5">
+											<div class="col-md-4">
 											' . $row["can_fecha_avance"] . '
 											</div>
 										</td>
+										
 										<td>
-											<div class="col-md-3">
-											' . $row["can_tipo_avance"] . '
-											</div>
-										</td>
-										<td>
-											<div class="col-md-3">
+											<div class="col-md-4">
 											' . $row["can_desc_avance"] . '
 											</div>
 										</td>
-										<td>
-											<div class="col-md-3">
-											
-											' . $row["can_estatus_avance"] . '
-											</div>
-										</td>
-								
 			
 										<td>
-
-										
-											<div class="col-md-3">
-											
-												<button type="button" class="btn btn-primary" aria-label="Editar Canalizacion" onclick="fn_modal_avance(3,'.$row["id_can_avance"].');">
-													<i class="bi bi-pencil-square"></i>
-													<span></span>
-												</button>
-												<button type="button" class="btn btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_avance(' . $row["id_can_avance"] . ',\'' . $row["can_tipo_avance"] . '\');">
-													<i class="bi bi-trash"></i>
-													<span></span>
-												</button>
+											<div class="row col-md-4">
+												<div class="col-md-6">
+													<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="fn_modal_avance(3,\'' . $row["can_exp_folio_avance"] . '\',' . $row["id_can_avance"] . ');">
+														<i class="bi bi-pencil-square"></i>
+													</button>
+												</div>
+												<div class="col-md-6">
+													<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_avance(' . $row["id_can_avance"] . ',\'' . $row["can_desc_avance"] . '\');">
+														<i class="bi bi-trash"></i>
+													</button>	
+												</div>
 											</div>
-										</td>   
-										
-
-									
-										</td>           
+										</td>            
 									</div>
 								</tr>';
 				}

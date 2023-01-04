@@ -62,6 +62,14 @@ body {
     width: 75%;
     
 }
+.h2-titulo-index{
+    text-align: justify;
+    color: #590F0F;
+    font-size: 2.5em;
+    margin: 1rem 1.5em;
+    width: 75%;
+    
+}
 
 footer {
     background-color: #626262;
@@ -87,7 +95,11 @@ footer {
     margin: 1em;
     align-items: right;
 }
+.imagen_can_div{
+    height: 10em;
+    margin: 1em;
 
+}
 
 
 
@@ -110,7 +122,9 @@ footer {
 }
 .tbl-estadisticas {
     background-color: #626262;
-    color: white;}
+    color: white;
+
+}
 
 .button-bars {
     position: absolute;
@@ -122,13 +136,9 @@ footer {
     transition: left 0.5s ease;
     left: 1px;
 }
+
 /* Titulo */
-.div-al {
-    /* border-bottom: 1px solid rgba(85, 85, 85, 0.089); */
-/*     -webkit-box-shadow: 0px 3px 3px -3px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 3px 3px -3px rgba(0,0,0,0.75);
-    box-shadow: 0px 3px 3px -3px rgba(0,0,0,0.75); */
-}
+
 
 /* Container */
 
@@ -298,7 +308,8 @@ td .eliminar_:hover {
     visibility: visible;
     transition: left 0.4s ease;
     align-items: flex-start;
-    overflow-x: scroll;
+    overflow-y: auto;
+
     z-index: 1000;
 
 
@@ -341,11 +352,7 @@ td .eliminar_:hover {
         box-shadow: 2px 3px 6px -2px #97552d;
     }
 
-    .img-log {
-        height: 2.2em;
-        margin: 2em 0em;
-        align-items: right;
-    }
+    
 
     .h2-titulo {
         text-align: justify;

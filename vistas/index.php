@@ -26,8 +26,7 @@ if (isset($_SESSION['nombre'])) {
     <div class="div-al row col-md-12">
 
         <div class="col-md-8">
-            <h2 class="h2-titulo-canalizacion">Canalización de Casos de Posibles Afectaciones a los Derechos de NNA
-                recibidas en la Secretaría Ejecutiva del SIPINNA Estatal
+            <h2 class="h2-titulo-index">Index
             </h2>
         </div>
 
@@ -45,34 +44,7 @@ if (isset($_SESSION['nombre'])) {
     <input type="hidden" id="hoy" value="<?php echo date('Y-m-d'); ?>">
     <!--Container -->
     <div class="container-fluid">
-        <div class="row">
-            <div class="table-responsive col-md-12">
-                <div class="row col-md-12">
-                    <div class="col-md-6">
-                        <h3></h3>
-                    </div>
-                    <div class="col-md-6" align="right">
-                        <button type="button" class="btn btn-success" onclick="mod_canalizacion(1,0)">
-                            <i class="bi bi-plus-circle"></i> Crear canalización
-                        </button>
-
-                        <!-- <?php $session  = 3;
-                                echo ($session == 3 ? 'success' : 'warning');  ?> -->
-
-                        <button type="button" class="btn btn-success hint--top" aria-label="actualizar_canalizaciones" id="actualizar_canalizaciones" onclick="fn_listar_canalizaciones();">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                        
-                    </div>
-                </div>
-
-                <br>
-                <div id="ver_lista_canalizaciones"></div>
-            </div>
-        </div>
-        <br></br>
-        <br></br>
-
+       
     </div>
     <?php include("../layout/footer.php"); ?>
 

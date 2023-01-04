@@ -196,7 +196,6 @@ if(isset($_SESSION['nombre'])){
     <script src="../lib/swetalert/sweetalert2.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../lib/jquery.min.js"></script>
-    <script src="../lib/datatables/jquery.dataTables.min.js"></script>
     <script src="../js/funciones.js"></script>
 
 </body>

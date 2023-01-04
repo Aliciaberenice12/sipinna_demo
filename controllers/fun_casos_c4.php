@@ -192,7 +192,7 @@ if (isset($_REQUEST['func'])) {
 												'.$res_der_vul.'.<br>
 												
 											</div>
-											<div class="col-lg-2 col-sm-2 col-12 margin5">
+											<div class="col-lg-2 col-sm-2 col-12 margin5" align="left">
 										
 												' . ( $row["c4_per_tercera_edad"] == "1" ? "■ Otros (personas de la tercera edad).<br>" : ""). '
 												' . ( $row["c4_per_discapacidad"] == "1" ? "■ Persona con alguna discapacidad.<br>":""). '
@@ -405,10 +405,6 @@ if (isset($_REQUEST['func'])) {
 					'c4_delito'=>$row["c4_delito"],
 					'id_c4_derecho'=>$row["id_c4_derecho"],
 					'c4_der_vul_victima'=>$row["c4_der_vul_victima"],
-
-
-
-
 				);
 				echo json_encode($datos, JSON_FORCE_OBJECT);
 			}
@@ -610,7 +606,7 @@ if (isset($_REQUEST['func'])) {
 											<div class="col-lg-3 col-sm-3 col-12 margin5">
 												'.$row["c4_edad_responsable"].'
 											</div>
-											<div class="col-lg-3 col-sm-3 col-12 margin5" align="left">
+											<div class="col-lg-3 col-sm-3 col-12 margin5">
 											'.$ress_pro_resp.'
 											</div>
 
@@ -814,16 +810,13 @@ if (isset($_REQUEST['func'])) {
 					$tmp_archivo    = $_FILES['archivo']['tmp_name'];
 					$ext            = explode(".", $_FILES['archivo']['name']);
 					$extension      = end($ext);
-					$nom_archivo    = $folio_img . '_' . rand() . '.' . $extension;
+					$nom_archivo_c4    = $folio_img . '_' . rand() . '.' . $extension;
 					$upload_folder  = '../images/casos_c4/';
-					$archivador     = $upload_folder . $nom_archivo;
+					$archivador     = $upload_folder . $nom_archivo_c4;
 
 					if (compressImage($tmp_archivo, $archivador, 30)) {
-						$estatus = $v->fn_registrar_caso_c4($_REQUEST["c4_codigo"],$_REQUEST["c4_folio"],$_REQUEST["c4_numero"],
-						$_REQUEST["c4_no_oficio"], $nom_archivo,$_REQUEST["c4_fecha_inicio"], $_REQUEST["c4_pais"], 
-						$_REQUEST["c4_edo"], $_REQUEST["c4_mun"], $_REQUEST["c4_mun_edo"],
-						$_REQUEST["c4_dirigido"],$_REQUEST["c4_dg"],$_SESSION["nombre"]
-					);
+						$datos_exp_c4=$_POST;
+						$estatus = $v->fn_registrar_caso_c4($nom_archivo_c4,$datos_exp_c4);
 						if ($estatus == 'error_registro') {
 							if (file_exists($archivador));
 							unlink($archivador);
@@ -831,16 +824,22 @@ if (isset($_REQUEST['func'])) {
 					} else
 						$estatus = 'error_subida_archivo';
 				}	
-			}else{
+			}else
 				$estatus=$v->editar_caso_c4(
 						$_REQUEST["id"],$_REQUEST["c4_codigo"],$_REQUEST["c4_folio"],$_REQUEST["c4_numero"],
 						$_REQUEST["c4_no_oficio"],$_REQUEST["c4_fecha_inicio"], $_REQUEST["c4_pais"], 
 						$_REQUEST["c4_edo"], $_REQUEST["c4_mun"], $_REQUEST["c4_mun_edo"],
-						$_REQUEST["c4_dirigido"],$_REQUEST["c4_dg"],$_SESSION["nombre"]
+						$_REQUEST["c4_dirigido"],$_REQUEST["c4_dg"],$_REQUEST["c4_estatus_caso"],$_SESSION["nombre"]
 				);
-			}
+				$estatus2=$v->editar_desc_caso_c4(
+					$_REQUEST["id_caso"],$_REQUEST["c4_lugar_hechos"],$_REQUEST["c4_des_hechos"],
+					$_REQUEST["c4_observaciones"],$_SESSION["nombre"]
+				);
+			
 
-			echo json_encode(['estatus' => $estatus]);
+			header('Content-Type: application/json');
+			$datos = array('estatus' => $estatus);
+			echo json_encode($datos, JSON_FORCE_OBJECT);
 			break;
 		
 		case 'fn_listar_casos_c4':
@@ -925,14 +924,16 @@ if (isset($_REQUEST['func'])) {
 										<td>								
 											<div >
 											
-												<button type="button" class="btn btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
+												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
 													<i class="bi bi-pencil-square"></i>
 													<span></span>
 												</button>
-												<button type="button" class="btn btn-danger " aria-label="Eliminar Canalizacion"  onclick="mensaje(1);">
+												
+												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_caso_c4(' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
 													<i class="bi bi-trash"></i>
 													<span></span>
 												</button>
+											
 											</div>
 										</td>   
 										   
@@ -948,7 +949,7 @@ if (isset($_REQUEST['func'])) {
 			echo $html;
 			break;
 		case 'fn_eliminar_caso_c4':
-			$estatus = $v->eliminar_caso_c4($_REQUEST["id"], $_REQUEST["c4_no_oficio"]);
+			$estatus = $v->eliminar_caso_c4($_REQUEST["id"], $_REQUEST["desc_eliminar_c4"]);
 			header('Content-Type: application/json');
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);

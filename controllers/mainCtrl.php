@@ -69,6 +69,13 @@ class ControllerMain
                 echo $result;
                 break;
 
+            case 'obtener_roles':
+                include_once "../models/usersModel.php";                
+                $objeto = new UserModel();
+                $result = $objeto->lista_roles();
+                echo $result;
+                break;
+
 
             default:
                 $arreglo = array(

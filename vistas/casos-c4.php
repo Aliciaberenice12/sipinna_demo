@@ -54,6 +54,7 @@ if(isset($_SESSION['nombre'])){
                         </button>
                     </div>
                 </div>
+                <br>
                 <div class="card-body">
                     <div id="ver_lista_casos_c4"></div>
                 </div>
