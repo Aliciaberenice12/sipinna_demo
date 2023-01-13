@@ -56,6 +56,7 @@ if (isset($_SESSION['nombre'])) {
                             <i class="bi bi-plus-circle"></i> Crear canalización
                         </button>
 
+
                         <!-- <?php $session  = 3;
                                 echo ($session == 3 ? 'success' : 'warning');  ?> -->
 

@@ -321,7 +321,6 @@ CREATE TABLE IF NOT EXISTS `cat_parentescos` (
 -- Volcando datos para la tabla sipinna.cat_parentescos: ~94 rows (aproximadamente)
 /*!40000 ALTER TABLE `cat_parentescos` DISABLE KEYS */;
 INSERT INTO `cat_parentescos` (`id_parentesco`, `parentesco`) VALUES
-	(0, 'Se desconoce'),
 	(1, 'esposa'),
 	(2, 'esposo'),
 	(3, 'hija'),
@@ -415,7 +414,8 @@ INSERT INTO `cat_parentescos` (`id_parentesco`, `parentesco`) VALUES
 	(91, 'sobrina segunda'),
 	(92, 'sobrino segundo'),
 	(93, 'sobrinastra segunda'),
-	(94, 'sobrinastro segundo');
+	(94, 'sobrinastro segundo'),
+	(95, 'Se desconoce');
 /*!40000 ALTER TABLE `cat_parentescos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla sipinna.cat_tipos_delitos
@@ -450,20 +450,21 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `idRol` int(11) NOT NULL AUTO_INCREMENT,
   `rol` varchar(250) NOT NULL,
   PRIMARY KEY (`idRol`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 -- Volcando datos para la tabla sipinna.roles: ~3 rows (aproximadamente)
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` (`idRol`, `rol`) VALUES
 	(1, 'Administrador'),
 	(2, 'Capturista'),
-	(3, 'Supervisor');
+	(3, 'Supervisor'),
+	(4, 'Historico');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
 -- Volcando estructura para tabla sipinna.tbl_c4_delitos_victimas
 CREATE TABLE IF NOT EXISTS `tbl_c4_delitos_victimas` (
   `id_c4_delito_victima` int(11) NOT NULL AUTO_INCREMENT,
-  `c4_delito` int(11) DEFAULT NULL,
+  `c4_delito` varchar(50) DEFAULT NULL,
   `c4_exp_folio_delito` varchar(50) DEFAULT NULL,
   `c4_id_victima` int(11) DEFAULT NULL,
   `c4_created_by` varchar(50) DEFAULT NULL,
@@ -518,22 +519,22 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_desc_casos` (
 -- Volcando estructura para tabla sipinna.tbl_c4_expedientes
 CREATE TABLE IF NOT EXISTS `tbl_c4_expedientes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `c4_codigo` varchar(50) DEFAULT NULL,
+  `id_c4_anio` int(11) NOT NULL,
   `c4_folio` varchar(50) DEFAULT NULL,
   `c4_numero` varchar(150) DEFAULT NULL,
   `c4_no_oficio` varchar(150) DEFAULT NULL,
   `c4_ruta_sol_oficio` varchar(150) DEFAULT NULL,
   `c4_fecha_inicio` date DEFAULT NULL,
   `c4_pais` varchar(50) NOT NULL,
-  `id_estado` int(11) NOT NULL,
-  `c4_mun` varchar(50) DEFAULT NULL,
-  `c4_mun_edo` varchar(50) DEFAULT NULL,
+  `c4_otros_estados` varchar(100) NOT NULL DEFAULT '0',
+  `id_estado` varchar(50) NOT NULL DEFAULT '0',
+  `c4_mun` varchar(50) NOT NULL DEFAULT '0',
+  `c4_mun_edo` varchar(50) NOT NULL DEFAULT '0',
   `c4_dirigido` varchar(2000) DEFAULT NULL,
   `c4_dg` varchar(2000) DEFAULT NULL,
   `c4_exp_folio` varchar(50) DEFAULT NULL,
   `c4_anio` year(4) DEFAULT NULL,
   `activo` int(11) NOT NULL DEFAULT '1',
-  `c4_estatus_caso` varchar(50) DEFAULT 'En Proceso',
   `c4_date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `c4_created_by` varchar(50) DEFAULT NULL,
   `c4_update_by` varchar(50) DEFAULT NULL,
@@ -567,28 +568,11 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_probable_responsable` (
 /*!40000 ALTER TABLE `tbl_c4_probable_responsable` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tbl_c4_probable_responsable` ENABLE KEYS */;
 
--- Volcando estructura para tabla sipinna.tbl_c4_reportantes
-CREATE TABLE IF NOT EXISTS `tbl_c4_reportantes` (
-  `id_reportante_c4` int(11) NOT NULL AUTO_INCREMENT,
-  `c4_inst_reportante` varchar(50) DEFAULT '0',
-  `c4_nom_reportante` varchar(50) DEFAULT NULL,
-  `c4_exp_folio_reportante` varchar(50) DEFAULT NULL,
-  `c4_reportante_id_caso` int(11) DEFAULT NULL,
-  `c4_update_by` varchar(50) DEFAULT NULL,
-  `c4_created_by` varchar(50) DEFAULT NULL,
-  `c4_created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_reportante_c4`),
-  KEY `fk_c4_rep_fk_c4_des_caso` (`c4_reportante_id_caso`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- Volcando datos para la tabla sipinna.tbl_c4_reportantes: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `tbl_c4_reportantes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_c4_reportantes` ENABLE KEYS */;
-
 -- Volcando estructura para tabla sipinna.tbl_c4_victimas
 CREATE TABLE IF NOT EXISTS `tbl_c4_victimas` (
   `id_victima` int(11) NOT NULL AUTO_INCREMENT,
-  `c4_edad_victima` varchar(50) DEFAULT NULL,
+  `c4_edad_victima` varchar(50),
+  `c4_edad_ms_victima` varchar(50),
   `c4_nom_victima` varchar(50) DEFAULT NULL,
   `c4_num_delitos` int(11) NOT NULL DEFAULT '0',
   `c4_per_tercera_edad` int(11) DEFAULT '0',
@@ -614,7 +598,7 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_victimas` (
 CREATE TABLE IF NOT EXISTS `tbl_can_avances` (
   `id_can_avance` int(11) NOT NULL AUTO_INCREMENT,
   `can_fecha_avance` date DEFAULT NULL,
-  `can_desc_avance` varchar(50) DEFAULT NULL,
+  `can_desc_avance` varchar(300) DEFAULT NULL,
   `can_exp_folio_avance` varchar(50) DEFAULT NULL,
   `can_created_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `can_created_by` varchar(50) NOT NULL,
@@ -651,7 +635,8 @@ CREATE TABLE IF NOT EXISTS `tbl_can_casos_reportados` (
 -- Volcando estructura para tabla sipinna.tbl_can_delitos_victimas
 CREATE TABLE IF NOT EXISTS `tbl_can_delitos_victimas` (
   `id_del_victima` int(11) NOT NULL AUTO_INCREMENT,
-  `can_delito` int(11) DEFAULT NULL,
+  `can_delito` varchar(50) NOT NULL,
+  `can_numero_delitos` int(11) NOT NULL,
   `can_exp_folio_delito` varchar(50) DEFAULT NULL,
   `can_id_victima` int(11) DEFAULT NULL,
   `can_created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -686,7 +671,8 @@ CREATE TABLE IF NOT EXISTS `tbl_can_der_vul_victima` (
 
 -- Volcando estructura para tabla sipinna.tbl_can_expediente
 CREATE TABLE IF NOT EXISTS `tbl_can_expediente` (
-  `id_canalizacion` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_canalizacion` int(11) NOT NULL,
   `can_numero_oficio` varchar(50) DEFAULT NULL,
   `can_folio` varchar(50) DEFAULT NULL,
   `can_numero` varchar(50) DEFAULT NULL,
@@ -705,7 +691,7 @@ CREATE TABLE IF NOT EXISTS `tbl_can_expediente` (
   `can_update_by` varchar(50) DEFAULT NULL,
   `can_created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `descripcion_elimina` varchar(250) DEFAULT NULL,
-  PRIMARY KEY (`id_canalizacion`),
+  PRIMARY KEY (`id`),
   KEY `id_edo_can` (`can_estado`),
   KEY `id_mun_can` (`can_municipio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -789,12 +775,13 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `rol_id` int(11) NOT NULL,
   PRIMARY KEY (`id_usuario`),
   KEY `rol_id` (`rol_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
--- Volcando datos para la tabla sipinna.usuarios: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla sipinna.usuarios: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellidos`, `departamento`, `usuario`, `email`, `contrasena`, `imagen`, `estado`, `perfil`, `rol_id`) VALUES
-	(2, 'admin', 'admin', 'admin', 'admin', 'admin_@gmail.com', '$2a$07$125Rdvlaptdf98112dsrqeZynkQteesBZ08gukO2SDqLxbk8WVlum', '164004759.jpg', 1, 0, 1);
+	(1, 'admin', 'admin', 'admin', 'admin', 'admin', '$2a$07$125Rdvlaptdf98112dsrqe6OQLyNre0JieQ4jGKy4eyouqwSdw99m', 'avatar.jpg', 1, 0, 1),
+	(3, 'historico', 'historico', 'historico', 'historico', 'historico', '$2a$07$125Rdvlaptdf98112dsrqeFm/kemh9.eJZrHOYw11GeBf0vfvKxZe', '1391721160.jpg', 1, 0, 4);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

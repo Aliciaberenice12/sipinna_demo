@@ -14,11 +14,12 @@
                         <div class="row col-md-12">
                             <div class="col-md-6">
                                 <h4><strong>Rellene los siguientes campos</strong></h4>
+                                <small id="helpCamposObligatorios" class="form-text text-muted">*Campos Obligatorios</small>
 
                             </div>
                             <div class="col-md-6">
                                 <label for="estatus">
-                                    <strong>Estatus del caso:</strong>
+                                    <strong>Estatus del caso* </strong>
                                 </label>
                                 <div class="btn-group" role="group" aria-label="Boton Estatus">
 
@@ -39,7 +40,7 @@
                         <div class="card">
                             <div class="row card-body" id="card_can_exp">
                                 <div class="col-md-6">
-                                    <label for="can_via_rec" id="can_via">Vía de Recepción:</label><br>
+                                    <label for="can_via_rec" id="can_via">Vía de Recepción *</label><br>
                                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                         <input type="radio" class="btn-check" name="can_via_rec" id="can_via_tel" value="Telefonica" autocomplete="off">
                                         <label class="btn btn-recepcion" for="can_via_tel">Telefónica</label>
@@ -56,43 +57,92 @@
                                 </div>
                                 <div class="col-md-6">
 
-                                    <label for="can_ruta_sol_oficio">Archivo Solicitud de Canalización:</label>
+                                    <label for="can_ruta_sol_oficio">Archivo Solicitud de Canalización *</label>
                                     <input type="file" class="form-control" id="can_ruta_sol_oficio" name="can_ruta_sol_oficio" accept="">
+                                    <input type="hidden" name="can_ruta_sol_oficio_edit" id="can_ruta_sol_oficio_edit" value="0">
                                     <div id="imagen_can">
                                         <span class="" id="imagen_subida_can"></span>
                                     </div>
                                 </div>
                                 <br>
                                 <div class="col-md-3">
-                                    <label for="can_numero"><strong>Número:</strong></label>
-                                    <input type="text" class="form-control" placeholder="Número" id="can_numero" name="can_numero" maxlength="50">
+                                    <label for="can_numero">Número *</label>
+                                    <input type="text" class="form-control" placeholder="Número" id="can_numero" name="can_numero" onkeypress="return onlyNumberKey(event)" maxlength="10">
+                                    <small id="helpNumeroc4" class="form-text text-muted">**Solo acepta Números</small>
+
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="can_num_oficio"><strong>Número Oficio:</strong></label>
+                                    <label for="can_num_oficio">Número Oficio *</label>
                                     <input type="text" class="form-control" placeholder="Número Oficio" id="can_num_oficio" name="can_num_oficio" maxlength="50">
+
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="can_folio">Folio:</label>
+                                    <label for="can_folio">Folio </label>
                                     <input type="text" class="form-control" placeholder="Folio" id="can_folio" name="can_folio" maxlength="50">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="can_fecha">Fecha:</label>
+                                    <label for="can_fecha">Fecha *</label>
                                     <input type="date" class="form-control" placeholder="Fecha" id="can_fecha" name="can_fecha">
                                 </div>
+
                                 <div class="col-md-3">
-                                    <label for="can_pais">Pais:</label>
-                                    <input type="text" class="form-control" placeholder="Pais" id="can_pais" name="can_pais" maxlength="30">
+                                    <label for="can_pais">Pais *</label>
+                                    <select name="can_pais" id="can_pais" class="form-select">
+                                        <option value="" selected disabled>Seleccione</option>
+                                        <optgroup label="América">
+                                            <option value="Argentina">Argentina</option>
+                                            <option value="Bolivia">Bolivia</option>
+                                            <option value="Brasil">Brasil</option>
+                                            <option value="Chile">Chile</option>
+                                            <option value="Colombia">Colombia</option>
+                                            <option value="Costa Rica">Costa Rica</option>
+                                            <option value="Cuba">Cuba</option>
+                                            <option value="Ecuador">Ecuador</option>
+                                            <option value="El Salvador">El Salvador</option>
+                                            <option value="Guayana Francesa">Guayana Francesa</option>
+                                            <option value="Granada">Granada</option>
+                                            <option value="Guatemala">Guatemala</option>
+                                            <option value="Guayana">Guayana</option>
+                                            <option value="Haití">Haití</option>
+                                            <option value="Honduras">Honduras</option>
+                                            <option value="Jamaica">Jamaica</option>
+                                            <option value="México">México</option>
+                                            <option value="Nicaragua">Nicaragua</option>
+                                            <option value="Paraguay">Paraguay</option>
+                                            <option value="Panamá">Panamá</option>
+                                            <option value="Perú">Perú</option>
+                                            <option value="Puerto Rico">Puerto Rico</option>
+                                            <option value="República Dominicana">República Dominicana</option>
+                                            <option value="Surinam">Surinam</option>
+                                            <option value="Uruguay">Uruguay</option>
+                                            <option value="Venezuela">Venezuela</option>
+                                        </optgroup>
+                                        <optgroup label="Europa">
+                                            <option value="7">España</option>
+                                            <option value="8">Francia</option>
+                                            <option value="9">Italia</option>
+                                            <option value="10">Suiza</option>
+                                            <option value="11">Alemania</option>
+                                            <option value="13">Holanda</option>
+                                            <option value="14">Polonia</option>
+                                            <option value="15">Grecia</option>
+                                        </optgroup>
+                                    </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="can_estado">Estado:</label>
+                                <div class="col-md-5" id="div_otros_estados">
+                                    <label for="can_otros_estados">Descripción de Estado</label>
+                                    <input type="text" class="form-control" placeholder="Describe estado" id="can_otros_estados" name="can_otros_estados" maxlength="30">
+
+                                </div>
+
+                                <div class="col-md-3" id="div_estado">
+                                    <label for="can_estado_label">Estado *</label>
                                     <select name="can_estado" id="can_estado" class="form-select">
-                                        <option value="0">Seleccionar</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="can_mun" id="can_mun">Municipio:</label>
+                                    <label for="can_mun" id="can_mun">Municipio *</label>
                                     <select name="can_municipio" id="can_municipio" class="form-select" required>
-                                        <option value="0">Seleccionar</option>
                                     </select>
                                     <input id="can_mun_edo" name="can_mun_edo" class="form-control" maxlength="30">
                                     </input>
@@ -107,13 +157,13 @@
                                 </div>
                                 <div class="col-md-6">
 
-                                    <label for="can_des_suncita_rep">Descripción sucinta del caso:</label>
+                                    <label for="can_des_suncita_rep">Descripción sucinta del caso *</label>
 
                                     <textarea name="can_des_suncita_rep" id="can_des_suncita_rep" class="form-control" rows="3" maxlength="500"></textarea>
                                 </div>
                                 <div class="col-md-6">
 
-                                    <label for="can_ges_reporte">Gestiones realizadas por la Secretaría Ejecutiva del SIPINNA Estatal:</label>
+                                    <label for="can_ges_reporte">Gestiones realizadas por la Secretaría Ejecutiva del SIPINNA Estatal *</label>
 
                                     <textarea name="can_ges_reporte" id="can_ges_reporte" class="form-control" rows="3" maxlength="500"></textarea>
                                 </div>
@@ -122,16 +172,16 @@
                         <!--Aqui comienza solicitantes-->
                         <div class="card">
                             <div class="row card-body" id="card_solicitante">
-                                <h5><br><strong> Datos Solicitante:</strong></h5>
+                                <h5><br><strong>Datos Solicitante </strong></h5>
 
                                 <input type="hidden" name="id_solicitante" id="id_solicitante" value="0">
 
                                 <div class="col-md-6">
-                                    <label for="can_inst_sol">Institución Solicitante:</label>
+                                    <label for="can_inst_sol">Institución Solicitante</label>
                                     <input type="text" class="form-control" name="can_inst_sol" id="can_inst_sol" maxlength="50">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="can_nom_sol">Nombre Solicitante:</label>
+                                    <label for="can_nom_sol">Nombre Solicitante *</label>
                                     <input type="text" class="form-control" name="can_nom_sol" id="can_nom_sol" maxlength="50">
                                 </div>
                             </div>
@@ -143,11 +193,11 @@
                                     <input type="hidden" name="id_reportante" id="id_reportante" value="0">
                                     <h5><br><strong> Datos Reportante:</strong></h5>
                                     <div class="col-md-5">
-                                        <label for="can_inst_rep">Institución Reportante:</label>
+                                        <label for="can_inst_rep">Institución Reportante </label>
                                         <input type="text" class="form-control" name="can_inst_rep" id="can_inst_rep" maxlength="50">
                                     </div>
                                     <div class="col-md-5">
-                                        <label for="can_nom_rep">Nombre Reportante:</label>
+                                        <label for="can_nom_rep">Nombre Reportante </label>
                                         <input type="text" class="form-control" name="can_nom_rep" id="can_nom_rep" maxlength="50">
                                     </div>
                                     <div class="col-md-2">
@@ -179,25 +229,47 @@
                                     </div>
                                     <div class="row col-md-12" id="victimas">
                                         <div class="col-md-2">
-                                            <label for="can_edad_vic">Edad:</label>
-                                            <input type="text" class="form-control" placeholder="Edad Victima" id="can_edad_vic" name="can_edad_vic" maxlength="50">
+                                            <label for="can_edad_vic">Edad(Años):</label>
+                                            <select name="can_edad_vic" id="can_edad_vic" class="form-select">
+                                                <option value="0" selected disabled>Seleccionar</option>
+                                                <?php
+                                                for ($i = 0; $i <= 100; $i++) {
+                                                    echo "<option value=" . $i . ">" . $i . " Años</option>";
+                                                }
+                                                ?>
+                                            </select>
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-2">
+
+                                            <label for="can_edad_ms_vic">Edad(Meses):</label>
+                                            <select name="can_edad_ms_vic" id="can_edad_ms_vic" class="form-select">
+                                                <option value="0" selected disabled>Seleccionar</option>
+                                                <?php
+                                                for ($i = 0; $i <= 12; $i++) {
+                                                    echo "<option value=" . $i . ">" . $i . " Meses</option>";
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4">
                                             <label for="can_nom_vic">Nombre Victima:</label>
                                             <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic" name="can_nom_vic" maxlength="50">
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-3">
                                             <label for="can_delito">Tipo de Delito:</label>
-                                            <select name="can_delito[]" id="can_delito" class="form-select">
-                                                <option value="0"></option>
+                                            <select name="can_delito[]" id="can_delito" class="form-select" multiple>
                                             </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="can_num_del">Numero delitos:</label>
+                                            <input type="number" class="form-control" placeholder="Numero delitos" id="can_num_del" name="can_num_del" maxlength="11">
                                         </div>
                                         <p></p>
                                         <div class="col-md-12">
                                             <label for="can_der_vul_vic">Derechos Vulnerados o restringidos:</label>
                                             <div class="form-text fs-6">(Seleccion Multiple) </div>
                                             <select name="can_der_vul_vic[]" id="can_der_vul_vic" class="form-select" multiple>
-                                                <option value="0"></option>
                                             </select>
                                         </div>
                                         <p></p>
@@ -244,10 +316,10 @@
                                         <div class="col-md-2" id="sexo_victima">
                                             <label><STRONG>Sexo</STRONG></label>
                                             <br>
-                                            <input type="radio" id="masculino" name="can_sexo_victima" value="Masculino">
-                                            <label for="masculino">Masculino</label><br>
-                                            <input type="radio" id="femenino" name="can_sexo_victima" value="Femenino">
-                                            <label for="femenino">Femenino</label><br>
+                                            <input type="radio" id="masculino" name="can_sexo_victima" value="Hombre">
+                                            <label for="masculino">Mujer</label><br>
+                                            <input type="radio" id="femenino" name="can_sexo_victima" value="Mujer">
+                                            <label for="femenino">Hombre</label><br>
                                             <input type="radio" id="n_i" name="can_sexo_victima" value="N/I" checked>
                                             <label for="n_i">N/I</label>
 
@@ -340,10 +412,14 @@
                         <div class="col-md-5">
                             <label for="can_delito_edit">Tipo de Delito:</label>
                             <input type="hidden" name="id_can_del_victima_edit" id="id_can_del_victima_edit" value="0">
-
-                            <select name="can_delito_edit" id="can_delito_edit" class="form-select">
+                            <small id="helpDel" class="form-text text-muted">(Multiple)</small>
+                            <select name="can_delito_edit" id="can_delito_edit" class="form-select" multiple>
                                 <option value="0"></option>
                             </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="can_num_del_edit">Numero delitos:</label>
+                            <input type="numer" class="form-control" placeholder="Numero delitos" id="can_num_del_edit" name="can_num_del_edit" maxlength="11">
                         </div>
                         <p></p>
                         <div class="col-md-12">
@@ -456,7 +532,7 @@
                             <div class="card-header">
                                 <h5 id="crear_nuevo_avance">
                                     <strong>Agregar Nuevo avance</strong>
-                                    
+
                                 </h5>
                                 <h5 id="editar_avance">
                                     <strong>Editar </strong>
@@ -466,7 +542,7 @@
                                 <div class="row col-md-12" id="avance" name="avance">
                                     <div class="col-md-12">
                                         <input type="hidden" class="form-control" name="id_can_avance" id="id_can_avance" value="0" disabled>
-                                        <input type="hidden" class="form-control" name="folio_can" id="folio_can" value="0" >
+                                        <input type="hidden" class="form-control" name="folio_can" id="folio_can" value="0">
 
                                     </div>
 

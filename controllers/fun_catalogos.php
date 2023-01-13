@@ -51,10 +51,7 @@ if ($_REQUEST["accion"] == 'fn_listar_delitos') {
 								<i class="bi bi-pencil-square"></i>
 								<span>Editar</span>
 							</button>
-							<button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar delito" onclick="fn_eliminar_delito(\'' . $row["id_delito"] . '\',\'' . $row["delito"] . '\');">
-								<i class="bi bi-trash"></i>
-								<span>Eliminar</span>
-							</button>
+							
 						</div>              
 					</div>
 				</td>                
@@ -156,10 +153,7 @@ if ($_REQUEST["accion"] == 'fn_listar_parentescos') {
 								<i class="bi bi-pencil-square"></i>
 								<span>Editar</span>
 							</button>
-							<button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar Parentesco" onclick="fn_eliminar_parentesco(\'' . $row["id_parentesco"] . '\',\'' . $row["parentesco"] . '\');">
-								<i class="bi bi-trash"></i>
-								<span>Eliminar</span>
-							</button>
+						
 						</div>              
 					</div>
 				</td>                
@@ -251,10 +245,7 @@ if ($_REQUEST["accion"] == 'fn_listar_municipios') {
 								<i class="bi bi-pencil-square"></i>
 								<span>Editar</span>
 							</button>
-							<button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar derecho" onclick="fn_eliminar_municipio(\'' . $row["id_municipio"] . '\',\'' . $row["municipio"] . '\');">
-								<i class="bi bi-trash"></i>
-								<span>Eliminar</span>
-							</button>
+							
 						</div>              
 					</div>
 				</td>                
@@ -349,10 +340,7 @@ if (empty($arr_res)) {
 							<i class="bi bi-pencil-square"></i>
 							<span>Editar</span>
 						</button>
-						<button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar derecho" onclick="fn_eliminar_derecho(\'' . $row["id_derecho"] . '\',\'' . $row["derecho"] . '\');">
-							<i class="bi bi-trash"></i>
-							<span>Eliminar</span>
-						</button>
+						
 					</div>              
 				</div>
 			</td>                
@@ -382,3 +370,21 @@ foreach ($arr_res as $row) {
 	echo json_encode($datos, JSON_FORCE_OBJECT);
 }
 }
+// Botones de Eliminar
+
+// <button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar delito" onclick="fn_eliminar_delito(\'' . $row["id_delito"] . '\',\'' . $row["delito"] . '\');">
+// 	<i class="bi bi-trash"></i>
+// 	<span>Eliminar</span>
+// </button>
+// <button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar derecho" onclick="fn_eliminar_derecho(\'' . $row["id_derecho"] . '\',\'' . $row["derecho"] . '\');">
+// 	<i class="bi bi-trash"></i>
+// 	<span>Eliminar</span>
+// </button>
+// <button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar derecho" onclick="fn_eliminar_municipio(\'' . $row["id_municipio"] . '\',\'' . $row["municipio"] . '\');">
+// 	<i class="bi bi-trash"></i>
+// 	<span>Eliminar</span>
+// </button>
+// <button type="button" class="btn btn-danger btn-sm hint--bottom" aria-label="Eliminar Parentesco" onclick="fn_eliminar_parentesco(\'' . $row["id_parentesco"] . '\',\'' . $row["parentesco"] . '\');">
+// <i class="bi bi-trash"></i>
+// <span>Eliminar</span>
+// </button>

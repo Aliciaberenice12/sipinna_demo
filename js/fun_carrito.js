@@ -19,7 +19,7 @@ function carrito_victima_c4(origen, evento, id) {
             can_per_transgenero = $.trim($('#can_per_transgenero').val());
             can_sexo_victima = document.querySelector('input[name="can_sexo_victima"]:checked').value;
 
-
+          
             if ($('#can_per_discapacidad').prop('checked'))
                 can_per_discapacidad = 1;
             else
@@ -93,6 +93,8 @@ function carrito_victima_c4(origen, evento, id) {
         if (evento == 1) //Agregar
         {
             c4_edad_vic = $.trim($('#c4_edad_vic').val());
+            c4_edad_ms_vic = $.trim($('#c4_edad_ms_vic').val());
+
             c4_nom_vic = $.trim($('#c4_nom_vic').val());
             c4_delitos = $.trim($('#c4_delitos').val());
             c4_num_delitos = $.trim($('#c4_num_delitos').val());
@@ -103,7 +105,48 @@ function carrito_victima_c4(origen, evento, id) {
             c4_per_indigena = $.trim($('#c4_per_indigena').val());
             c4_per_transgenero = $.trim($('#c4_per_transgenero').val());
             c4_sexo_victima = document.querySelector('input[name="c4_sexo_victima"]:checked').value;
-
+            if(c4_edad_vic === ''){
+                toastr.options.timeOut = 2500;
+                toastr.warning('Debes ingresar el edad de la Victima!');
+                $('#c4_edad_vic').focus();
+                return false;
+            }
+            if(c4_edad_ms_vic === ''){
+                toastr.options.timeOut = 2500;
+                toastr.warning('Debes Seleccionar!');
+                $('#c4_edad_ms_vic').focus();
+                return false;
+            }
+            if(c4_nom_vic === ''){
+                toastr.options.timeOut = 2500;
+                toastr.warning('Debes ingresar el nombre de la Victima!');
+                $('#c4_nom_vic').focus();
+                return false;
+            }
+            if(c4_nom_vic === ''){
+                toastr.options.timeOut = 2500;
+                toastr.warning('Debes ingresar el nombre de la Victima!');
+                $('#c4_nom_vic').focus();
+                return false;
+            }
+            if(c4_delitos === ''){
+                toastr.options.timeOut = 2500;
+                toastr.warning('Debes Seleccionar el Delito!');
+                $('#c4_delitos').focus();
+                return false;
+            }
+            if(c4_num_delitos === ''){
+                toastr.options.timeOut = 2500;
+                toastr.warning('Debes ingresar el numero de los Delito!');
+                $('#c4_num_delitos').focus();
+                return false;
+            }
+            if(c4_num_delitos === ''){
+                toastr.options.timeOut = 2500;
+                toastr.warning('Debes ingresar el numero de los Delito!');
+                $('#c4_num_delitos').focus();
+                return false;
+            }
             if ($('#c4_per_tercera_edad').prop('checked'))
                 c4_per_tercera_edad = 1;
             else
@@ -131,6 +174,7 @@ function carrito_victima_c4(origen, evento, id) {
         }
         else {
             c4_edad_vic = '';
+            c4_edad_ms_vic='';
             c4_nom_vic = '';
             c4_delitos = '';
             c4_num_delitos = '';
@@ -143,13 +187,14 @@ function carrito_victima_c4(origen, evento, id) {
             c4_sexo_victima = '';
         }
         $.post("../controllers/fun_casos_c4.php", {
-            func: 'carrito_victima_c4', evento: evento, id: id, c4_edad_vic: c4_edad_vic,
+            func: 'carrito_victima_c4', evento: evento, id: id, c4_edad_vic: c4_edad_vic,c4_edad_ms_vic:c4_edad_ms_vic,
             c4_nom_vic: c4_nom_vic, c4_delitos: c4_delitos, c4_num_delitos: c4_num_delitos, c4_der_vul: c4_der_vul,
             c4_per_tercera_edad: c4_per_tercera_edad, c4_per_violencia: c4_per_violencia, c4_per_discapacidad: c4_per_discapacidad,
             c4_per_indigena: c4_per_indigena, c4_per_transgenero: c4_per_transgenero, c4_sexo_victima: c4_sexo_victima
         }, function (data) {
             $('#lista_dat_vic_c4').html(data);
             $('#c4_edad_vic').val('');
+            $('#c4_edad_ms_vic').val('');            
             $('#c4_nom_vic').val('');
             $('#c4_delitos').val('0');
             $('#c4_num_delitos').val('');
@@ -176,12 +221,31 @@ function carrito_probable_resp(evento, id) {
         c4_nom_responsable = $.trim($('#c4_nom_responsable').val());
         c4_edad_responsable = $.trim($('#c4_edad_responsable').val());
         c4_parentesco = $.trim($('#c4_parentesco').val());
+        if(c4_nom_responsable === ''){
+            toastr.options.timeOut = 2500;
+            toastr.warning('Debes ingresar el nombre del Probable Responsable!');
+            $('#c4_nom_responsable').focus();
+            return false;
+        }
+        if(c4_edad_responsable === ''){
+            toastr.options.timeOut = 2500;
+            toastr.warning('Debes ingresar el Edad del Probable Responsable!');
+            $('#c4_edad_responsable').focus();
+            return false;
+        }
+        if(c4_parentesco === ''){
+            toastr.options.timeOut = 2500;
+            toastr.warning('Debes Seleccionar Parentesco');
+            $('#c4_parentesco').focus();
+            return false;
+        }
+        
 
     }
     else {
         c4_nom_responsable = '';
         c4_edad_responsable = '';
-        c4_parentesco = '';
+        c4_parentesco = '0';
 
     }
 
@@ -196,27 +260,3 @@ function carrito_probable_resp(evento, id) {
     });
 }
 
-function carrito_reportante(evento, id) {
-
-   
-    if (evento == 1) //Agregar
-    {
-        c4_inst_rep = $.trim($('#c4_inst_rep').val());
-        c4_nom_rep = $.trim($('#c4_nom_rep').val());
-        if(c4_inst_rep === ''){
-            alert('Debes ingresar la nombr');
-            return false;
-        }
-
-    }
-    else {
-        c4_inst_rep = '';
-        c4_nom_rep = '';
-    }
-
-    $.post("../controllers/fun_casos_c4.php", { func: 'carrito_reportante', evento: evento, id: id, c4_inst_rep: c4_inst_rep, c4_nom_rep: c4_nom_rep }, function (data) {
-        $('#lista_dat_rep_c4').html(data);
-        $('#c4_inst_rep').val('');
-        $('#c4_nom_rep').val('');
-    });
-}

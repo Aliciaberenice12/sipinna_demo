@@ -2,49 +2,86 @@ var cargando =
     '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
 
 $(document).ready(function () {
-    $("#c4_municipio").hide();
-    $("#c4_mun_edo").hide();
     $("#c4_mun").hide();
+    $("#c4_mun_edo").hide();
+    $("#c4_municipio").hide();
+    $("#c4_edo").hide();
+    $("#otros_estados_c4").hide();
+    $("#c4_estado").hide();
+    $("#div_otros_estados_c4").hide();
+    $("#div_estado_c4").hide();
+    $("#div_mun_c4").hide();
 
-    $("#c4_edo").change(function () {
 
-        if ($(this).val() == "30")
+    $("#c4_pais").change(function () {
 
-            $("#c4_mun_edo").hide(),
-                $("#c4_mun").show(400),
+        if ($(this).val() == "México") {
+            $("#div_estado_c4").show(),
+            $("#div_otros_estados_c4").hide(),
+            $("#otros_estados_c4").val(""),
+
+            $("#c4_edo").show(400),
+            $("#c4_estado").show()
+
+        }
+        else {
+            $("#div_estado_c4").hide(),
+
+            $("#div_otros_estados_c4").show(400),
+                $("#otros_estados_c4").show(),
+                $("#c4_edo").val("0"),
                 $("#c4_mun_edo").val(""),
-                $("#c4_municipio").show(400);
-        else
+                $("#c4_mun").val("0"),
+
+                $("#c4_edo").hide(400),
+                $("#c4_estado").hide(),
+                $("#div_mun_c4").hide()
+
+
+        }
+    });
+    $("#c4_edo").change(function () {
+        if ($(this).val() == "30") {
+            $("#div_mun_c4").show(),
+            $("#c4_municipio").show(200),
+            $("#c4_mun").show(200),
+                $("#c4_mun_edo").val(""),
+                $("#c4_mun_edo").hide(200)
+        }
+
+
+        else {
+            $("#c4_municipio").show(200),
+            $("#div_mun_c4").show(),
             $("#c4_mun").hide(),
-                $("#c4_mun_edo").show(200),
-                $("#c4_municipio").show(200),
-                $("#c4_mun").hide(),
-                $("#c4_mun").val("");
-
+                $("#c4_mun").val("0"),
+                $("#c4_mun_edo").show(200)
+        }
 
     });
-    $("#victimasCheck").change(function () {
 
-        if ($(this).val() == "on")
 
-            $("#victimas").show(400);
-        else
-            $("#victimas").hide();
-    });
     $("#actualizar_listado").click();
 });
 //Casos de c4
-function mensaje(origen){
-    if(origen==1){
+function mensaje(origen) {
+    if (origen == 1) {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Aun en proceso!');
         return false;
     }
-    else{
-        
+    else {
+
     }
 }
-function mod_caso_c4(origen, id,fol_c4) {
+function onlyNumberKey(evt) {
+    // Only ASCII character in that range allowed
+    var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+    if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+        return false;
+    return true;
+}
+function mod_caso_c4(origen, id, fol_c4) {
     fn_carga_municipios('c4_mun');
     fn_carga_estados('c4_edo');
     fn_carga_delitos('c4_delitos');
@@ -54,20 +91,17 @@ function mod_caso_c4(origen, id,fol_c4) {
 
 
     if (origen == 1) {
-        carrito_victima_c4(2,3,0);
-        carrito_reportante(3,0);
-        carrito_probable_resp(3,0);
+        carrito_victima_c4(2, 3, 0);
+        carrito_probable_resp(3, 0);
         $("#add_reportantes").show();
         $("#add_pro_resp").show();
-        $("#add_victimas").show(); 
+        $("#add_victimas").show();
         $("#lista_bd_dat_rep_c4").hide();
         $("#lista_bd_probable_res").hide();
-        $("#lista_bd_victimas").hide(); 
+        $("#lista_bd_victimas").hide();
         $("#imagen_c4").hide();//imagen_c4
-
         $('#tit_mod_c4').html('Crear Caso ');
         $('#id_caso').val(0);
-        $('#c4_codigo').val("");
         $('#c4_numero').val("");
         $('#c4_pais').val("");
         $('#c4_folio').val("");
@@ -89,9 +123,6 @@ function mod_caso_c4(origen, id,fol_c4) {
         $('#c4_observaciones').val("");
         $('#c4_rep_der').val("");
         $('#c4_delitos').val("");
-        $('#pendiente_c4').prop('checked', false).removeAttr('checked');
-        $('#en_roceso_c4').prop('checked', false).removeAttr('checked');
-        $('#concluido_c4').prop('checked', false).removeAttr('checked');
         $('#c4_per_tercera_edad').prop('checked', false).removeAttr('checked');
         $('#c4_per_discapacidad').prop('checked', false).removeAttr('checked');
         $('#c4_per_violencia').prop('checked', false).removeAttr('checked');
@@ -107,54 +138,54 @@ function mod_caso_c4(origen, id,fol_c4) {
     }
     //editar
     else if (origen == 2) {
-            $('#tit_mod_c4').html('Editar Caso');
-            $("#add_reportantes").hide();
-            $("#add_pro_resp").hide();
-            $("#add_victimas").hide();       
-            $("#lista_bd_dat_rep_c4").show();
-            $("#lista_bd_probable_res").show();
-            $("#lista_bd_victimas").show(); 
-            $("#imagen_c4").show();//imagen_c4
+        $('#tit_mod_c4').html('Editar Caso');
+        $("#add_reportantes").hide();
+        $("#add_pro_resp").hide();
+        $("#add_victimas").hide();
+        $("#lista_bd_dat_rep_c4").show();
+        $("#lista_bd_probable_res").show();
+        $("#lista_bd_victimas").show();
+        $("#imagen_c4").show();//imagen_c4
 
         $.post("../controllers/fun_casos_c4.php", { func: 'fn_obtener_caso_c4', id: id }, function (res) {
             $('#id_caso').val(id);
-            $('#c4_codigo').val(res.c4_codigo);
             $('#c4_folio').val(res.c4_folio);
             $('#c4_numero').val(res.c4_numero);
             $('#c4_no_oficio').val(res.c4_no_oficio);
-            $('#c4_estatus_caso').val(res.c4_estatus_caso);
-            switch (res.c4_estatus_caso) {
-                case 'En proceso':
-                    $('#en_proceso_c4').click();
-                    break;
-                case 'Pendiente':
-                    $('#pendiente_c4').click();
-                    break;
-                case 'Concluido':
-                    $('#concluido_c4').click();
-                    break;
-
-              
-            }
-
+            $('#c4_ruta_sol_oficio_edit').val(res.c4_ruta_sol_oficio);
             //$('#c4_ruta_sol_oficio').val(res.c4_ruta_sol_oficio);
-            imagenc4 = '<img src="../images/casos_c4/' + res.c4_ruta_sol_oficio + '" class="imagen_c4_div" />';
+            imagenc4 = '<a  href="../images/casos_c4/' + res.c4_ruta_sol_oficio + '"  /a>';
             $("#imagen_subida_c4").html(imagenc4);
-
             $('#c4_fecha_inicio').val(res.c4_fecha_inicio);
             $('#c4_pais').val(res.c4_pais);
+            if(res.c4_pais == 'México'){
+                $("#div_estado_c4").show(),
+                $("#c4_edo").show(),
+                $("#c4_estado").show(),
+                $("#div_mun_c4").show(),  
+                $("#div_otros_estados_c4").hide()
+            }
+            else{
+
+                $("#div_otros_estados_c4").show(),
+                $("#otros_estados_c4").show(),
+                $("#div_estado_c4").hide(),
+                $("#div_mun_c4").hide()  
+            }
             $('#c4_edo').val(res.id_estado);
             setTimeout(function () {
                 $('#c4_edo').val(res.id_estado);
-              }, 500);
-            if(res.id_estado == '30'){
+            }, 500);
+            if (res.id_estado == '30') {
                 $("#c4_mun").show(400),
-                $("#c4_mun_edo").val("");
+                $("#c4_municipio").show(400),
+                $("#c4_mun_edo").val("")
             }
-            else{
+            else {
                 $("#c4_mun_edo").show(200),
-                $("#c4_mun").hide();
+                $("#c4_mun").hide()
             }
+            $('#otros_estados_c4').val(res.c4_otros_estados);
             $('#c4_mun').val(res.c4_mun);
             $('#c4_mun_edo').val(res.c4_mun_edo);
             $('#c4_dirigido').val(res.c4_dirigido);
@@ -163,15 +194,14 @@ function mod_caso_c4(origen, id,fol_c4) {
             $('#c4_estatus_caso').val(res.c4_estatus_caso);
             $('#modal_c4').modal('show');
         });
-        $.post("../controllers/fun_casos_c4.php", { func: 'fn_obtener_desc_caso_c4', id: id,fol_c4:fol_c4}, function (res) {
+        $.post("../controllers/fun_casos_c4.php", { func: 'fn_obtener_desc_caso_c4', id: id, fol_c4: fol_c4 }, function (res) {
             $('#id_desc_caso').val(id);
             $('#c4_lugar_hechos').val(res.c4_lugar_hechos);
             $('#c4_des_hechos').val(res.c4_des_hechos);
             $('#c4_observaciones').val(res.c4_observaciones);
-           
+
 
         });
-        fn_listar_reportantes_c4(fol_c4);
         fn_listar_pro_res_c4(fol_c4);
         fn_listar_victimas_c4(fol_c4);
 
@@ -187,7 +217,7 @@ function mod_caso_c4(origen, id,fol_c4) {
 
         });
     }
-    else if (origen==4){//Editar Reportante c4
+    else if (origen == 4) {//Editar Reportante c4
         $('#modal_c4').modal('hide');
         $('#tit_mod_reportante_c4').html('Editar Reportante');
 
@@ -200,7 +230,7 @@ function mod_caso_c4(origen, id,fol_c4) {
 
         });
     }
-    else if (origen ==5){// Editar Probable Responsable c4
+    else if (origen == 5) {// Editar Probable Responsable c4
         $('#modal_c4').modal('hide');
         $('#tit_mod_pro_res_c4').html('Editar Probable Responsable');
         $('#modal_pro_resp_c4').modal({ backdrop: 'static', keyboard: false });
@@ -211,10 +241,10 @@ function mod_caso_c4(origen, id,fol_c4) {
             $('#c4_nom_responsable_edit').val(res.c4_nom_responsable);
             setTimeout(function () {
                 $('#c4_parentesco_edit').val(res.c4_parentesco);
-              }, 500);
+            }, 500);
         });
     }
-    else if (origen ==6){// Editar Victima c4
+    else if (origen == 6) {// Editar Victima c4
         $('#modal_c4').modal('hide');
         $('#tit_mod_victima_c4').html('Editar Victima');
         $('#modal_victima_c4').modal({ backdrop: 'static', keyboard: false });
@@ -228,12 +258,12 @@ function mod_caso_c4(origen, id,fol_c4) {
             $('#c4_delito_edit').val(res.c4_delito);
             setTimeout(function () {
                 $('#c4_delito_edit').val(res.c4_delito);
-              }, 500);
+            }, 500);
             $('#id_c4_der_victima_edit').val(res.id_c4_derecho);
             $('#c4_der_vul_vic_edit').val(res.c4_der_vul_victima);
             setTimeout(function () {
                 $('#c4_der_vul_vic_edit').val(res.c4_der_vul_victima);
-              }, 500);
+            }, 500);
             $('#c4_per_tercera_edad_edit').val(res.c4_per_tercera_edad);
             $('#c4_per_violencia_edit').val(res.c4_per_violencia);
             $('#c4_per_discapacidad_edit').val(res.c4_per_discapacidad);
@@ -263,16 +293,17 @@ function mod_caso_c4(origen, id,fol_c4) {
     }
 
 }
+
 function fun_agregar_caso_c4() {
     hoy = $('#hoy').val();
     id = $('#id_caso').val();
-    c4_codigo = $.trim($('#c4_codigo').val());
     c4_folio = $.trim($('#c4_folio').val());
     c4_numero = $.trim($('#c4_numero').val());
     c4_no_oficio = $.trim($('#c4_no_oficio').val());
     c4_ruta_sol_oficio = $.trim($('#c4_ruta_sol_oficio').val());
     c4_fecha_inicio = $.trim($('#c4_fecha_inicio').val());
     c4_pais = $.trim($('#c4_pais').val());
+    otros_estados_c4 = $.trim($('#otros_estados_c4').val());
     c4_edo = $.trim($('#c4_edo').val());
     c4_mun = $.trim($('#c4_mun').val());
     c4_mun_edo = $.trim($('#c4_mun_edo').val());
@@ -280,11 +311,11 @@ function fun_agregar_caso_c4() {
     c4_dg = $.trim($('#c4_dg').val());
     file0 = document.getElementById('c4_ruta_sol_oficio');
     file = file0.files[0];
-    id_caso = $('#id_desc_caso').val();
+    id_caso = $('#id_desc_caso').val();    
+    c4_ruta_sol_oficio_edit = $.trim($('#c4_ruta_sol_oficio_edit').val());    
     c4_lugar_hechos = $.trim($('#c4_lugar_hechos').val());
     c4_des_hechos = $.trim($('#c4_des_hechos').val());
     c4_observaciones = $.trim($('#c4_observaciones').val());
-    c4_estatus_caso = document.querySelector('input[name="c4_estatus_caso"]:checked').value;
 
     if (typeof (file) != "undefined")//Si trae un archivo
     {
@@ -294,39 +325,21 @@ function fun_agregar_caso_c4() {
             $('#c4_ruta_sol_oficio').focus();
             return false;
         }
-        if (!(/\.(jpg|jpeg|png)$/i).test(file.name)) {
-            toastr.options.timeOut = 2500;
-            toastr.warning('¡El archivo debe ser formato jpg, jpeg o png!');
-            $('#c4_ruta_sol_oficio').focus();
-            return false;
-        }
-    }
-    else {
-        toastr.options.timeOut = 2500;
-        toastr.warning('¡Debes seleccionar el archivo!');
-        $('#c4_ruta_sol_oficio').focus();
-        return false;
-    }
 
+    }
     if (c4_no_oficio == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Debes ingresar el numero de oficio!');
         $('#c4_no_oficio').focus();
         return false;
     }
-
     else if (c4_fecha_inicio == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Seleccione una Fecha!');
         $('#c4_fecha_inicio').focus();
         return false;
     }
-    else if (c4_edo == '') {
-        toastr.options.timeOut = 2500;
-        toastr.warning('¡Seleccione un Estado!');
-        $('#c4_edo').focus();
-        return false;
-    }
+   
 
     else if (c4_fecha_inicio > hoy) {
         toastr.options.timeOut = 2500;
@@ -349,13 +362,13 @@ function fun_agregar_caso_c4() {
     var data = new FormData();
     data.append('func', 'fn_guardar_caso_c4');
     data.append('id', id);
-    data.append('c4_codigo', c4_codigo);
     data.append('c4_folio', c4_folio);
     data.append('c4_numero', c4_numero);
     data.append('c4_no_oficio', c4_no_oficio);
     data.append('c4_ruta_sol_oficio', c4_ruta_sol_oficio);
     data.append('c4_fecha_inicio', c4_fecha_inicio);
     data.append('c4_pais', c4_pais);
+    data.append('otros_estados_c4', otros_estados_c4);
     data.append('c4_edo', c4_edo);
     data.append('c4_mun', c4_mun);
     data.append('c4_mun_edo', c4_mun_edo);
@@ -363,10 +376,10 @@ function fun_agregar_caso_c4() {
     data.append('c4_dg', c4_dg);
     data.append('archivo', file);
     data.append('id_caso', id_caso);
+    data.append('c4_ruta_sol_oficio_edit', c4_ruta_sol_oficio_edit);
     data.append('c4_lugar_hechos', c4_lugar_hechos);
     data.append('c4_des_hechos', c4_des_hechos);
     data.append('c4_observaciones', c4_observaciones);
-    data.append('c4_estatus_caso', c4_estatus_caso);
 
     $.ajax({
         url: "../controllers/fun_casos_c4.php",
@@ -376,8 +389,8 @@ function fun_agregar_caso_c4() {
         processData: false,
         cache: false
     }).done(function (result) {
-      
-        if (result.estatus === "ok") {
+        console.log(result);
+        if (result.estatus === "ok expediente registrado") {
             Swal.fire({ icon: 'success', title: 'Expediente guardado correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_c4').modal('hide');
             fn_listar_casos_c4();
@@ -390,8 +403,8 @@ function fun_agregar_caso_c4() {
             fn_listar_casos_c4();
 
         }
-        else{
-            
+        else {
+
             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
             $('#btn_create_can').prop('disabled', false);
             $('#modalCanalizacion').modal('hide');
@@ -414,17 +427,7 @@ function fn_listar_casos_c4() {
         });
     });
 }
-function fn_listar_reportantes_c4(fol_c4) {
-    $("#lista_bd_dat_rep_c4").html(cargando);
-    $.post("../controllers/fun_casos_c4.php", { func: 'fn_lista_reportantes_c4', fol_c4: fol_c4 }, function (data) {
-        $('#lista_bd_dat_rep_c4').html(data);
-        $('#tbl_reportantes_c4').DataTable({
-            language: { "url": "../lib/datatables/Spanish.json" },
-            order: [[0, "asc"]],
-            searching: true,
-        });
-    });
-}
+
 function fn_listar_pro_res_c4(fol_c4) {
     $("#lista_bd_probable_res").html(cargando);
     $.post("../controllers/fun_casos_c4.php", { func: 'fn_lista_pro_res_c4', fol_c4: fol_c4 }, function (data) {
@@ -453,13 +456,12 @@ function fn_eliminar_caso_c4(id, c4_no_oficio) {
         input: 'text',
         text: c4_no_oficio + ' será eliminado',
         icon: 'warning',
-        autocapitalize: 'off',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sí, Eliminar!',
         cancelButtonText: 'Cancelar',
-          inputValidator: desc_eliminar_c4 => {
+        inputValidator: desc_eliminar_c4 => {
             // Si el valor es válido, debes regresar undefined. Si no, una cadena
             if (!desc_eliminar_c4) {
                 return "Por favor escribe la Descripción";
@@ -471,7 +473,7 @@ function fn_eliminar_caso_c4(id, c4_no_oficio) {
         if (result.value) {
             let desc_eliminar_c4 = result.value;
 
-            datos = { func: 'fn_eliminar_caso_c4', id: id,desc_eliminar_c4:desc_eliminar_c4 };
+            datos = { func: 'fn_eliminar_caso_c4', id: id, desc_eliminar_c4: desc_eliminar_c4 };
 
             $.ajax({
                 url: "../controllers/fun_casos_c4.php",
@@ -518,7 +520,7 @@ function fun_agregar_reportante_c4() {
 
         }
         else {
-            Swal.fire({ icon: 'success', title: 'Datos Actualizados correctamente',showCnfirmButton: false, timer: 1500 });
+            Swal.fire({ icon: 'success', title: 'Datos Actualizados correctamente', showCnfirmButton: false, timer: 1500 });
             $('#btn_create_can').prop('disabled', false);
             $('#modal_c4').modal('hide');
 
@@ -653,7 +655,7 @@ function fun_editar_pro_res_c4() {
 //         $('#c4_des_hechos').focus();
 //         return false;
 //     }
- 
+
 
 //     var data = new FormData();
 //     data.append('func', 'fn_guardar_desc_caso_c4');
@@ -717,7 +719,7 @@ function fun_agregar_victima_c4() {
     id = $('#id_victima_c4').val();
     var data = new FormData();
     data.append('func', 'fn_guardar_victima_c4');
-    data.append('id', id);  
+    data.append('id', id);
     $.ajax({
         url: "../controllers/fun_casos_c4.php",
         type: "POST",
@@ -726,7 +728,7 @@ function fun_agregar_victima_c4() {
         processData: false,
         cache: false
     }).done(function (res) {
-        
+
         if (res.estatus === "ok") {
             Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_c4').modal('hide');
@@ -992,9 +994,9 @@ function fn_carga_parentescos(combo) {
 
 function fn_combo_parentescos(combo) {
     $.post("../controllers/fun_casos_c4.php", { func: 'fn_carga_parentescos' }, function (data) {
-      $('#' + combo).html(data);
+        $('#' + combo).html(data);
     });
-  }
+}
 function fn_carga_derechos(combo) {
     $.post("../controllers/fun_casos_c4.php", { func: 'fn_carga_derechos' }, function (data) {
         $('#' + combo).html(data);

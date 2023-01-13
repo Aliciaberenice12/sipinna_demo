@@ -97,7 +97,8 @@ footer {
 }
 .imagen_can_div{
     height: 10em;
-    margin: 1em;
+    width: 80%;
+    margin: .25em;
 
 }
 

@@ -64,7 +64,7 @@ if (isset($_SESSION['nombre'])) {
             </div>
             <div class="col-md-1">
                 <br>
-                <button type="button" class="btn btn-success" onclick="mensaje(1)">consultar</button>
+                <button type="button" class="btn btn-success" onclick="consulta()">consultar</button>
 
             </div>
 
@@ -223,8 +223,6 @@ if (isset($_SESSION['nombre'])) {
 
 
 </body>
-
-<script src="../lib/datatables/jquery.dataTables.min.js"></script>
 
 
 </html>

@@ -15,97 +15,129 @@
                         <div class="row col-md-12">
                             <div class="col-md-6">
                                 <h4><strong>Rellene los siguientes campos</strong></h4>
+                                <small id="helpCamposObligatoriosC4" class="form-text text-muted">*Campos Obligatorios</small>
+
                             </div>
                             <div class="col-md-6">
-                                <label for="estatus">
-                                    <strong>Estatus del caso:</strong>
-                                </label>
-                                <div class="btn-group" role="group" aria-label="Boton Estatus">
 
-                                    <input type="radio" class="btn-check" name="c4_estatus_caso" id="pendiente_c4" value="Pendiente" autocomplete="off">
-                                    <label class="btn btn-recepcion" for="pendiente_c4">Pendiente</label>
-
-                                    <input type="radio" class="btn-check" name="c4_estatus_caso" id="en_proceso_c4" value="En proceso" autocomplete="off">
-                                    <label class="btn btn-recepcion" for="en_proceso_c4">En proceso</label>
-
-                                    <input type="radio" class="btn-check" name="c4_estatus_caso" id="concluido_c4" value="Concluido" autocomplete="off">
-                                    <label class="btn btn-recepcion" for="concluido_c4">Concluido</label>
-                                </div>
                             </div>
                         </div>
                         <div class="card">
 
                             <div class=" row card-body">
 
-                                <div class="col-md-2">
-                                    <label for="c4_codigo">Codigo *</label>
-                                    <input class="form-control" name="c4_codigo" id="c4_codigo" placeholder="Codigo *" rows="1">
-                                </div>
+
                                 <div class="col-md-2">
                                     <label for="c4_folio">Folio *</label>
                                     <input class="form-control" name="c4_folio" id="c4_folio" placeholder="Folio *" rows="1">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="c4_numero">Número:</label>
-                                    <input type="text" class="form-control" placeholder="Número" id="c4_numero" name="c4_numero">
+                                    <label for="c4_numero">Número *</label>
+                                    <input type="text" class="form-control" placeholder="Número" id="c4_numero" name="c4_numero" onkeypress="return onlyNumberKey(event)" maxlength="10">
+                                    <small id="helpNumeroc4" class="form-text text-muted">*Solo acepta numeros</small>
+
                                 </div>
                                 <div class="col-md-2">
-                                    <labe0l for="c4_no_oficio">Número Oficio:</label>
-                                        <input type="text" class="form-control" placeholder="No.Oficio" id="c4_no_oficio" name="c4_no_oficio">
+                                    <labe0l for="c4_no_oficio">Número Oficio *</label>
+                                        <input type="text" class="form-control" placeholder="No.Oficio" id="c4_no_oficio" name="c4_no_oficio" maxlength="50">
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="c4_ruta_sol_oficio">Archivo Solicitud de Canalización:</label>
-                                    <input type="file" class="form-control" id="c4_ruta_sol_oficio" name="c4_ruta_sol_oficio" accept="image/*">
-                                    <div id="imagen_c4">
-                                        <span class="" id="imagen_subida_c4"></span>
-                                    </div>
+                                <div class="col-md-6">
+                                    <label for="c4_ruta_sol_oficio">Archivo Solicitud de Canalización *</label>
+                                    <input type="file" class="form-control" id="c4_ruta_sol_oficio" name="c4_ruta_sol_oficio">
+                                    <input type="hidden" name="c4_ruta_sol_oficio_edit" id="c4_ruta_sol_oficio_edit" value="0">
                                 </div>
+
+
 
                                 <div class="col-md-3">
-                                    <label for="c4_fecha_inicio">Fecha:</label>
+                                    <label for="c4_fecha_inicio">Fecha *</label>
                                     <input type="date" class="form-control" placeholder="Fecha" id="c4_fecha_inicio" name="c4_fecha_inicio">
                                 </div>
-                                <div class="col-3">
-                                    <label for="c4_pais">Pais:</label>
-                                    <input type="text" id="c4_pais" name="c4_pais" placeholder="Pais" class="form-control">
+                                <div class="col-md-3">
+                                    <label for="c4_pais">Pais *</label>
+                                    <select name="c4_pais" id="c4_pais" class="form-select">
+                                        <option value="" selected disabled>Seleccione</option>
+                                        <optgroup label="América">
+                                            <option value="Argentina">Argentina</option>
+                                            <option value="Bolivia">Bolivia</option>
+                                            <option value="Brasil">Brasil</option>
+                                            <option value="Chile">Chile</option>
+                                            <option value="Colombia">Colombia</option>
+                                            <option value="Costa Rica">Costa Rica</option>
+                                            <option value="Cuba">Cuba</option>
+                                            <option value="Ecuador">Ecuador</option>
+                                            <option value="El Salvador">El Salvador</option>
+                                            <option value="Guayana Francesa">Guayana Francesa</option>
+                                            <option value="Granada">Granada</option>
+                                            <option value="Guatemala">Guatemala</option>
+                                            <option value="Guayana">Guayana</option>
+                                            <option value="Haití">Haití</option>
+                                            <option value="Honduras">Honduras</option>
+                                            <option value="Jamaica">Jamaica</option>
+                                            <option value="México">México</option>
+                                            <option value="Nicaragua">Nicaragua</option>
+                                            <option value="Paraguay">Paraguay</option>
+                                            <option value="Panamá">Panamá</option>
+                                            <option value="Perú">Perú</option>
+                                            <option value="Puerto Rico">Puerto Rico</option>
+                                            <option value="República Dominicana">República Dominicana</option>
+                                            <option value="Surinam">Surinam</option>
+                                            <option value="Uruguay">Uruguay</option>
+                                            <option value="Venezuela">Venezuela</option>
+                                        </optgroup>
+                                        <optgroup label="Europa">
+                                            <option value="7">España</option>
+                                            <option value="8">Francia</option>
+                                            <option value="9">Italia</option>
+                                            <option value="10">Suiza</option>
+                                            <option value="11">Alemania</option>
+                                            <option value="13">Holanda</option>
+                                            <option value="14">Polonia</option>
+                                            <option value="15">Grecia</option>
+                                        </optgroup>
+                                    </select>
+                                    <br>
+                                </div>
+                                <div class="col-md-5" id="div_otros_estados_c4">
+                                    <label for="otros_estados_c4">Descripción de Estado</label>
+                                    <input type="text" class="form-control" placeholder="Describe estado" id="otros_estados_c4" name="otros_estados_c4" maxlength="30">
 
                                 </div>
-                                <div class="col-3">
-                                    <label for="c4_edo">Estado:</label>
+
+                                <div class="col-md-3" id="div_estado_c4">
+                                    <label for="c4_estado">Estado *</label>
                                     <select name="c4_edo" id="c4_edo" class="form-select">
-                                        <option value="0">Seleccionar</option>
                                     </select>
                                 </div>
-                                <div class="col-3">
-                                    <label for="c4_municipio">Municipio:</label>
+                                <div class="col-md-3" id="div_mun_c4">
+                                    <label for="c4_municipio" id="c4_municipio">Municipio *</label>
                                     <select name="c4_mun" id="c4_mun" class="form-select" required>
-                                        <option value="0">Seleccionar</option>
                                     </select>
-                                    <input type="text" id="c4_mun_edo" name="c4_mun_edo" class="form-control">
-
+                                    <input id="c4_mun_edo" name="c4_mun_edo" class="form-control" maxlength="30">
+                                    </input>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="c4_dirigido">Dirigido:</label>
-                                    <input type="text" class="form-control" id="c4_dirigido" name="c4_dirigido">
+                                    <input type="text" class="form-control" id="c4_dirigido" name="c4_dirigido" maxlength="250">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="c4_dg">Director General:</label>
-                                    <input class="form-control" type="text" id="c4_dg" name="c4_dg">
+                                    <input class="form-control" type="text" id="c4_dg" name="c4_dg" maxlength="250">
                                 </div>
                                 <!--Aqui comienza desc caso c4-->
 
                                 <div class="col-md-4">
                                     <input type="hidden" name="id_desc_caso" id="id_desc_caso" value="0">
-                                    <label for="c4_lugar_hechos">Lugar de los hechos :</label>
-                                    <textarea id="c4_lugar_hechos" name="c4_lugar_hechos" placeholder="Descripción..." class="form-control" rows="3"></textarea>
+                                    <label for="c4_lugar_hechos">Lugar de los hechos *</label>
+                                    <textarea id="c4_lugar_hechos" name="c4_lugar_hechos" placeholder="Descripción..." class="form-control" rows="3" maxlength="250"></textarea>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="c4_des_hechos">Hechos:</label>
-                                    <textarea id="c4_des_hechos" name="c4_des_hechos" placeholder="Descripción..." class="form-control" rows="3"></textarea>
+                                    <label for="c4_des_hechos">Hechos *</label>
+                                    <textarea id="c4_des_hechos" name="c4_des_hechos" placeholder="Descripción..." class="form-control" rows="3" maxlength="250"></textarea>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="c4_observaciones">Observaciones:</label>
-                                    <textarea id="c4_observaciones" name="c4_observaciones" placeholder="Observaciones..." class="form-control" rows="3"></textarea>
+                                    <textarea id="c4_observaciones" name="c4_observaciones" placeholder="Observaciones..." class="form-control" rows="3" maxlength="250"></textarea>
                                 </div>
                                 <!--Aqui Termina desc caso c4-->
 
@@ -113,37 +145,7 @@
 
                         </div>
 
-                        <!--Aqui empieza Reportantes-->
 
-                        <div class="card">
-                            <h5><br><strong> Datos del Reportante:</strong></h5>
-
-                            <div class="row card-body" id="add_reportantes">
-                                <input type="hidden" name="id_reportante_c4" id="id_reportante_c4" value="0">
-
-                                <div class="col-md-5">
-                                    <label for="c4_inst_rep">Institución Reportante:</label>
-                                    <input type="text" class="form-control" name="c4_inst_rep" id="c4_inst_rep">
-                                </div>
-                                <div class="col-md-5">
-                                    <label for="c4_nom_rep">Nombre Reportante:</label>
-                                    <input type="text" class="form-control" name="c4_nom_rep" id="c4_nom_rep">
-                                </div>
-                                <div class="col-md-2">
-                                    <br>
-                                    <button class="btn btn-success" type="button" onclick="carrito_reportante(1,0);">
-                                        <i class="bi bi-plus-circle"> </i>Agregar
-                                    </button>
-                                </div>
-                                <div id="lista_dat_rep_c4"></div>
-
-                            </div>
-                            <div id="lista_bd_dat_rep_c4"></div>
-
-                        </div>
-
-
-                        <!--Aqui Termina Reportantes-->
 
                         <!--Probable Responsable-->
 
@@ -157,12 +159,19 @@
                                     <label for="c4_nom_responsable">Nombre Probable responsable:</label>
                                     <input type="text" class="form-control" name="c4_nom_responsable" id="c4_nom_responsable">
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="c4_edad_responsable">Edad Probable responsable:</label>
-                                    <input type="text" class="form-control" name="c4_edad_responsable" id="c4_edad_responsable">
+                                <div class="col-md-4">
+                                    <label for="c4_edad_responsable">Edad Probable responsable(Años):</label>
+                                        <select name="c4_edad_responsable" id="c4_edad_responsable" class="form-select">
+                                            <option value="0" selected disabled>Seleccionar</option>
+                                            <?php
+                                            for ($i = 0; $i <= 100; $i++) {
+                                                echo "<option value=" . $i . ">" . $i . " Años</option>";
+                                            }
+                                            ?>
+                                        </select>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label for="c4_parentesco">Parentesco con victima:</label>
                                     <select name="c4_parentesco" id="c4_parentesco" class="form-select" required>
                                         <option value="0">Seleccionar</option>
@@ -189,10 +198,30 @@
                             <input type="hidden" name="id_victima_c4" id="id_victima_c4" value="0">
 
                             <div class="row card-body" id="add_victimas">
-                                <div class="col-md-3">
-                                    <label for="c4_edad_vic">Edad Victima:</label>
-                                    <input type="text" class="form-control" placeholder="Edad Victima" id="c4_edad_vic" name="c4_edad_vic" required>
+                                <div class="col-md-2">
+                                    <label for="c4_edad_vic">Edad(Años):</label>
+                                    <select name="c4_edad_vic" id="c4_edad_vic" class="form-select">
+                                        <option value="0" selected disabled>Seleccionar</option>
+                                        <?php
+                                        for ($i = 0; $i <= 100; $i++) {
+                                            echo "<option value=" . $i . ">" . $i . " Años</option>";
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
+                                <div class="col-md-2">
+
+                                    <label for="c4_edad_ms_vic">Edad(Meses):</label>
+                                    <select name="c4_edad_ms_vic" id="c4_edad_ms_vic" class="form-select">
+                                        <option value="0" selected disabled>Seleccionar</option>
+                                        <?php
+                                        for ($i = 0; $i <= 11; $i++) {
+                                            echo "<option value=" . $i . ">" . $i . " Meses</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+
                                 <div class="col-md-3">
                                     <label for="c4_nom_vic">Nombre Victima:</label>
                                     <input type="text" class="form-control" placeholder="Nombre Victima" id="c4_nom_vic" name="c4_nom_vic" required>
@@ -200,13 +229,13 @@
 
                                 <div class="col-md-3">
                                     <label for="c4_delitos">Tipo de Delito:</label>
-                                    <select name="c4_delitos" id="c4_delitos" class="form-select" required>
+                                    <select name="c4_delitos" id="c4_delitos" class="form-select" multiple>
                                         <option value="0"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="c4_num_delitos">Número de delitos:</label>
-                                    <input type="NUMBER" class="form-control" placeholder="Número de Delitos" id="c4_num_delitos" name="c4_num_delitos" required>
+                                    <input type="number" class="form-control" placeholder="Número de Delitos" id="c4_num_delitos" name="c4_num_delitos">
                                 </div>
                                 <div class="col-md-12">
                                     <label for="c4_der_vul">Derechos Vulnerados o restringidos:</label>
@@ -250,10 +279,10 @@
                                 <div class="col-md-6">
                                     <label><STRONG>Sexo</STRONG></label>
                                     <br>
-                                    <input type="radio" id="masculino" name="c4_sexo_victima" value="Masculino">
-                                    <label for="c4_masculino">Masculino</label><br>
-                                    <input type="radio" id="femenino" name="c4_sexo_victima" value="Femenino">
-                                    <label for="femenino">Femenino</label><br>
+                                    <input type="radio" id="masculino" name="c4_sexo_victima" value="Hombre">
+                                    <label for="c4_masculino">Hombre</label><br>
+                                    <input type="radio" id="femenino" name="c4_sexo_victima" value="Mujer">
+                                    <label for="femenino">Mujer</label><br>
                                     <input type="radio" id="n_i" name="c4_sexo_victima" value="N/I" checked>
                                     <label for="n_i">N/I</label>
                                 </div>

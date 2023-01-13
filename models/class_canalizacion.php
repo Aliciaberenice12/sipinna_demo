@@ -65,7 +65,8 @@ class Canalizacion extends Conexion
 		else
 			return $row["fol"];
 	}
-
+	//Registrar historico
+	
 	//Registrar Canalizacion
 	public function insertar_canalizacion($nom_gd, $datos_exp)
 	{
@@ -215,13 +216,15 @@ class Canalizacion extends Conexion
 					$sql6   = $conn->prepare("INSERT INTO 	tbl_can_delitos_victimas
 															(can_exp_folio_delito,
 															can_delito,
+															can_numero_delitos,
 															can_id_victima,
 															can_created_by)
-													VALUES	(?,?,?,?)");
+													VALUES	(?,?,?,?,?)");
 					$sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
 					$sql6->bindParam(2, $row["can_delito"], PDO::PARAM_INT, 11);
-					$sql6->bindParam(3, $last_id, PDO::PARAM_INT, 11);
-					$sql6->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
+					$sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
+					$sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
+					$sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
 					$sql6->execute();
 					if ($last_2 = $conn->lastInsertId() > 0) {
 					} else {
@@ -263,8 +266,9 @@ class Canalizacion extends Conexion
 
 		return $estatus;
 	}
-	public function editar_canalizacion($id, $can_via_rec, $can_numero, $can_folio, $can_pais, $can_numero_oficio, $can_fecha, 
-	$can_estado, $can_municipio, $can_mun_edo,$estatus_exp,$nombre_creador)
+	
+	public function editar_canalizacion($can_via_rec, $can_numero, $can_folio, $can_pais, $can_numero_oficio, $can_fecha, 
+	$can_estado, $can_municipio, $can_mun_edo,$estatus_exp,$nom_arc,$nombre_creador,$id)
 	{
 		$sql = $this->dbh->prepare("UPDATE 	tbl_can_expediente
 							 		SET		can_via_rec=?,
@@ -277,11 +281,14 @@ class Canalizacion extends Conexion
 											can_municipio=? ,
 											can_mun_edo =?,
 											estatus_expediente =?,
+											can_ruta_sol_oficio=?,
 											can_update_by=?
 									WHERE 	id_canalizacion = ?");
-		if ($sql->execute(array($can_via_rec, $can_numero, $can_folio, $can_pais, $can_numero_oficio, $can_fecha, $can_estado, 
-		$can_municipio, $can_mun_edo,$estatus_exp,$nombre_creador ,$id))) {
-			return 'ok';
+		if ($sql->execute(array(
+			$can_via_rec, $can_numero, $can_folio, $can_pais, $can_numero_oficio, $can_fecha, $can_estado,
+			$can_municipio, $can_mun_edo, $estatus_exp, $nom_arc, $nombre_creador, $id
+		))) {
+			return 'editado';
 		} else
 			return 'error';
 	}
@@ -351,14 +358,14 @@ class Canalizacion extends Conexion
 
 
 			if ($sql->execute()) {
-				$estatus = 'ok';
+				$estatus2 = 'ok';
 			} else
-				$estatus = 'error_registro';
+				$estatus2 = 'error_registro';
 		} catch (Exception $e) {
-			$estatus = $e;
+			$estatus2 = $e;
 		}
 
-		return $estatus;
+		return $estatus2;
 	}
 	//Solicitante
 	public function obtener_dato_solicitante($folio_exp)
@@ -385,14 +392,14 @@ class Canalizacion extends Conexion
 			$sql->bindParam(3, $id);
 
 			if ($sql->execute()) {
-				$estatus = 'ok';
+				$estatus3 = 'editado';
 			} else
-				$estatus = 'error_registro';
+				$estatus3 = 'error_registro';
 		} catch (Exception $e) {
-			$estatus = $e;
+			$estatus3 = $e;
 		}
 
-		return $estatus;
+		return $estatus3;
 	}
 	public function lista_solicitantes()
 	{
@@ -561,6 +568,7 @@ class Canalizacion extends Conexion
 											can_sexo_victima,
 											can_der_vul_vic,
 											can_delito,
+											can_numero_delitos,
 											id_del_victima,
 											id_derecho,
 											can_exp_folio_victima,
@@ -594,6 +602,7 @@ class Canalizacion extends Conexion
 												can_exp_folio_victima,
 												can_der_vul_vic,
 												can_delito,
+												can_numero_delitos,
 												tbl_can_victimas.id_can_victima,
 												tbl_can_delitos_victimas.can_id_victima
 										FROM 	((tbl_can_victimas

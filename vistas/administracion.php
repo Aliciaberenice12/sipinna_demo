@@ -106,7 +106,7 @@ if (isset($_SESSION['nombre'])) {
                                     <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Completa el campo..."><br>
                                     <label for="rol" class="form-label">Rol: </label>
                                     <select name="rol_usuario" id="rol_usuario" class="form-select" required>
-                                    
+
                                     </select>
                                 </div>
                                 <div class="col-md-4">
@@ -163,8 +163,3 @@ if (isset($_SESSION['nombre'])) {
 </body>
 
 </html>
-
-
-
-
-
