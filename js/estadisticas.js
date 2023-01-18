@@ -13,10 +13,16 @@ function mensaje(origen){
     }
 }
 function consulta() {
-    id_reporte = $('#id_reporte').val();
+    gen_reporte = $.trim($('#gen_reporte').val());
+    id_reporte = $.trim($('#id_reporte').val());
     desde_fecha = $.trim($('#desde_fecha').val());
     hasta_fecha = $.trim($('#hasta_fecha').val());
-
+    if (gen_reporte == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('Seleccione Reporte !');
+        $('#gen_reporte').focus();
+        return false;
+    }
     if (id_reporte == '0') {
         toastr.options.timeOut = 2500;
         toastr.warning('Seleccione Reporte a Consultar!');
@@ -38,6 +44,7 @@ function consulta() {
 
     var data = new FormData();
     data.append('func', 'fn_obtener_reporte');
+    data.append('gen_reporte', gen_reporte);
     data.append('id_reporte', id_reporte);
     data.append('desde_fecha', desde_fecha);
     data.append('hasta_fecha', hasta_fecha);
@@ -53,22 +60,18 @@ function consulta() {
 
         if (res.estatus === "ok") {
             Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
-            $('#crearAvance').modal('hide');
-            $('#avancesCanalizacion').modal('show');
-            fn_listar_avances(folio_can);
-            fn_modal_avance(2);
-
+            $('#').modal('hide');
+          
         }
         else if (res.estatus === "editado") {
             Swal.fire({ icon: 'success', title: 'Expediente Editado correctamente', showConfirmButton: false, timer: 1500 });
-            fn_listar_avances(folio_can);
-            fn_modal_avance(2);
+    
 
         }
         else {
             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
             $('#btn_create_can').prop('disabled', false);
-            $('#crearCanalizacion').modal('hide');
+            $('').modal('hide');
 
 
             return false;

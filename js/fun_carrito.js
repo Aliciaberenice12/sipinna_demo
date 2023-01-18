@@ -97,7 +97,9 @@ function carrito_victima_c4(origen, evento, id) {
 
             c4_nom_vic = $.trim($('#c4_nom_vic').val());
             c4_delitos = $.trim($('#c4_delitos').val());
-            c4_num_delitos = $.trim($('#c4_num_delitos').val());
+            c4_delitos_c=c4_delitos.split(",");
+            c4_num_delitos=c4_delitos_c.length;
+            console.log(c4_num_delitos);
             c4_der_vul = $.trim($('#c4_der_vul').val());
             c4_per_tercera_edad = $.trim($('#c4_per_tercera_edad').val());
             c4_per_violencia = $.trim($('#c4_per_violencia').val());
@@ -105,6 +107,7 @@ function carrito_victima_c4(origen, evento, id) {
             c4_per_indigena = $.trim($('#c4_per_indigena').val());
             c4_per_transgenero = $.trim($('#c4_per_transgenero').val());
             c4_sexo_victima = document.querySelector('input[name="c4_sexo_victima"]:checked').value;
+           
             if(c4_edad_vic === ''){
                 toastr.options.timeOut = 2500;
                 toastr.warning('Debes ingresar el edad de la Victima!');
@@ -117,12 +120,7 @@ function carrito_victima_c4(origen, evento, id) {
                 $('#c4_edad_ms_vic').focus();
                 return false;
             }
-            if(c4_nom_vic === ''){
-                toastr.options.timeOut = 2500;
-                toastr.warning('Debes ingresar el nombre de la Victima!');
-                $('#c4_nom_vic').focus();
-                return false;
-            }
+           
             if(c4_nom_vic === ''){
                 toastr.options.timeOut = 2500;
                 toastr.warning('Debes ingresar el nombre de la Victima!');
@@ -135,18 +133,14 @@ function carrito_victima_c4(origen, evento, id) {
                 $('#c4_delitos').focus();
                 return false;
             }
-            if(c4_num_delitos === ''){
+            if(c4_der_vul === ''){
                 toastr.options.timeOut = 2500;
-                toastr.warning('Debes ingresar el numero de los Delito!');
-                $('#c4_num_delitos').focus();
+                toastr.warning('Debes Seleccionar el Derecho!');
+                $('#c4_der_vul').focus();
                 return false;
             }
-            if(c4_num_delitos === ''){
-                toastr.options.timeOut = 2500;
-                toastr.warning('Debes ingresar el numero de los Delito!');
-                $('#c4_num_delitos').focus();
-                return false;
-            }
+            
+          
             if ($('#c4_per_tercera_edad').prop('checked'))
                 c4_per_tercera_edad = 1;
             else
@@ -197,7 +191,7 @@ function carrito_victima_c4(origen, evento, id) {
             $('#c4_edad_ms_vic').val('');            
             $('#c4_nom_vic').val('');
             $('#c4_delitos').val('0');
-            $('#c4_num_delitos').val('');
+            // $('#c4_num_delitos').val('');
             $('#c4_der_vul').val('0');
             $('#c4_per_tercera_edad').prop('checked', false).removeAttr('checked');
             $('#c4_per_violencia').prop('checked', false).removeAttr('checked');

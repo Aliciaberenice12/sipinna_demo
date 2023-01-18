@@ -32,9 +32,6 @@ function compressImage($source, $destination, $quality)
 if (isset($_REQUEST['func'])) {
 	switch ($_REQUEST['func']) {
 			//Casos c4 Victimas
-
-
-
 		case 'carrito_victima_c4':
 			if ($_REQUEST["evento"] == 1 || $_REQUEST["evento"] == 2 || $_REQUEST["evento"] == 3) {
 				if ($_REQUEST["evento"] == 1) //Agregar al carrito
@@ -104,9 +101,9 @@ if (isset($_REQUEST['func'])) {
 						$delitos = explode(',', $row['c4_delitos']);
 						unset($_SESSION['cat_delito']);
 						foreach ($delitos as $delito) {
-							array_push($aux, $_SESSION['cat_delitos'][$delito][0]);
+							array_push($aux, "■ ". $_SESSION['cat_delitos'][$delito][0]);
 						}
-						$aux2 = implode(",", $aux);
+						$aux2 = implode("<br>", $aux);
 
 						$der = [];
 						$arr_der_vul = $row['c4_der_vul'];
@@ -122,9 +119,12 @@ if (isset($_REQUEST['func'])) {
 									' . $row["c4_nom_vic"] . '
 								</td>		
 								<td>
-								' . $row["c4_edad_vic"] . ' Años
+								 <strong>Años:</strong> ' . ($row["c4_edad_vic"] == "0" ? "Se desconoce" : $row["c4_edad_vic"] ) . '
+
 								<br>
-								' . $row["c4_edad_ms_vic"] . ' Meses
+								<strong>Meses:</strong> ' . ($row["c4_edad_ms_vic"] == "0" ? "Se desconoce" : $row["c4_edad_ms_vic"] ) . '
+
+								
 								</td>				
 								<td>
 									' . $aux2 . '
@@ -170,6 +170,7 @@ if (isset($_REQUEST['func'])) {
 			} else {
 				$estatus = $v->editar_victima_c4(
 					$_REQUEST["c4_edad_victima_edit"],
+					$_REQUEST["c4_edad_ms_vic_edit"],
 					$_REQUEST["c4_nom_victima_edit"],
 					$_REQUEST["c4_num_delitos_edit"],
 					$_REQUEST["c4_per_tercera_edad_edit"],
@@ -244,9 +245,9 @@ if (isset($_REQUEST['func'])) {
 					$delitos = explode(',', $row['c4_delito']);
 					unset($_SESSION['cat_delito']);
 					foreach ($delitos as $delito) {
-						array_push($aux, $_SESSION['cat_delitos'][$delito][0]);
+						array_push($aux, "■ " . $_SESSION['cat_delitos'][$delito][0]);
 					}
-					$aux2 = implode(",", $aux);
+					$aux2 = implode("<br>", $aux);
 
 					$der = [];
 					$arr_der_vul = $row['c4_der_vul_victima'];
@@ -262,11 +263,10 @@ if (isset($_REQUEST['func'])) {
 									<div class="row">
 										<td class="col-md-2">
 											<div>
-											
-											' . $row["c4_edad_victima"] . ' Años
-											<br>
-											' . $row["c4_edad_ms_victima"] . ' Meses
+											<strong>Años:</strong> ' . ($row["c4_edad_victima"] == "0" ? "Se desconoce" : $row["c4_edad_victima"] ) . '
 
+											<br>
+											<strong>Meses:</strong> ' . ($row["c4_edad_ms_victima"] == "0" ? "Se desconoce" : $row["c4_edad_ms_victima"] ) . '
 											</div>
 										</td>
 										<td class="col-md-2">
@@ -276,9 +276,8 @@ if (isset($_REQUEST['func'])) {
 										</td>
 										<td class="col-md-2">
 											<div align="left">
-											' . $aux2 . '
-											<br>
-											<strong>n° Delitos: </strong><u>' . $row["c4_num_delitos"] . ' </u>
+											' . $aux2 . '.<br>
+											<strong>N° Delitos: </strong><u>' . $row["c4_num_delitos"] . ' </u>
 											</div>
 										</td>
 										
@@ -329,6 +328,8 @@ if (isset($_REQUEST['func'])) {
 				header('Content-Type: application/json');
 				$datos = array(
 					'c4_edad_victima' => $row["c4_edad_victima"],
+					'c4_edad_ms_victima' => $row["c4_edad_ms_victima"],
+					
 					'c4_nom_victima' => $row["c4_nom_victima"],
 					'c4_num_delitos' => $row["c4_num_delitos"],
 					'c4_per_tercera_edad' => $row["c4_per_tercera_edad"],
@@ -338,6 +339,7 @@ if (isset($_REQUEST['func'])) {
 					'c4_per_transgenero' => $row["c4_per_transgenero"],
 					'c4_sexo_victima' => $row["c4_sexo_victima"],
 					'id_c4_delito_victima' => $row["id_c4_delito_victima"],
+					'c4_exp_folio_victima' => $row["c4_exp_folio_victima"],
 					'c4_delito' => $row["c4_delito"],
 					'id_c4_derecho' => $row["id_c4_derecho"],
 					'c4_der_vul_victima' => $row["c4_der_vul_victima"],
@@ -564,7 +566,7 @@ if (isset($_REQUEST['func'])) {
 					'c4_edad_responsable' => $row["c4_edad_responsable"],
 					'c4_nom_responsable' => $row["c4_nom_responsable"],
 					'c4_parentesco' => $row["c4_parentesco"],
-
+					'c4_exp_folio_resp' => $row["c4_exp_folio_resp"]
 				);
 				echo json_encode($datos, JSON_FORCE_OBJECT);
 			}
@@ -618,10 +620,11 @@ if (isset($_REQUEST['func'])) {
 			//Caso c4 Expediente
 		case 'fn_guardar_caso_c4':
 			if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] != '4') {
-				if ($_REQUEST["id"] == 0) {
+				if ($_REQUEST["id"] == 0) //Crear Expediente 
+				{
 
 					$nom_archivo = '';
-					if ($_FILES["archivo"]["size"] > 500000) //Si el archivo es mayor a 500 Kb
+					if ($_FILES["archivo"]["size"] > 1000000) //Si el archivo es mayor a 500 Kb
 						$estatus = 'arch_pesado';
 
 					else {
@@ -636,58 +639,77 @@ if (isset($_REQUEST['func'])) {
 						$datos_exp_c4 = $_POST;
 						$estatus = $v->fn_registrar_caso_c4($nom_archivo_c4, $datos_exp_c4);
 					}
-				} else 
+				} else //Editar Expediente
 				{
-					$folio_img_1    = str_replace(' ', '', $_REQUEST["c4_no_oficio"]);
-					$folio_img      = str_replace('/', '_', $folio_img_1);
-					$nombre_archivo = $_FILES['archivo']['name'];
-					$tmp_archivo    = $_FILES['archivo']['tmp_name'];
-					$ext            = explode(".", $_FILES['archivo']['name']);
-					$extension      = end($ext);
-					$nom_archivo_c4    = $folio_img . '_' . rand() . '.' . $extension;
-					$upload_folder  = '../images/casos_c4/';
-					$archivador     = $upload_folder . $nom_archivo_c4;
-
-					if (compressImage($tmp_archivo, $archivador, 30)) {
-
+					if (isset($_POST['archivo'])) {//si no se cambia la imagen 
 						$estatus = $v->editar_caso_c4(
-							$_REQUEST["id"],
-							$_REQUEST["c4_folio"],
-							$_REQUEST["c4_numero"],
-							$_REQUEST["c4_no_oficio"],
-							$_REQUEST["c4_fecha_inicio"],
-							$_REQUEST["c4_pais"],
-							$_REQUEST["c4_otros_estados"],
-							$_REQUEST["c4_edo"],
-							$_REQUEST["c4_mun"],
-							$_REQUEST["c4_mun_edo"],
-							$_REQUEST["c4_dirigido"],
-							$_REQUEST["c4_dg"],
-							$nom_archivo_c4,
+							$_POST["id"],
+							$_POST["c4_folio"],
+							$_POST["c4_numero"],
+							$_POST["c4_no_oficio"],
+							$_POST["c4_fecha_inicio"],
+							$_POST["c4_pais"],
+							$_POST["otros_estados_c4"],
+							$_POST["c4_edo"],
+							$_POST["c4_mun"],
+							$_POST["c4_mun_edo"],
+							$_POST["c4_dirigido"],
+							$_POST["c4_dg"],
+							$_POST["c4_ruta_sol_oficio_edit"],
 							$_SESSION["nombre"]
 						);
+						$estatus2 = $v->editar_desc_caso_c4(
+							$_POST["id_caso"],
+							$_POST["c4_lugar_hechos"],
+							$_POST["c4_des_hechos"],
+							$_POST["c4_observaciones"],
+							$_SESSION["nombre"]
+						);
+					} 
+					else //si tiene imagen 
+					{
+						$folio_img_1    = str_replace(' ', '', $_REQUEST["c4_no_oficio"]);
+						$folio_img      = str_replace('/', '_', $folio_img_1);
+						$fichero = $_FILES["archivo"];
+						$obt_fecha_folio = $_POST["c4_fecha_inicio"];
+						$ext            = explode(".", $_FILES['archivo']['name']);
+						$extension      = end($ext);
+						$nom_archivo_c4    = $folio_img . '_' . rand() . '.' . $extension;
+						$upload_folder  = '../images/casos_c4/';
+						move_uploaded_file($fichero["tmp_name"], "../images/casos_c4/" . $nom_archivo_c4);
 						unlink($upload_folder . $_REQUEST["c4_ruta_sol_oficio_edit"]);
 
-						if ($estatus == 'error_registro') {
-							if (file_exists($archivador));
-							unlink($archivador);
-						}
-					} else
-						$estatus = 'error_subida_archivo';
-
-					$estatus2 = $v->editar_desc_caso_c4(
-						$_REQUEST["id_caso"],
-						$_REQUEST["c4_lugar_hechos"],
-						$_REQUEST["c4_des_hechos"],
-						$_REQUEST["c4_observaciones"],
-						$_SESSION["nombre"]
-					);
+						$estatus = $v->editar_caso_c4_c_img(
+							$_POST["c4_folio"],
+							$_POST["c4_numero"],
+							$_POST["c4_no_oficio"],
+							$_POST["c4_fecha_inicio"],
+							$_POST["c4_pais"],
+							$_POST["otros_estados_c4"],
+							$_POST["c4_edo"],
+							$_POST["c4_mun"],
+							$_POST["c4_mun_edo"],
+							$_POST["c4_dirigido"],
+							$_POST["c4_dg"],
+							$nom_archivo_c4,
+							$_SESSION["nombre"],
+							$_POST["id"]
+						);
+						$estatus2 = $v->editar_desc_caso_c4(
+							$_REQUEST["id_caso"],
+							$_REQUEST["c4_lugar_hechos"],
+							$_REQUEST["c4_des_hechos"],
+							$_REQUEST["c4_observaciones"],
+							$_SESSION["nombre"]
+						);
+					}
 				}
 			} else 
-				if ($_REQUEST["id"] == 0) {//registra expediente historico nuevo 
+				if ($_REQUEST["id"] == 0) //registra expediente historico nuevo
+				{ 
 
 					$nom_archivo = '';
-					if ($_FILES["archivo"]["size"] > 500000) //Si el archivo es mayor a 500 Kb
+					if ($_FILES["archivo"]["size"] > 1000000) //Si el archivo es mayor a 500 Kb
 						$estatus = 'arch_pesado';
 
 					else {
@@ -847,15 +869,15 @@ if (isset($_REQUEST['func'])) {
 	
 										</td>
 										<td>
-										' . ($row["id_estado"] == "Seleccionar" ? "" : $row["id_estado"]) . '
-
+										
+										' . ($row["estado"] == "Seleccionar" ? "" : $row["estado"]) . '
+											' . $row["estado"] . '
 											' . $row["c4_otros_estados"] . '
 	
 										</td>
 										<td>
 										
-											' . ($row["c4_mun"] == "Seleccionar" ? "" : $row["c4_mun"]) . '
-
+											' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '
 
 											' . $row["c4_mun_edo"] . '
 
@@ -909,7 +931,7 @@ if (isset($_REQUEST['func'])) {
 					'c4_fecha_inicio'    => $row["c4_fecha_inicio"],
 					'c4_pais'    => $row["c4_pais"],
 					'c4_otros_estados'    => $row["c4_otros_estados"],
-					'id_estado'    => $row["id_estado"],
+					'c4_edo'    => $row["c4_edo"],
 					'c4_mun'       => $row["c4_mun"],
 					'c4_mun_edo'       => $row["c4_mun_edo"],
 					'c4_dirigido'       => $row["c4_dirigido"],
@@ -1066,7 +1088,6 @@ if (isset($_REQUEST['func'])) {
 			echo $html;
 			break;
 		case 'fn_carga_delitos':
-			$html = '<option value="0" disabled selected>Seleccionar</option>';
 			$arr_res = $v->fn_lista_delitos();
 			foreach ($arr_res as $row) {
 				$html .= '<option value="' . $row["id_delito"] . '">' . $row["delito"] . '</option>';

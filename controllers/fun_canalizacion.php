@@ -625,8 +625,8 @@ if (isset($_REQUEST['func'])) {
 				{
 				}
 			}
-			else
-			
+			else// Registro Historico 
+			{
 				if ($_REQUEST["id"] == '0') // historico nuevo registro
 				{
 					$nom_archivo_can = '';
@@ -656,7 +656,7 @@ if (isset($_REQUEST['func'])) {
 				{  
 					$datos_exp_historico_edit = $_POST;
 				}
-			
+			}
 			header('Content-Type: application/json');
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
