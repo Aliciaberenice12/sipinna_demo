@@ -58,11 +58,10 @@
                                 <div class="col-md-6">
 
                                     <label for="can_ruta_sol_oficio">Archivo Solicitud de Canalización *</label>
-                                    <input type="file" class="form-control" id="can_ruta_sol_oficio" name="can_ruta_sol_oficio" accept="">
+                                    <input type="file" class="form-control" id="can_ruta_sol_oficio" name="can_ruta_sol_oficio" accept="application/pdf">
                                     <input type="hidden" name="can_ruta_sol_oficio_edit" id="can_ruta_sol_oficio_edit" value="0">
-                                    <div id="imagen_can">
-                                        <span class="" id="imagen_subida_can"></span>
-                                    </div>
+                                    <span class="archivo_subido_local" id="imagen_subida_can"></span>
+
                                 </div>
                                 <br>
                                 <div class="col-md-3">
@@ -140,7 +139,7 @@
                                     <select name="can_estado" id="can_estado" class="form-select">
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3" id="div_municipio">
                                     <label for="can_mun" id="can_mun">Municipio *</label>
                                     <select name="can_municipio" id="can_municipio" class="form-select" required>
                                     </select>
@@ -231,22 +230,9 @@
                                         <div class="col-md-2">
                                             <label for="can_edad_vic">Edad(Años):</label>
                                             <select name="can_edad_vic" id="can_edad_vic" class="form-select">
-                                                <option value="0" selected disabled>Seleccionar</option>
-                                                <?php
+                                            <option value="0"  >Menos de 1 año</option>                                                <?php
                                                 for ($i = 0; $i <= 100; $i++) {
                                                     echo "<option value=" . $i . ">" . $i . " Años</option>";
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-
-                                            <label for="can_edad_ms_vic">Edad(Meses):</label>
-                                            <select name="can_edad_ms_vic" id="can_edad_ms_vic" class="form-select">
-                                                <option value="0" selected disabled>Seleccionar</option>
-                                                <?php
-                                                for ($i = 0; $i <= 12; $i++) {
-                                                    echo "<option value=" . $i . ">" . $i . " Meses</option>";
                                                 }
                                                 ?>
                                             </select>
@@ -256,20 +242,17 @@
                                             <label for="can_nom_vic">Nombre Victima:</label>
                                             <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic" name="can_nom_vic" maxlength="50">
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
                                             <label for="can_delito">Tipo de Delito:</label>
                                             <select name="can_delito[]" id="can_delito" class="form-select" multiple>
                                             </select>
+                                            
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="can_num_del">Numero delitos:</label>
-                                            <input type="number" class="form-control" placeholder="Numero delitos" id="can_num_del" name="can_num_del" maxlength="11">
-                                        </div>
+                                     
                                         <p></p>
                                         <div class="col-md-12">
                                             <label for="can_der_vul_vic">Derechos Vulnerados o restringidos:</label>
-                                            <div class="form-text fs-6">(Seleccion Multiple) </div>
-                                            <select name="can_der_vul_vic[]" id="can_der_vul_vic" class="form-select" multiple>
+                                            <select name="can_der_vul_vic[]" id="can_der_vul_vic" class="form-select" >
                                             </select>
                                         </div>
                                         <p></p>
@@ -317,9 +300,9 @@
                                             <label><STRONG>Sexo</STRONG></label>
                                             <br>
                                             <input type="radio" id="masculino" name="can_sexo_victima" value="Hombre">
-                                            <label for="masculino">Mujer</label><br>
+                                            <label for="masculino">Hombre</label><br>
                                             <input type="radio" id="femenino" name="can_sexo_victima" value="Mujer">
-                                            <label for="femenino">Hombre</label><br>
+                                            <label for="femenino">Mujer</label><br>
                                             <input type="radio" id="n_i" name="can_sexo_victima" value="N/I" checked>
                                             <label for="n_i">N/I</label>
 
@@ -401,15 +384,23 @@
                         <h5><strong>Datos de presunta(s) victima(s) :</strong></h5>
                     </div>
                     <div class="row col-md-12" id="victimas">
-                        <div class="col-md-2">
-                            <label for="can_edad_vic_edit">Edad:</label>
-                            <input type="text" class="form-control" placeholder="Edad Victima" id="can_edad_vic_edit" name="can_edad_vic_edit" required>
+                       
+                        <div class="col-md-4">
+                            <label for="can_edad_vic_edit">Edad(Años):</label>
+                            <select name="can_edad_vic_edit" id="can_edad_vic_edit" class="form-select">
+                                <option value="0"  >Menos de un año</option>
+                                <?php
+                                for ($i = 1; $i <= 100; $i++) {
+                                    echo "<option value=" . $i . ">" . $i . " Años</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-8">
                             <label for="can_nom_vic_edit">Nombre Victima:</label>
                             <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic_edit" name="can_nom_vic_edit" required>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-12">
                             <label for="can_delito_edit">Tipo de Delito:</label>
                             <input type="hidden" name="id_can_del_victima_edit" id="id_can_del_victima_edit" value="0">
                             <small id="helpDel" class="form-text text-muted">(Multiple)</small>
@@ -417,18 +408,18 @@
                                 <option value="0"></option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <label for="can_num_del_edit">Numero delitos:</label>
                             <input type="numer" class="form-control" placeholder="Numero delitos" id="can_num_del_edit" name="can_num_del_edit" maxlength="11">
-                        </div>
+                        </div> -->
                         <p></p>
                         <div class="col-md-12">
                             <label for="can_der_vul_vic_edit">Derechos Vulnerados o restringidos:</label><br>
                             <input type="hidden" name="id_can_der_victima_edit" id="id_can_der_victima_edit" value="0">
 
-                            <small id="helpDEr" class="form-text text-muted">(Multiple)</small>
+                            <small id="helpDEr" class="form-text text-muted"></small>
 
-                            <select name="can_der_vul_vic_edit[]" id="can_der_vul_vic_edit" class="form-select" multiple>
+                            <select name="can_der_vul_vic_edit[]" id="can_der_vul_vic_edit" class="form-select">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -476,10 +467,10 @@
                         <div class="col-md-2">
                             <label><STRONG>Sexo</STRONG></label>
                             <br>
-                            <input type="radio" id="masculino_edit" name="can_sexo_victima_edit" value="Masculino">
-                            <label for="masculino_edit">Masculino</label><br>
-                            <input type="radio" id="femenino_edit" name="can_sexo_victima_edit" value="Femenino">
-                            <label for="femenino_edit">Femenino</label><br>
+                            <input type="radio" id="masculino_edit" name="can_sexo_victima_edit" value="Hombre">
+                            <label for="masculino_edit">Hombre</label><br>
+                            <input type="radio" id="femenino_edit" name="can_sexo_victima_edit" value="Mujer">
+                            <label for="femenino_edit">Mujer</label><br>
                             <input type="radio" id="n_i_edit" name="can_sexo_victima_edit" value="N/I">
                             <label for="n_i_edit">N/I</label>
 
@@ -493,7 +484,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     Cancelar
                 </button>
-                <button type="button" class="btn btn-success" onclick="fun_editar_victima();">Agregar</button>
+                <button type="button" class="btn btn-success" onclick="fun_editar_victima();">Guardar</button>
             </div>
 
         </div>

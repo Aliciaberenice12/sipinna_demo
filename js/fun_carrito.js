@@ -93,13 +93,11 @@ function carrito_victima_c4(origen, evento, id) {
         if (evento == 1) //Agregar
         {
             c4_edad_vic = $.trim($('#c4_edad_vic').val());
-            c4_edad_ms_vic = $.trim($('#c4_edad_ms_vic').val());
 
             c4_nom_vic = $.trim($('#c4_nom_vic').val());
             c4_delitos = $.trim($('#c4_delitos').val());
             c4_delitos_c=c4_delitos.split(",");
             c4_num_delitos=c4_delitos_c.length;
-            console.log(c4_num_delitos);
             c4_der_vul = $.trim($('#c4_der_vul').val());
             c4_per_tercera_edad = $.trim($('#c4_per_tercera_edad').val());
             c4_per_violencia = $.trim($('#c4_per_violencia').val());
@@ -114,12 +112,7 @@ function carrito_victima_c4(origen, evento, id) {
                 $('#c4_edad_vic').focus();
                 return false;
             }
-            if(c4_edad_ms_vic === ''){
-                toastr.options.timeOut = 2500;
-                toastr.warning('Debes Seleccionar!');
-                $('#c4_edad_ms_vic').focus();
-                return false;
-            }
+           
            
             if(c4_nom_vic === ''){
                 toastr.options.timeOut = 2500;
@@ -168,7 +161,6 @@ function carrito_victima_c4(origen, evento, id) {
         }
         else {
             c4_edad_vic = '';
-            c4_edad_ms_vic='';
             c4_nom_vic = '';
             c4_delitos = '';
             c4_num_delitos = '';
@@ -181,14 +173,13 @@ function carrito_victima_c4(origen, evento, id) {
             c4_sexo_victima = '';
         }
         $.post("../controllers/fun_casos_c4.php", {
-            func: 'carrito_victima_c4', evento: evento, id: id, c4_edad_vic: c4_edad_vic,c4_edad_ms_vic:c4_edad_ms_vic,
+            func: 'carrito_victima_c4', evento: evento, id: id, c4_edad_vic: c4_edad_vic,
             c4_nom_vic: c4_nom_vic, c4_delitos: c4_delitos, c4_num_delitos: c4_num_delitos, c4_der_vul: c4_der_vul,
             c4_per_tercera_edad: c4_per_tercera_edad, c4_per_violencia: c4_per_violencia, c4_per_discapacidad: c4_per_discapacidad,
             c4_per_indigena: c4_per_indigena, c4_per_transgenero: c4_per_transgenero, c4_sexo_victima: c4_sexo_victima
         }, function (data) {
             $('#lista_dat_vic_c4').html(data);
             $('#c4_edad_vic').val('');
-            $('#c4_edad_ms_vic').val('');            
             $('#c4_nom_vic').val('');
             $('#c4_delitos').val('0');
             // $('#c4_num_delitos').val('');

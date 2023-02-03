@@ -126,7 +126,16 @@ footer {
     color: white;
 
 }
-
+.tbl-foot{
+    background-color: #837f7f;
+    color: white;
+}
+.tbl_div{
+    margin:0px;
+    padding: 8px;   
+    
+    border: none;
+}
 .button-bars {
     position: absolute;
     margin: 1.5em 1em;

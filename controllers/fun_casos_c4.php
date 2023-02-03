@@ -6,29 +6,6 @@ session_start();
 //print_r($_SESSION);
 //print_r($_SESSION["rol_id"]);
 
-function compressImage($source, $destination, $quality)
-{
-	// Obtenemos la información de la imagen
-	$imgInfo = getimagesize($source);
-	$mime    = $imgInfo['mime'];
-
-	// Creamos una imagen
-	switch ($mime) {
-		case 'image/jpeg':
-			$image = imagecreatefromjpeg($source);
-			break;
-		case 'image/png':
-			$image = imagecreatefrompng($source);
-			break;
-		case 'image/gif':
-			$image = imagecreatefromgif($source);
-			break;
-		default:
-			$image = imagecreatefromjpeg($source);
-	}
-	// Guardamos la imagen
-	return imagejpeg($image, $destination, $quality);
-}
 if (isset($_REQUEST['func'])) {
 	switch ($_REQUEST['func']) {
 			//Casos c4 Victimas
@@ -37,7 +14,6 @@ if (isset($_REQUEST['func'])) {
 				if ($_REQUEST["evento"] == 1) //Agregar al carrito
 				{
 					$c4_edad_vic 			= $_POST["c4_edad_vic"];
-					$c4_edad_ms_vic 			= $_POST["c4_edad_ms_vic"];
 					$c4_nom_vic  			= $_POST["c4_nom_vic"];
 					$c4_delitos  			= $_POST["c4_delitos"];
 					$c4_num_delitos  		= $_POST["c4_num_delitos"];
@@ -52,7 +28,7 @@ if (isset($_REQUEST['func'])) {
 
 					//Creamos el array con sus valores
 					$_SESSION["victima_c4"][$id] = array(
-						'id' => $id, 'c4_edad_vic' => $c4_edad_vic, 'c4_edad_ms_vic' => $c4_edad_ms_vic, 'c4_nom_vic' => $c4_nom_vic,
+						'id' => $id, 'c4_edad_vic' => $c4_edad_vic,'c4_nom_vic' => $c4_nom_vic,
 						'c4_delitos' => $c4_delitos, 'c4_num_delitos' => $c4_num_delitos, 'c4_der_vul' => $c4_der_vul,
 						'c4_per_tercera_edad' => $c4_per_tercera_edad, 'c4_per_violencia' => $c4_per_violencia,
 						'c4_per_discapacidad' => $c4_per_discapacidad, 'c4_per_indigena' => $c4_per_indigena, 'c4_per_transgenero' => $c4_per_transgenero,
@@ -122,7 +98,6 @@ if (isset($_REQUEST['func'])) {
 								 <strong>Años:</strong> ' . ($row["c4_edad_vic"] == "0" ? "Se desconoce" : $row["c4_edad_vic"] ) . '
 
 								<br>
-								<strong>Meses:</strong> ' . ($row["c4_edad_ms_vic"] == "0" ? "Se desconoce" : $row["c4_edad_ms_vic"] ) . '
 
 								
 								</td>				
@@ -170,7 +145,6 @@ if (isset($_REQUEST['func'])) {
 			} else {
 				$estatus = $v->editar_victima_c4(
 					$_REQUEST["c4_edad_victima_edit"],
-					$_REQUEST["c4_edad_ms_vic_edit"],
 					$_REQUEST["c4_nom_victima_edit"],
 					$_REQUEST["c4_num_delitos_edit"],
 					$_REQUEST["c4_per_tercera_edad_edit"],
@@ -264,9 +238,6 @@ if (isset($_REQUEST['func'])) {
 										<td class="col-md-2">
 											<div>
 											<strong>Años:</strong> ' . ($row["c4_edad_victima"] == "0" ? "Se desconoce" : $row["c4_edad_victima"] ) . '
-
-											<br>
-											<strong>Meses:</strong> ' . ($row["c4_edad_ms_victima"] == "0" ? "Se desconoce" : $row["c4_edad_ms_victima"] ) . '
 											</div>
 										</td>
 										<td class="col-md-2">
@@ -327,9 +298,7 @@ if (isset($_REQUEST['func'])) {
 			foreach ($arr_res as $row) {
 				header('Content-Type: application/json');
 				$datos = array(
-					'c4_edad_victima' => $row["c4_edad_victima"],
-					'c4_edad_ms_victima' => $row["c4_edad_ms_victima"],
-					
+					'c4_edad_victima' => $row["c4_edad_victima"],					
 					'c4_nom_victima' => $row["c4_nom_victima"],
 					'c4_num_delitos' => $row["c4_num_delitos"],
 					'c4_per_tercera_edad' => $row["c4_per_tercera_edad"],
@@ -619,29 +588,39 @@ if (isset($_REQUEST['func'])) {
 
 			//Caso c4 Expediente
 		case 'fn_guardar_caso_c4':
-			if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] != '4') {
+			if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] == '1') //Crear Registro Administrador
+			{
+
 				if ($_REQUEST["id"] == 0) //Crear Expediente 
 				{
 
 					$nom_archivo = '';
-					if ($_FILES["archivo"]["size"] > 1000000) //Si el archivo es mayor a 500 Kb
-						$estatus = 'arch_pesado';
+					if (isset($_FILES["archivo"]) and $_FILES["archivo"] != '') {
+						if ($_FILES["archivo"]["size"] > 1000000) //Si el archivo es mayor a 500 Kb
+							$estatus = 'arch_pesado';
 
-					else {
-						$folio_img_1    = str_replace(' ', '', $_REQUEST["c4_no_oficio"]);
-						$folio_img      = str_replace('/', '_', $folio_img_1);
-						$fichero = $_FILES["archivo"];
-						$ext            = explode(".", $_FILES['archivo']['name']);
-						$extension      = end($ext);
-						$nom_archivo_c4    = $folio_img . '_' . rand() . '.' . $extension;
+						else {
+							$folio_img_1    = str_replace(' ', '', $_REQUEST["c4_no_oficio"]);
+							$folio_img      = str_replace('/', '_', $folio_img_1);
+							$fichero = $_FILES["archivo"];
+							$ext            = explode(".", $_FILES['archivo']['name']);
+							$extension      = end($ext);
+							$nom_archivo_c4    = $folio_img . '_' . rand() . '.' . $extension;
 
-						move_uploaded_file($fichero["tmp_name"], "../images/casos_c4/" . $nom_archivo_c4);
+							move_uploaded_file($fichero["tmp_name"], "../images/casos_c4/" . $nom_archivo_c4);
+							$datos_exp_c4 = $_POST;
+							$id_c4_anio='0';
+							$estatus = $v->fn_registrar_caso_c4($nom_archivo_c4, $datos_exp_c4,$id_c4_anio);
+						}
+					} else {
 						$datos_exp_c4 = $_POST;
-						$estatus = $v->fn_registrar_caso_c4($nom_archivo_c4, $datos_exp_c4);
+						$sin_imagen = 'no.png';
+						$id_c4_anio='0';
+						$estatus = $v->fn_registrar_caso_c4($sin_imagen, $datos_exp_c4,$id_c4_anio);
 					}
 				} else //Editar Expediente
 				{
-					if (isset($_POST['archivo'])) {//si no se cambia la imagen 
+					if (isset($_POST['archivo'])) { //si no se cambia la imagen 
 						$estatus = $v->editar_caso_c4(
 							$_POST["id"],
 							$_POST["c4_folio"],
@@ -665,8 +644,7 @@ if (isset($_REQUEST['func'])) {
 							$_POST["c4_observaciones"],
 							$_SESSION["nombre"]
 						);
-					} 
-					else //si tiene imagen 
+					} else //si tiene imagen 
 					{
 						$folio_img_1    = str_replace(' ', '', $_REQUEST["c4_no_oficio"]);
 						$folio_img      = str_replace('/', '_', $folio_img_1);
@@ -704,15 +682,15 @@ if (isset($_REQUEST['func'])) {
 						);
 					}
 				}
-			} else 
+			} 
+			else if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] == '4') ///Crear Expediente en perfil histirico
+			{ 
 				if ($_REQUEST["id"] == 0) //registra expediente historico nuevo
-				{ 
-
+				{
 					$nom_archivo = '';
-					if ($_FILES["archivo"]["size"] > 1000000) //Si el archivo es mayor a 500 Kb
+					if (isset($_FILES["archivo"]) and $_FILES["archivo"] != ''){
+						if ($_FILES["archivo"]["size"] > 1000000) //Si el archivo es mayor a 500 Kb
 						$estatus = 'arch_pesado';
-
-					else {
 						$folio_img_1    = str_replace(' ', '', $_REQUEST["c4_no_oficio"]);
 						$folio_img      = str_replace('/', '_', $folio_img_1);
 						$fichero = $_FILES["archivo"];
@@ -727,11 +705,21 @@ if (isset($_REQUEST['func'])) {
 						$datos_exp_histirico = $_POST;
 						$estatus = $v->fn_registrar_caso_c4_historico($nom_archivo_c4, $datos_exp_histirico, $anio_folio);
 					}
+					
+					else {
+							$nom_archivo_c4='no.png';
+							$datos_exp_histirico = $_POST;
+							$obt_fecha_folio = $_POST["c4_fecha_inicio"];
+							$anio_fol = explode("-", $obt_fecha_folio);
+							$anio_folio = $anio_fol['0'];
+							$estatus = $v->fn_registrar_caso_c4_historico($nom_archivo_c4, $datos_exp_histirico, $anio_folio);
+				
+						
+					}
 				} 
-				else //Editar Expediente Histirico 
+				else //Editar Expediente
 				{
-					$datos_exp_historico_edit = $_POST;
-					if (isset($_POST['archivo'])) {//si no se cambia la imagen 
+					if (isset($_POST['archivo'])) { //si no se cambia la imagen 
 						$estatus = $v->editar_caso_c4(
 							$_POST["id"],
 							$_POST["c4_folio"],
@@ -755,8 +743,7 @@ if (isset($_REQUEST['func'])) {
 							$_POST["c4_observaciones"],
 							$_SESSION["nombre"]
 						);
-					} 
-					else 
+					} else //si tiene imagen 
 					{
 						$folio_img_1    = str_replace(' ', '', $_REQUEST["c4_no_oficio"]);
 						$folio_img      = str_replace('/', '_', $folio_img_1);
@@ -794,6 +781,7 @@ if (isset($_REQUEST['func'])) {
 						);
 					}
 				}
+			}
 			header('Content-Type: application/json');
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
@@ -871,7 +859,7 @@ if (isset($_REQUEST['func'])) {
 										<td>
 										
 										' . ($row["estado"] == "Seleccionar" ? "" : $row["estado"]) . '
-											' . $row["estado"] . '
+										
 											' . $row["c4_otros_estados"] . '
 	
 										</td>
@@ -943,133 +931,7 @@ if (isset($_REQUEST['func'])) {
 			}
 			break;
 			//Avances 
-		case 'fn_guardar_avance':
-			if ($_REQUEST['id'] == 0) // nuevo registro
-				$estatus = $v->insertar_avance($_REQUEST["can_tipo_avance"], $_REQUEST["can_fecha_avance"], $_REQUEST["can_estatus_avance"], $_REQUEST["can_desc_avance"]);
-			else
-				$estatus = $v->editar_avance($_REQUEST["id"], $_REQUEST["can_tipo_avance"], $_REQUEST["can_fecha_avance"], $_REQUEST["can_estatus_avance"], $_REQUEST["can_desc_avance"]);
-
-			header('Content-Type: application/json');
-			$datos = array('estatus' => $estatus);
-			echo json_encode($datos, JSON_FORCE_OBJECT);
-			break;
-		case 'fn_eliminar_avance':
-			$estatus = $v->eliminar_avance($_REQUEST["id"], $_REQUEST["can_tipo_avance"]);
-			header('Content-Type: application/json');
-			$datos = array('estatus' => $estatus);
-			echo json_encode($datos, JSON_FORCE_OBJECT);
-			break;
-		case 'fn_obtener_avance':
-			$arr_res = $v->obtener_avance($_REQUEST["id"]);
-			foreach ($arr_res as $row) {
-				header('Content-Type: application/json');
-				$datos = array(
-					'can_tipo_avance'	=> $row["can_tipo_avance"],
-					'can_fecha_avance'	=> $row["can_fecha_avance"],
-					'can_estatus_avance' => $row["can_estatus_avance"],
-					'can_desc_avance'	=> $row["can_desc_avance"],
-				);
-				echo json_encode($datos, JSON_FORCE_OBJECT);
-			}
-			break;
-		case 'fn_listar_avances':
-			$arr_res = $v->lista_avances();
-
-			$size    = sizeof($arr_res);
-
-			if (empty($arr_res)) {
-				$html =
-					'
-				<center>
-					<span>¡ No hay datos !</span>
-				</center>';
-			} else {
-				$html = '  
-				<div class="row">
-					<div class="col-12" align="left">
-						<table id="tbl_avance" class="table table-hover table-striped table-sm table-responsive-sm">
-							<thead class="tbl-estadisticas">
-							<tr align="center">
-								<th>
-									Fecha Avance
-								</th>
-								<th>
-									Tipo Avance
-								</th>
-								<th>
-									Descripción avance
-								</th>
-								<th>
-									Estatus
-								</th>
-								<th>
-									Acciones
-								</th>
-								
-							</tr>
-							</thead>
-							<tbody>';
-				foreach ($arr_res as $row) {
-
-					$html .= '
-								<tr class="text-11" align="center" id="l_avance' . $row["id_can_avance"] . '">
-									<div class="row">
-										<td>
-										<div class="col-md-5">
-											' . $row["id_can_avance"] . '
-											</div>
-											<div class="col-md-5">
-											' . $row["can_fecha_avance"] . '
-											</div>
-										</td>
-										<td>
-											<div class="col-md-3">
-											' . $row["can_tipo_avance"] . '
-											</div>
-										</td>
-										<td>
-											<div class="col-md-3">
-											' . $row["can_desc_avance"] . '
-											</div>
-										</td>
-										<td>
-											<div class="col-md-3">
-											
-											' . $row["can_estatus_avance"] . '
-											</div>
-										</td>
-								
-			
-										<td>
-
-										
-											<div class="col-md-3">
-											
-												<button type="button" class="btn btn-primary" aria-label="Editar Canalizacion" onclick="fn_modal_avance(3,' . $row["id_can_avance"] . ');">
-													<i class="bi bi-pencil-square"></i>
-													<span></span>
-												</button>
-												<button type="button" class="btn btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_avance_(' . $row["id_can_avance"] . ',\'' . $row["can_tipo_avance"] . '\');">
-													<i class="bi bi-trash"></i>
-													<span></span>
-												</button>
-											</div>
-										</td>   
-										
-
-									
-										</td>           
-									</div>
-								</tr>';
-				}
-				$html .= '
-							</tbody>
-						</table>
-					</div>
-				</div>';
-			}
-			echo $html;
-			break;
+					
 			//Cargar Catálogos
 		case 'fn_carga_municipios':
 			$html = '<option value="0" disabled selected>Seleccionar</option>';

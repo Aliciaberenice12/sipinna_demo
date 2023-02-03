@@ -2,12 +2,12 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
 if (isset($_SESSION['nombre'])) {
     $user = $_SESSION['nombre'];
 } else {
     header('location: ../index.php');
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -17,7 +17,6 @@ if (isset($_SESSION['nombre'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Sipinna</title>
-
     <!--CSS-->
     <link rel="stylesheet" href="../css/sipinna.css" />
     <link rel="stylesheet" href="../lib/bootstrap-5.2.1-dist/css/bootstrap.min.css">
@@ -106,7 +105,7 @@ if (isset($_SESSION['nombre'])) {
                                     <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Completa el campo..."><br>
                                     <label for="rol" class="form-label">Rol: </label>
                                     <select name="rol_usuario" id="rol_usuario" class="form-select" required>
-
+                                    
                                     </select>
                                 </div>
                                 <div class="col-md-4">
@@ -120,7 +119,7 @@ if (isset($_SESSION['nombre'])) {
                                 <div class="col-md-4">
 
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-8 pass">
                                     <label for="contrasena">Contraseña</label>
                                     <input type="password" name="contrasena" id="contrasena" class="form-control" placeholder="Completa el campo..."><br>
                                     <label for="contrasena"> Repite Contraseña</label>
@@ -163,3 +162,8 @@ if (isset($_SESSION['nombre'])) {
 </body>
 
 </html>
+
+
+
+
+

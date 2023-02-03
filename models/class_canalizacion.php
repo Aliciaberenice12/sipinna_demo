@@ -13,11 +13,14 @@ class Canalizacion extends Conexion
 	{
 
 		$sql = $this->dbh->prepare("
-									SELECT	id_canalizacion,
+									SELECT	
+											id,
+											id_canalizacion,
 											can_numero,
 											can_numero_oficio,
 											date_format(can_fecha,'%d-%m-%Y') as can_fecha,
 											activo,
+											can_otros_estados,
 											can_estado,
 											can_municipio,
 											can_mun_edo,
@@ -30,7 +33,7 @@ class Canalizacion extends Conexion
 											cat_estados.estado,
 											cat_municipios.municipio
 									FROM 	((tbl_can_expediente
-							INNER 	JOIN 	cat_estados 
+							LEFT 	JOIN 	cat_estados 
 									ON 		tbl_can_expediente.can_estado = cat_estados.id_estado )
 							LEFT 	JOIN 	cat_municipios
 									ON 		tbl_can_expediente.can_municipio = cat_municipios.id_municipio)
@@ -66,38 +69,63 @@ class Canalizacion extends Conexion
 			return $row["fol"];
 	}
 	//Registrar historico
-	
-	//Registrar Canalizacion
-	public function insertar_canalizacion($nom_gd, $datos_exp)
+	public function gen_folio_can_historico($tabla, $id,$anio_folio)
+	{
+		$sql = $this->dbh->prepare("select max(" . $id . ")+1 as fol from " . $tabla . " where anio = ? ;");
+		$sql->execute(array($anio_folio));
+		$row = $sql->fetch(PDO::FETCH_ASSOC);
+		if ($row["fol"] == "")
+			return 1;
+		else
+			return $row["fol"];
+	}
+	public function insertar_canalizacion_historico($nom_archivo, $datos_exp_historico_can, $anio_folio)
 	{
 		try {
-			// print_r($datos_exp);
+			// print_r($datos_exp_historico_can);
 			// die();
 			$nombre_creador = $_SESSION['nombre'];
 
-			$id = $this->gen_folio_can('tbl_can_expediente', 'id_canalizacion');
-			$can_folio_expediente = 'SE/OAyA/' . $id . '/' . date('Y');
-			$anio  = date('Y');
+			$id = $this->gen_folio_can_historico('tbl_can_expediente', 'id_canalizacion',$anio_folio);
+			$anio  = $anio_folio;
+			$can_folio_expediente = 'SE/OAyA/' . $anio_folio . '/' . sprintf("%04s",$id);
+
 			$conn = $this->dbh;
 			$conn->beginTransaction();
 
-			$sql   = $conn->prepare("insert into tbl_can_expediente 
-			(can_numero_oficio,can_folio,can_numero,can_fecha,can_pais,can_estado,can_municipio,can_mun_edo,can_via_rec,
-			can_ruta_sol_oficio,can_folio_expediente,anio,can_created_by) 
-			values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			$sql->bindParam(1, $datos_exp['can_num_oficio'], PDO::PARAM_STR, 50);
-			$sql->bindParam(2, $datos_exp['can_folio'], PDO::PARAM_STR, 30);
-			$sql->bindParam(3, $datos_exp['can_numero'], PDO::PARAM_STR);
-			$sql->bindParam(4, $datos_exp['can_fecha'], PDO::PARAM_STR, 30);
-			$sql->bindParam(5, $datos_exp['can_pais'], PDO::PARAM_STR, 30);
-			$sql->bindParam(6, $datos_exp['can_estado'], PDO::PARAM_STR, 30);
-			$sql->bindParam(7, $datos_exp['can_municipio'], PDO::PARAM_STR, 30);
-			$sql->bindParam(8, $datos_exp['can_mun_edo'], PDO::PARAM_STR);
-			$sql->bindParam(9, $datos_exp['can_via_rec'], PDO::PARAM_STR);
-			$sql->bindParam(10, $nom_gd);
-			$sql->bindParam(11, $can_folio_expediente, PDO::PARAM_STR);
-			$sql->bindParam(12, $anio, PDO::PARAM_STR, 30);
-			$sql->bindParam(13, $nombre_creador, PDO::PARAM_STR, 50);
+			$sql   = $conn->prepare("INSERT INTO tbl_can_expediente 
+												(can_numero_oficio,
+												can_folio,
+												can_numero,
+												can_fecha,
+												can_pais,
+												can_otros_estados,
+												can_estado,
+												can_municipio,
+												can_mun_edo,
+												can_via_rec,
+												can_ruta_sol_oficio,
+												can_folio_expediente,
+												anio,
+												can_created_by,
+												id_canalizacion) 
+										VALUES 	(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$sql->bindParam(1, $datos_exp_historico_can['can_num_oficio'], PDO::PARAM_STR, 50);
+			$sql->bindParam(2, $datos_exp_historico_can['can_folio'], PDO::PARAM_STR, 30);
+			$sql->bindParam(3, $datos_exp_historico_can['can_numero'], PDO::PARAM_STR);
+			$sql->bindParam(4, $datos_exp_historico_can['can_fecha'], PDO::PARAM_STR, 30);
+			$sql->bindParam(5, $datos_exp_historico_can['can_pais'], PDO::PARAM_STR, 30);
+			$sql->bindParam(6, $datos_exp_historico_can['can_otros_estados'], PDO::PARAM_STR, 30);
+			$sql->bindParam(7, $datos_exp_historico_can['can_estado'], PDO::PARAM_STR, 30);
+			$sql->bindParam(8, $datos_exp_historico_can['can_municipio'], PDO::PARAM_STR, 30);
+			$sql->bindParam(9, $datos_exp_historico_can['can_mun_edo'], PDO::PARAM_STR);
+			$sql->bindParam(10, $datos_exp_historico_can['can_via_rec'], PDO::PARAM_STR);
+			$sql->bindParam(11, $nom_archivo);
+			$sql->bindParam(12, $can_folio_expediente, PDO::PARAM_STR);
+			$sql->bindParam(13, $anio, PDO::PARAM_STR, 30);
+			$sql->bindParam(14, $nombre_creador, PDO::PARAM_STR, 50);
+			$sql->bindParam(15, $id, PDO::PARAM_STR, 30);
+
 			$sql->execute();
 			if ($conn->lastInsertId() > 0) {
 			} else {
@@ -107,14 +135,22 @@ class Canalizacion extends Conexion
 
 			//Comienza casos
 
-			$id_expediente = $id;
-			$sql2   = $conn->prepare("insert into tbl_can_casos_reportados (exp_id_caso_reportado,can_des_caso,can_gest_caso,ins_con_hechos,expediente_id_caso,can_created_by)
-			 values (?,?,?,?,?,?)");
+			$id_expediente = $can_folio_expediente;
+			$id_caso = $anio_folio.'/'.$id;
+
+			$sql2   = $conn->prepare("INSERT INTO 	tbl_can_casos_reportados 
+													(exp_id_caso_reportado,
+													can_des_caso,
+													can_gest_caso,
+													ins_con_hechos,
+													expediente_id_caso,
+													can_created_by)
+											VALUES 	(?,?,?,?,?,?)");
 			$sql2->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
-			$sql2->bindParam(2, $datos_exp['can_des_suncita_rep'], PDO::PARAM_STR, 30);
-			$sql2->bindParam(3, $datos_exp['can_ges_reporte'], PDO::PARAM_STR);
-			$sql2->bindParam(4, $datos_exp['ins_con_hechos'], PDO::PARAM_STR);
-			$sql2->bindParam(5, $id_expediente, PDO::PARAM_STR, 50);
+			$sql2->bindParam(2, $datos_exp_historico_can['can_des_suncita_rep'], PDO::PARAM_STR, 30);
+			$sql2->bindParam(3, $datos_exp_historico_can['can_ges_reporte'], PDO::PARAM_STR);
+			$sql2->bindParam(4, $datos_exp_historico_can['ins_con_hechos'], PDO::PARAM_STR);
+			$sql2->bindParam(5, $id_caso, PDO::PARAM_STR, 50);
 			$sql2->bindParam(6, $nombre_creador, PDO::PARAM_STR, 50);
 			$sql2->execute();
 
@@ -123,7 +159,8 @@ class Canalizacion extends Conexion
 				$conn->rollback();
 				$estatus = 'Error al registrar datos del caso';
 			}
-			$id_caso_solicitante = $id;
+
+			
 			$sql3   = $conn->prepare("INSERT iNTO 	tbl_can_solicitante
 														(exp_id_solicitante,
 														can_inst_solicitante,
@@ -132,9 +169,9 @@ class Canalizacion extends Conexion
 														can_created_by)
 			 									VALUES	(?,?,?,?,?)");
 			$sql3->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
-			$sql3->bindParam(2, $datos_exp['can_inst_sol'], PDO::PARAM_STR, 30);
-			$sql3->bindParam(3, $datos_exp['can_nom_sol'], PDO::PARAM_STR);
-			$sql3->bindParam(4, $id_caso_solicitante, PDO::PARAM_STR, 50);
+			$sql3->bindParam(2, $datos_exp_historico_can['can_inst_sol'], PDO::PARAM_STR, 30);
+			$sql3->bindParam(3, $datos_exp_historico_can['can_nom_sol'], PDO::PARAM_STR);
+			$sql3->bindParam(4, $id_caso, PDO::PARAM_STR, 50);
 			$sql3->bindParam(5, $nombre_creador, PDO::PARAM_STR, 50);
 			$sql3->execute();
 			if ($conn->lastInsertId() > 0) {
@@ -145,7 +182,7 @@ class Canalizacion extends Conexion
 			}
 				
 			//Reportante
-			$id_caso = $id;
+			
 			if(isset($_SESSION['reportante']) and !empty($_SESSION['reportante']))
 				{	
 					foreach ($_SESSION['reportante'] as $row) {
@@ -203,7 +240,7 @@ class Canalizacion extends Conexion
 					$sql5->bindParam(8, $row["can_sexo_victima"], PDO::PARAM_STR, 11);
 					$sql5->bindParam(9, $can_folio_expediente, PDO::PARAM_STR, 50);
 					$sql5->bindParam(10, $nombre_creador, PDO::PARAM_STR, 50);
-					$sql5->bindParam(11, $id_caso_reportado_victima, PDO::PARAM_STR, 50);
+					$sql5->bindParam(11, $id_caso, PDO::PARAM_STR, 50);
 					$sql5->execute();
 					if ($conn->lastInsertId() > 0) {
 					} else {
@@ -221,7 +258,7 @@ class Canalizacion extends Conexion
 															can_created_by)
 													VALUES	(?,?,?,?,?)");
 					$sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
-					$sql6->bindParam(2, $row["can_delito"], PDO::PARAM_INT, 11);
+					$sql6->bindParam(2, $row["can_delito"], PDO::PARAM_STR, 11);
 					$sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
 					$sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
 					$sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
@@ -266,27 +303,240 @@ class Canalizacion extends Conexion
 
 		return $estatus;
 	}
+	//Registrar Canalizacion
+	public function insertar_canalizacion($nom_archivo_can, $datos_exp_can)
+	{
+		try {
+			// print_r($datos_exp_can);
+			// die();
+			$nombre_creador = $_SESSION['nombre'];
+
+			$id = $this->gen_folio_can('tbl_can_expediente', 'id');
+			$can_folio_expediente ='SE/OAyA/' . date('Y') . '/' . sprintf("%04s",$id);
+			$anio  = date('Y');
+			$conn = $this->dbh;
+			$conn->beginTransaction();
+			$id_canalizacion='0';
+			$sql   = $conn->prepare("insert into tbl_can_expediente 
+			(can_numero_oficio,can_folio,can_numero,can_fecha,can_pais,can_otros_estados,can_estado,can_municipio,can_mun_edo,can_via_rec,
+			can_ruta_sol_oficio,can_folio_expediente,anio,can_created_by,id_canalizacion) 
+			values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$sql->bindParam(1, $datos_exp_can['can_num_oficio'], PDO::PARAM_STR, 50);
+			$sql->bindParam(2, $datos_exp_can['can_folio'], PDO::PARAM_STR, 30);
+			$sql->bindParam(3, $datos_exp_can['can_numero'], PDO::PARAM_STR);
+			$sql->bindParam(4, $datos_exp_can['can_fecha'], PDO::PARAM_STR, 30);
+			$sql->bindParam(5, $datos_exp_can['can_pais'], PDO::PARAM_STR, 30);
+			$sql->bindParam(6, $datos_exp_can['can_otros_estados'], PDO::PARAM_STR, 30);
+			$sql->bindParam(7, $datos_exp_can['can_estado'], PDO::PARAM_STR, 30);
+			$sql->bindParam(8, $datos_exp_can['can_municipio'], PDO::PARAM_STR, 30);
+			$sql->bindParam(9, $datos_exp_can['can_mun_edo'], PDO::PARAM_STR);
+			$sql->bindParam(10, $datos_exp_can['can_via_rec'], PDO::PARAM_STR);
+			$sql->bindParam(11, $nom_archivo_can);
+			$sql->bindParam(12, $can_folio_expediente, PDO::PARAM_STR);
+			$sql->bindParam(13, $anio, PDO::PARAM_STR, 30);
+			$sql->bindParam(14, $nombre_creador, PDO::PARAM_STR, 50);
+			$sql->bindParam(15, $id_canalizacion, PDO::PARAM_STR, 50);
+
+			$sql->execute();
+			if ($conn->lastInsertId() > 0) {
+			} else {
+				$conn->rollback();
+				$estatus = 'error_expediente';
+			}
+
+			//Comienza casos
+
+			$id_expediente = $id;
+			$sql2   = $conn->prepare("INSERT INTO 	tbl_can_casos_reportados
+			 										(exp_id_caso_reportado,
+			 										can_des_caso,
+			 										can_gest_caso,
+			 										ins_con_hechos,
+			 										expediente_id_caso,
+													can_created_by)
+										VALUES 		(?,?,?,?,?,?)");
+			$sql2->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
+			$sql2->bindParam(2, $datos_exp_can['can_des_suncita_rep'], PDO::PARAM_STR, 30);
+			$sql2->bindParam(3, $datos_exp_can['can_ges_reporte'], PDO::PARAM_STR);
+			$sql2->bindParam(4, $datos_exp_can['ins_con_hechos'], PDO::PARAM_STR);
+			$sql2->bindParam(5, $id_expediente, PDO::PARAM_STR, 50);
+			$sql2->bindParam(6, $nombre_creador, PDO::PARAM_STR, 50);
+			$sql2->execute();
+
+			if ($conn->lastInsertId() > 0) {
+			} else {
+				$conn->rollback();
+				$estatus = 'error_caso';
+			}
+			
+			$sql3   = $conn->prepare("INSERT iNTO 	tbl_can_solicitante
+														(exp_id_solicitante,
+														can_inst_solicitante,
+														can_nom_solicitante,
+														caso_id_solicitante,
+														can_created_by)
+			 									VALUES	(?,?,?,?,?)");
+			$sql3->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
+			$sql3->bindParam(2, $datos_exp_can['can_inst_sol'], PDO::PARAM_STR, 30);
+			$sql3->bindParam(3, $datos_exp_can['can_nom_sol'], PDO::PARAM_STR);
+			$sql3->bindParam(4, $id_expediente, PDO::PARAM_STR, 50);
+			$sql3->bindParam(5, $nombre_creador, PDO::PARAM_STR, 50);
+			$sql3->execute();
+			if ($conn->lastInsertId() > 0) {
+			} else
+			{
+				$conn->rollback();
+				$estatus = 'error_solicitante';
+			}
+				
+			//Reportante
+			
+			if(isset($_SESSION['reportante']) and !empty($_SESSION['reportante']))
+				{	
+					foreach ($_SESSION['reportante'] as $row) {
+						$sql4   = $conn->prepare("INSERT INTO 	tbl_can_reportante
+																	 (
+																	exp_id_reportante,
+																	can_inst_reportante,
+																	can_nom_reportante,
+																	can_created_by,
+																	caso_id_reportante)
+														VALUES 		(?,?,?,?,?)
+														");
+						$sql4->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
+						$sql4->bindParam(2, $row["institucion"], PDO::PARAM_STR, 30);
+						$sql4->bindParam(3, $row["reportante"], PDO::PARAM_STR, 30);
+						$sql4->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
+						$sql4->bindParam(5, $id_expediente, PDO::PARAM_STR, 30);
+						$sql4->execute();
+						if ($conn->lastInsertId() > 0) {
+						
+						} else
+						{
+							$conn->rollback();
+							$estatus = 'error_reportantes';
+						}
+							
+					}
+				}
+			//Victimas
+			$id_caso_reportado_victima = $id;
+			if (isset($_SESSION['victima']) and !empty($_SESSION['victima'])) {
+				foreach ($_SESSION['victima'] as $row) {
+
+					$sql5   = $conn->prepare("INSERT INTO 	tbl_can_victimas 
+														(	can_edad_vic,
+															can_nom_vic,
+															can_per_tercera_edad,
+															can_per_violencia,
+															can_per_discapacidad,
+															can_per_indigena,
+															can_per_transgenero,
+															can_sexo_victima,
+															can_exp_folio_victima,
+															can_created_by,
+															id_caso_reportando_victima
+														)
+												values (?,?,?,?,?,?,?,?,?,?,?)");
+					$sql5->bindParam(1, $row["can_edad_vic"], PDO::PARAM_STR, 30);
+					$sql5->bindParam(2, $row["can_nom_vic"], PDO::PARAM_STR, 50);
+					$sql5->bindParam(3, $row["can_per_tercera_edad"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(4, $row["can_per_violencia"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(5, $row["can_per_discapacidad"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(6, $row["can_per_indigena"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(7, $row["can_per_transgenero"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(8, $row["can_sexo_victima"], PDO::PARAM_STR, 11);
+					$sql5->bindParam(9, $can_folio_expediente, PDO::PARAM_STR, 50);
+					$sql5->bindParam(10, $nombre_creador, PDO::PARAM_STR, 50);
+					$sql5->bindParam(11, $id_expediente, PDO::PARAM_STR, 50);
+					$sql5->execute();
+					if ($conn->lastInsertId() > 0) {
+					} else {
+						$conn->rollback();
+						$estatus = 'error_victima';
+						break;
+					}
+
+					$last_id = $conn->lastInsertId();
+					
+				
+					$sql6   = $conn->prepare("INSERT INTO 	tbl_can_delitos_victimas
+															(can_exp_folio_delito,
+															can_delito,
+															can_numero_delitos,
+															can_id_victima,
+															can_created_by)
+													VALUES	(?,?,?,?,?)");
+					$sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
+					$sql6->bindParam(2, $row["can_delito"], PDO::PARAM_STR, 11);
+					$sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
+					$sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
+					$sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
+					$sql6->execute();
+					if ($last_2 = $conn->lastInsertId() > 0) {
+					} else {
+						$conn->rollback();
+						$estatus = 'Error_Delito';
+						break;
+					}
+
+					$sql7= $conn->prepare("INSERT INTO 			tbl_can_der_vul_victima
+																(can_exp_folio_derecho,
+																can_der_vul_vic,
+																can_id_victima,
+																can_created_by)
+													VALUES	 	(?,?,?,?)");
+					$sql7->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
+					$sql7->bindParam(2, $row["can_der_vul_vic"], PDO::PARAM_STR, 11);
+					$sql7->bindParam(3, $last_id, PDO::PARAM_INT, 11);
+					$sql7->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
+					$sql7->execute();
+					if ($last_id3 = $conn->lastInsertId() > 0) {
+					} else {
+						$conn->rollback();
+						$estatus = 'Error_Derecho';
+						break;
+					}
+				}
+			}
+
+			if ($last_id = $conn->lastInsertId() > 0) {
+				$conn->commit();
+				$estatus = 'ok';
+			} else {
+				$conn->rollback();
+				$estatus = 'error_registro_expediente';
+			}
+		} catch (PDOException $e) {
+			$estatus = $e;
+		
+		}
+
+		return $estatus;
+	}
 	
-	public function editar_canalizacion($can_via_rec, $can_numero, $can_folio, $can_pais, $can_numero_oficio, $can_fecha, 
-	$can_estado, $can_municipio, $can_mun_edo,$estatus_exp,$nom_arc,$nombre_creador,$id)
+	public function editar_canalizacion($can_via_rec, $can_numero, $can_folio, $can_numero_oficio,$can_pais,
+	$can_otros_estados,$can_estado, $can_municipio, $can_mun_edo,$can_fecha,$estatus_exp,$nom_arc,$nombre_creador,$id)
 	{
 		$sql = $this->dbh->prepare("UPDATE 	tbl_can_expediente
 							 		SET		can_via_rec=?,
 											can_numero=?,
 											can_folio=?,
-											can_pais=? ,
 											can_numero_oficio = ?,
-											can_fecha = ?,
+											can_pais=? ,
+											can_otros_estados=? ,
 											can_estado = ? ,
 											can_municipio=? ,
 											can_mun_edo =?,
+											can_fecha = ?,
+
 											estatus_expediente =?,
 											can_ruta_sol_oficio=?,
 											can_update_by=?
-									WHERE 	id_canalizacion = ?");
+									WHERE 	id = ?");
 		if ($sql->execute(array(
-			$can_via_rec, $can_numero, $can_folio, $can_pais, $can_numero_oficio, $can_fecha, $can_estado,
-			$can_municipio, $can_mun_edo, $estatus_exp, $nom_arc, $nombre_creador, $id
+			$can_via_rec, $can_numero, $can_folio, $can_numero_oficio,$can_pais,
+			$can_otros_estados,$can_estado, $can_municipio, $can_mun_edo,$can_fecha,$estatus_exp,$nom_arc,$nombre_creador,$id
 		))) {
 			return 'editado';
 		} else
@@ -296,11 +546,13 @@ class Canalizacion extends Conexion
 	{
 
 		$sql = $this->dbh->prepare("SELECT
-											id_canalizacion,
+											id,
+											can_folio,
 											can_numero,
 											can_numero_oficio, 
 											can_fecha,
 											can_pais,
+											can_otros_estados,
 											can_ruta_sol_oficio,
 											can_estado,
 											can_municipio,
@@ -309,15 +561,14 @@ class Canalizacion extends Conexion
 											can_folio_expediente,
 											estatus_expediente,
 											can_folio,
-											can_ruta_sol_oficio,
 											tbl_can_expediente.can_estado,
 											tbl_can_expediente.can_municipio,
 											cat_estados.estado,
 											cat_municipios.municipio
 									FROM 	((tbl_can_expediente 
-								INNER JOIN 	cat_estados ON tbl_can_expediente.can_estado = cat_estados.id_estado)
+								LEFT JOIN 	cat_estados ON tbl_can_expediente.can_estado = cat_estados.id_estado)
 								LEFT JOIN 	cat_municipios ON tbl_can_expediente.can_municipio = cat_municipios.id_municipio)
-									WHERE 	id_canalizacion=?
+									WHERE 	id=?
 									");
 
 		$sql->execute(array($id));
@@ -326,7 +577,10 @@ class Canalizacion extends Conexion
 	}
 	public function eliminar_canalizacion($id, $desc_elimina)
 	{
-		$sql = $this->dbh->prepare("update tbl_can_expediente set activo = ?,descripcion_elimina=? where id_canalizacion = ?");
+		$sql = $this->dbh->prepare("UPDATE 	tbl_can_expediente
+		 							SET 	activo = ?,
+											descripcion_elimina=?
+									WHERE 	id = ?");
 		if ($sql->execute(array(0, $desc_elimina, $id))) {
 
 			return 'ok';
@@ -349,7 +603,13 @@ class Canalizacion extends Conexion
 	public function editar_caso_reportado($id, $can_des_suncita_rep, $can_ges_reporte, $ins_con_hechos, $nombre_creador)
 	{
 		try {
-			$sql = $this->dbh->prepare("update tbl_can_casos_reportados set can_des_caso=?,can_gest_caso=?,ins_con_hechos=?, can_update_by=? where id_caso_reportado = ?");
+			$sql = $this->dbh->prepare("UPDATE	tbl_can_casos_reportados 
+										SET		can_des_caso=?,
+												can_gest_caso=?,
+												ins_con_hechos=?,
+												can_update_by=? 
+										WHERE 	id_caso_reportado = ?"
+										);
 			$sql->bindParam(1, $can_des_suncita_rep, PDO::PARAM_STR, 30);
 			$sql->bindParam(2, $can_ges_reporte, PDO::PARAM_STR, 30);
 			$sql->bindParam(3, $ins_con_hechos, PDO::PARAM_STR, 30);
@@ -380,16 +640,18 @@ class Canalizacion extends Conexion
 		return $row;
 	}
 
-	public function editar_solicitante($id, $can_inst_sol, $can_nom_sol)
+	public function editar_solicitante($id, $can_inst_sol, $can_nom_sol,$nombre)
 	{
 		try {
 			$sql = $this->dbh->prepare("UPDATE 	tbl_can_solicitante
 										 SET 	can_inst_solicitante=?,
-												can_nom_solicitante=?
+												can_nom_solicitante=?,
+												can_update_by=?
 										WHERE 	id_solicitate =?");
 			$sql->bindParam(1, $can_inst_sol, PDO::PARAM_STR, 30);
 			$sql->bindParam(2, $can_nom_sol, PDO::PARAM_STR, 30);
-			$sql->bindParam(3, $id);
+			$sql->bindParam(3, $nombre, PDO::PARAM_STR, 30);
+			$sql->bindParam(4, $id);
 
 			if ($sql->execute()) {
 				$estatus3 = 'editado';
@@ -502,7 +764,7 @@ class Canalizacion extends Conexion
 
 		return $estatus;
 	}
-	public function editar_delito_victima_can($id_del_victima, $delito, $nombre_creador)
+	public function editar_delito_victima_can($id_del_victima, $delito,$num_del, $nombre_creador)
 	{
 		$conn = $this->dbh;
 		$conn->beginTransaction();
@@ -510,10 +772,12 @@ class Canalizacion extends Conexion
 		try {
 			$sql = $conn->prepare("UPDATE 	tbl_can_delitos_victimas
 									SET 	can_delito=?,
+											can_numero_delitos=?,
 											can_update_by=?
 									WHERE	id_del_victima= ?");
 			if ($sql->execute(array(
 				$delito,
+				$num_del,	
 				$nombre_creador,
 				$id_del_victima
 			))) {

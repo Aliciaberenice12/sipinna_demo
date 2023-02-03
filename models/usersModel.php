@@ -161,6 +161,9 @@ class UserModel
     public function editarUsuario($data) {
         include_once "../config/class.pdo.php";
 
+        /* print_r($data);
+        die(); */
+
         $conexion = new Conexion();
         $conexion->conectar();
 
@@ -173,7 +176,7 @@ class UserModel
                 $imagen = $_POST["img_user"];
             }
 
-            $sqlQuery = "UPDATE usuarios SET nombre=:nombre, apellidos=:apellidos, departamento=:departamento, usuario=:usuario, email=:email, rol_id=:rol_id imagen=:imagen WHERE id_usuario=:id";
+            $sqlQuery = "UPDATE usuarios SET nombre=:nombre, apellidos=:apellidos, departamento=:departamento, usuario=:usuario, email=:email, rol_id=:rol_id, imagen=:imagen WHERE id_usuario=:id";
 
             $stmt = $conexion->dbh->prepare($sqlQuery);
 
@@ -183,7 +186,7 @@ class UserModel
             $stmt->bindParam(':usuario', $_POST["usuario"]);
             $stmt->bindParam(':email', $_POST["email"]);
             $stmt->bindParam(':imagen', $imagen);
-            $stmt->bindParam(':rol_id', $_POST["rol_id"]);
+            $stmt->bindParam(':rol_id', $_POST["rol_usuario"]);
             $stmt->bindParam(':id', $_POST["id_usuario"]);
 
             $stmt->execute();
@@ -241,7 +244,7 @@ class UserModel
 
         try {
 
-            $sqlQuery = "SELECT id_usuario, nombre, apellidos, departamento, usuario, imagen, contrasena, estado,rol_id, perfil FROM usuarios WHERE estado = 1 AND usuario = :usuario AND contrasena = :pass";
+            $sqlQuery = "SELECT id_usuario, nombre, apellidos, departamento, usuario, imagen, contrasena, estado, perfil, rol_id FROM usuarios WHERE estado = 1 AND usuario = :usuario AND contrasena = :pass";
 
             /* Encripta el acceso antes de buscar en la base de datos */
             $pass = $conexion->criptpass($data['pass']);
@@ -271,9 +274,8 @@ class UserModel
                 $_SESSION["apellidos"]     = $results[0]["apellidos"];
                 $_SESSION["departamento"]  = $results[0]["departamento"];
                 $_SESSION["perfil"]        = $results[0]["perfil"];
-                $_SESSION["rol_id"]        = $results[0]["rol_id"];
-
                 $_SESSION["imagen"]        = $picture;
+                $_SESSION["rol_id"]        = $results[0]["rol_id"];
 
 
 

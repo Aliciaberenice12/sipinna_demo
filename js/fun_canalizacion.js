@@ -1,50 +1,62 @@
 var cargando =
     '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
 $(document).ready(function () {
-    $("#can_mun_edo").hide();
     $("#can_municipio").hide();
     $("#listado_victimas").hide();
     $("#div_otros_estados").hide();
     $("#div_estado").hide();
     $("#can_mun").hide();
-
-    $("#can_estado").change(function () {
-
-        if ($(this).val() == "30")
-
-            $("#can_mun_edo").hide(),
-            $("#can_mun").show(400),
-            $("#can_municipio").show(400),
-            $("#can_mun_edo").val("");
-
-        else
-            $("#can_municipio").hide(),
-            $("#can_mun").show(400),
-            $("#can_mun_edo").show(200),
-            $("#can_municipio").val("0");
-
-    });
+    $("#can_mun_edo").hide();
+    $("#div_municipio").hide();
+    
     $("#can_pais").change(function () {
 
-        if ($(this).val() == "México")
-            $("#can_estado").val(""),
-            $("#div_estado").show(400),
-            $("#can_otros_estados").val(""),
-
-            $("#div_otros_estados").hide(400)
-
-        else
+        if ($(this).val() == "México") {
+            $("#div_estado").show(),
+            $("#div_otros_estados").hide(),
+            $("#can_otros_estados").val(""),            
+            $("#div_municipio").hide(),
+            $("#can_estado_label").show(400),
+            $("#can_estado").show()
+            
+        }
+        else {
+            $("#div_estado").hide(),
             $("#div_otros_estados").show(400),
-            $("#div_estado").hide(400),
-            $("#can_mun").hide(),
-            $("#can_municipio").hide();
-            $("#can_municipio").val("");
+            $("#can_otros_estados").show(),
+                $("#can_estado").val("0"),
+                $("#can_estado").hide(),
+                $("#can_municipio").val("0"),
+                $("#can_municipio").hide(),
+                $("#can_mun_edo").val(""),
+                $("#can_mun_edo").hide(),  
+                $("#can_mun").hide(),
+                $("#can_estado_label").hide(400),
+                $("#div_mun_c4").hide()         
+                  
+        }
+    });
+    $("#can_estado").change(function () {
+        if ($(this).val() == "30") {
+            $("#div_municipio").show(),
+            $("#can_municipio").show(200),
+            $("#can_mun").show(200),
+                $("#can_mun_edo").val(""),
+                $("#can_mun_edo").hide(200)
+        }
 
-            $("#can_mun_edo").hide();
-            $("#can_mun_edo").val("");
 
+        else {
+            $("#can_mun").show(200)
+            $("#can_mun_edo").show(200),
+            $("#div_municipio").show(),
+            $("#can_municipio").hide(),
+            $("#can_municipio").val("0")
+        }
 
     });
+    
+   
     $("#actualizar_canalizaciones").click();
 
     $(document).on('click', '#agregar_victima', function () {
@@ -78,6 +90,7 @@ function mod_canalizacion(origen, id, folio_exp) {
         $('#can_num_oficio').val("");
         $('#can_fecha').val("");
         $('#can_estado').val("");
+        $('#can_otros_estados').val("");
         $('#can_municipio').val("");
         $('#can_mun_edo').val("");
         $('#can_pais').val("");
@@ -102,7 +115,6 @@ function mod_canalizacion(origen, id, folio_exp) {
         $('#can_inst_rep').val("");
         $('#can_nom_rep').val("");
         imagencan = $("#imagen_subida_can").val("");
-
         $('#can_des_suncita_rep').val("");
         $('#can_ges_reporte').val("");
         $('#can_inst_sol').val("");
@@ -114,10 +126,6 @@ function mod_canalizacion(origen, id, folio_exp) {
         $('#can_der_vul_vic').val("");
         $('#modal_canalizacion').modal({ backdrop: 'static', keyboard: false });
         $('#modal_canalizacion').modal('show');
-
-
-
-
     }
     else if (origen == 2) //Editar...
     {
@@ -136,52 +144,60 @@ function mod_canalizacion(origen, id, folio_exp) {
         $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_canalizacion', id: id, folio_exp: folio_exp }, function (res) {
             $('#id_canalizacion').val(id);
             $('#can_folio').val(res.can_folio);
-            $('#can_pais').val(res.can_pais);
             $('#can_numero').val(res.can_numero);
             $('#can_num_oficio').val(res.can_numero_oficio);
-            $('#estatus_expediente').val(res.estatus_expediente);
-            switch (res.estatus_expediente) {
-                case 'En proceso':
-                    $('#en_proceso').click();
-                    break;
-                case 'Pendiente':
-                    $('#pendiente').click();
-                    break;
-                case 'Concluido':
-                    $('#concluido').click();
-                    break;
+            $('#c4_ruta_sol_oficio_edit').val(res.c4_ruta_sol_oficio);
 
-
-            }
-            $('#can_ruta_sol_oficio_edit').val(res.can_ruta_sol_oficio);
-
-            imagencan = '<img src="../images/canalizacion/' + res.can_ruta_sol_oficio + '" class="img-thumbnail" style=" width:15em;" />';
-            $("#imagen_subida_can").html(imagencan);
+            imagen_can = '<a  href="../images/canalizacion/' + res.can_ruta_sol_oficio + '" target="_blank"><i class="bi bi-file-pdf"></i>Mostar Archivo Subido</a>';
+            $("#imagen_subida_can").html(imagen_can);
 
             $('#can_fecha').val(res.can_fecha);
+            $('#can_pais').val(res.can_pais);
+            $('#can_otros_estados').val(res.can_otros_estados);
+
+            if(res.can_pais == 'México'){
+                $("#div_estado").show(),
+                $("#can_estado").show(),
+                $("#div_municipio").show(),  
+                $("#div_otros_estados").hide(),
+                $("#can_otros_estados").val("")
+
+            }
+            else{
+
+                $("#div_otros_estados").show(),
+                $("#can_otros_estados").show(),
+                $("#can_estado").val("0"),
+                $("#div_estado").hide(),
+                $("#div_municipio").hide(),  
+                $("#can_municipio").val("0"),
+                $("#can_mun_edo").val("")  
+            }
+
             $('#can_estado').val(res.can_estado);
+
             setTimeout(function () {
                 $('#can_estado').val(res.can_estado);
             }, 500);
             if (res.can_estado == '30') {
+                $("#can_mun").show(400),
+                $("#can_municipio").show(400),
                 $("#can_mun_edo").hide(),
-                    $("#can_mun").show();
 
-                $("#can_municipio").show();
-
-                $("#can_mun_edo").val("");
-
+                $("#can_mun_edo").val("")
             }
             else {
                 $("#can_mun_edo").show(200),
-                    $("#can_municipio").hide();
-                $("#can_municipio").val("");
-
+                $("#can_mun").show()
             }
-
+            
+            $('#can_ruta_sol_oficio_edit').val(res.can_ruta_sol_oficio);
             $('#can_municipio').val(res.can_municipio);
             $('#can_mun_edo').val(res.can_mun_edo);
+            $('#can_folio_expediente').val(res.can_folio_expediente);
+
             $('#can_via_rec').val(res.can_via_rec);
+
             switch (res.can_via_rec) {
                 case 'Telefonica':
                     $('#can_via_tel').click();
@@ -197,7 +213,19 @@ function mod_canalizacion(origen, id, folio_exp) {
                     $('#can_via_red').click();
                     break;
             }
-            $('#can_folio_expediente').val(res.can_folio_expediente);
+
+            $('#estatus_expediente').val(res.estatus_expediente);
+            switch (res.estatus_expediente) {
+                case 'En proceso':
+                    $('#en_proceso').click();
+                    break;
+                case 'Pendiente':
+                    $('#pendiente').click();
+                    break;
+                case 'Concluido':
+                    $('#concluido').click();
+                    break;
+            }
         });
         $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_casos_reportados', id: id, folio_exp: folio_exp }, function (res) {
             $('#id_caso_reportado').val(id);
@@ -285,7 +313,6 @@ function mod_canalizacion(origen, id, folio_exp) {
     }
     else if (origen == 5) {//Editar Reportante
         $('#tit_mod_reportante').html('Editar reportante');
-        $('#modal_canalizacion').modal('hide');
         $('#modal_reportante').modal('show');
 
         $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_datos_reportantes', id: id, folio_exp: folio_exp }, function (res) {
@@ -297,7 +324,6 @@ function mod_canalizacion(origen, id, folio_exp) {
     }
     else if (origen == 6) {//Editar Victima
         $('#tit_mod_victima').html('Editar Victima');
-        $('#modal_canalizacion').modal('hide');
         $('#modal_victima').modal('show');
 
         $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_datos_victimas_edit', id: id, folio_exp: folio_exp }, function (res) {
@@ -307,11 +333,12 @@ function mod_canalizacion(origen, id, folio_exp) {
             $('#can_edad_vic_edit').val(res.can_edad_vic);
             $('#can_nom_vic_edit').val(res.can_nom_vic);
             $('#can_num_del_edit').val(res.can_numero_delitos);
-
+            can_delitos=res.can_delito.split(",");
+            console.log(can_delitos);
 
             // $('#can_delito_edit').val(res.can_delito);
             setTimeout(function () {
-                $('#can_delito_edit').val(res.can_delito);
+                $('#can_delito_edit').val(can_delitos);
             }, 500);
             // $('#can_der_vul_vic_edit').val(res.can_der_vul_vic);
             setTimeout(function () {
@@ -326,10 +353,10 @@ function mod_canalizacion(origen, id, folio_exp) {
             res.can_per_violencia == 1 ? $('#can_per_violencia_edit').prop('checked', true) : $('#can_per_violencia_edit').prop('checked', false);
             $('#can_sexo_victima_edit').val(res.can_sexo_victima);
             switch (res.can_sexo_victima) {
-                case 'Femenino':
+                case 'Mujer':
                     $('#femenino_edit').prop('checked', true)
                     break;
-                case 'Masculino':
+                case 'Hombre':
                     $('#masculino_edit').prop('checked', true)
                     break;
                 case 'N/I':
@@ -343,13 +370,7 @@ function mod_canalizacion(origen, id, folio_exp) {
 
 
 }
-function evitaCaracteres(e) {
-    var digito = window.Event ? e.which : e.keyCode
-    if (digito == '13')
-        $('#btnSend').click();
-    return (digito >= 63 || digito <= 59 || digito == 61)
 
-}
 function onlyNumberKey(evt) {
     // Only ASCII character in that range allowed
     var ASCIICode = (evt.which) ? evt.which : evt.keyCode
@@ -380,6 +401,7 @@ function fun_validar_campos() {
     can_municipio = $.trim($('#can_municipio').val());
     can_mun_edo = $.trim($('#can_mun_edo').val());
     can_ruta_sol_oficio = $.trim($('#can_ruta_sol_oficio').val());
+    
     file0 = document.getElementById('can_ruta_sol_oficio');
     file = file0.files[0];
     can_des_suncita_rep = $.trim($('#can_des_suncita_rep').val());
@@ -389,22 +411,7 @@ function fun_validar_campos() {
     can_nom_sol = $.trim($('#can_nom_sol').val());
 
 
-    if (typeof (file) != "undefined")//Si trae un archivo
-    {
-        if (file.size > 500000) {
-            toastr.options.timeOut = 2500;
-            toastr.warning('¡El archivo pesa más de 500 kb deberás reducirlo!');
-            $('#can_ruta_sol_oficio').focus();
-            return false;
-        }
-
-        if (!(/\.(jpg|jpeg|png)$/i).test(file.name)) {
-            toastr.options.timeOut = 2500;
-            toastr.warning('¡El archivo debe ser formato jpg, jpeg o png!');
-            $('#can_ruta_sol_oficio').focus();
-            return false;
-        }
-    }
+   
     
     if (can_numero == '') {
         toastr.options.timeOut = 2500;
@@ -481,6 +488,7 @@ function fun_agregarCanalizacion() {
     can_folio = $.trim($('#can_folio').val());
     can_fecha = $.trim($('#can_fecha').val());
     can_pais = $.trim($('#can_pais').val());
+    can_otros_estados=$.trim($('#can_otros_estados').val());
     can_estado = $.trim($('#can_estado').val());
     can_municipio = $.trim($('#can_municipio').val());
     can_mun_edo = $.trim($('#can_mun_edo').val());
@@ -502,22 +510,25 @@ function fun_agregarCanalizacion() {
     var data = new FormData();
     data.append('func', 'fn_guardar_canalizacion');
     data.append('id', id);
-    data.append('id_caso', id_caso);
-    data.append('id_solicitante', id_solicitante);
     data.append('can_num_oficio', can_num_oficio);
     data.append('can_folio', can_folio);
     data.append('can_numero', can_numero);
     data.append('can_fecha', can_fecha);
     data.append('can_pais', can_pais);
+    data.append('can_otros_estados', can_otros_estados);
     data.append('can_estado', can_estado);
     data.append('can_municipio', can_municipio);
     data.append('can_mun_edo', can_mun_edo);
     data.append('can_via_rec', can_via_rec);
     data.append('archivo_can', file);
-    data.append('can_des_suncita_rep', can_des_suncita_rep);
     data.append('can_ruta_sol_oficio_edit', can_ruta_sol_oficio_edit);
+    //Datos para Caso
+    data.append('id_caso', id_caso);
+    data.append('can_des_suncita_rep', can_des_suncita_rep);
     data.append('can_ges_reporte', can_ges_reporte);
     data.append('ins_con_hechos', ins_con_hechos);
+    //datos para solicitante
+    data.append('id_solicitante', id_solicitante);
     data.append('can_inst_sol', can_inst_sol);
     data.append('can_nom_sol', can_nom_sol);
     data.append('estatus_expediente', estatus_expediente);
@@ -531,7 +542,6 @@ function fun_agregarCanalizacion() {
         processData: false,
         cache: false
     }).done(function (result) {
-         console.log(result.estatus);
         if (result.estatus === "ok") {
             Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_canalizacion').modal('hide');
@@ -554,111 +564,11 @@ function fun_agregarCanalizacion() {
 
     })
 }
-//Caso Reportado
 
-// function fun_agregar_caso_reportado() {
-//     id = $('#id_caso_reportado').val();
-//     can_des_suncita_rep = $.trim($('#can_des_suncita_rep').val());
-//     can_ges_reporte = $.trim($('#can_ges_reporte').val());
-//     ins_con_hechos = $.trim($('#ins_con_hechos').val());
-
-//     var data = new FormData();
-//     data.append('func', 'fn_guardar_caso_reportado');
-//     data.append('id', id);
-//     data.append('can_des_suncita_rep', can_des_suncita_rep);
-//     data.append('can_ges_reporte', can_ges_reporte);
-//     data.append('ins_con_hechos', ins_con_hechos);
-
-//     $.ajax({
-//         url: "../controllers/fun_canalizacion.php",
-//         type: "POST",
-//         data: data,
-//         contentType: false,
-//         processData: false,
-//         cache: false
-//     }).done(function (res) {
-//         //console.log(res);
-//         //var result = JSON.parse(res);
-//         //console.log(result);
-//         if (res.estatus === "ok") {
-//             fun_agregar_solicitante();
-//         }
-//         else {
-//             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showCnfirmButton: false, timer: 1500 });
-//             $('#btn_create_can').prop('disabled', false);
-//             $('#modalCanalizacion').modal('hide');
-//             return false;
-//         }
-//     })
-// }
-//Solicitante
-// function fun_agregar_solicitante() {
-//     id = $('#id_solicitante').val();
-//     can_inst_sol = $.trim($('#can_inst_sol').val());
-//     can_nom_sol = $.trim($('#can_nom_sol').val());
-
-//     var data = new FormData();
-//     data.append('func', 'fn_guardar_solicitante');
-//     data.append('id', id);
-//     data.append('can_inst_sol', can_inst_sol);
-//     data.append('can_nom_sol', can_nom_sol);
-
-//     $.ajax({
-//         url: "../controllers/fun_canalizacion.php",
-//         type: "POST",
-//         data: data,
-//         contentType: false,
-//         processData: false,
-//         cache: false
-//     }).done(function (res) {
-//         if (res.estatus === "ok") {
-
-//             fun_agregar_reportante();
-
-//         }
-//         else {
-//             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showCnfirmButton: false, timer: 1500 });
-//             $('#btn_create_can').prop('disabled', false);
-//             $('#modalCanalizacion').modal('hide');
-//             fn_listar_canalizaciones();
-
-//             return false;
-//         }
-
-
-//     })
-// }
-//Reportante
-// function fun_agregar_reportante(id) {
-//     id = $('#id_reportante').val();
-
-//     var data = new FormData();
-//     data.append('func', 'fn_guardar_reportante');
-//     data.append('id', id);
-//     $.ajax({
-//         url: "../controllers/fun_canalizacion.php",
-//         type: "POST",
-//         data: data,
-//         contentType: false,
-//         processData: false,
-//         cache: false
-//     }).done(function (res) {
-//         //console.log(res);
-//         //var result = JSON.parse(res);
-//         //console.log(result);
-//         if (res.estatus === "ok") {
-//             fun_agregar_victima();
-//         }
-//         else {
-//             Swal.fire({ icon: 'success', title: 'Datos Actualizados correctamente', showConfirmButton: false, timer: 1500 });
-//             $('#modal_canalizacion').modal('hide');
-//             fn_listar_canalizaciones();
-
-//         }
-//     })
-// }
 function fun_editar_reportante() {
     id = $('#id_reportante_edit').val();
+    folio_exp = $.trim($('#can_folio_expediente').val());    
+
     can_inst_rep_edit = $.trim($('#can_inst_rep_edit').val());
     can_nom_rep_edit = $.trim($('#can_nom_rep_edit').val());
 
@@ -679,7 +589,7 @@ function fun_editar_reportante() {
         if (res.estatus === "ok") {
             Swal.fire({ icon: 'success', title: 'Datos Actualizados correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_reportante').modal('hide');
-            $("#actualizar_canalizaciones").click();
+            fn_listar_reportantes(folio_exp);
 
         }
         else {
@@ -687,87 +597,15 @@ function fun_editar_reportante() {
         }
     })
 }
-//Guardar Victima
-// function fun_agregar_victima() {
-//     id = $('#id_can_victima').val();
-//     can_edad_vic = $.trim($('#can_edad_vic').val());
-//     can_nom_vic = $.trim($('#can_nom_vic').val());
-//     can_sexo_victima = $.trim($('#can_sexo_victima').val());
-//     can_per_tercera_edad = $.trim($('#can_per_tercera_edad').val());
-//     can_per_violencia = $.trim($('#can_per_violencia').val());
-//     can_per_discapacidad = $.trim($('#can_per_discapacidad').val());
-//     can_per_indigena = $.trim($('#can_per_indigena').val());
-//     can_per_transgenero = $.trim($('#can_per_transgenero').val());
-
-//     if ($('#can_per_discapacidad').prop('checked'))
-//         can_per_discapacidad = 1;
-//     else
-//         can_per_discapacidad = 0;
-
-//     if ($('#can_per_tercera_edad').prop('checked'))
-//         can_per_tercera_edad = 1;
-//     else
-//         can_per_tercera_edad = 0;
-
-//     if ($('#can_per_violencia').prop('checked'))
-//         can_per_violencia = 1;
-//     else
-//         can_per_violencia = 0;
-
-//     if ($('#can_per_indigena').prop('checked'))
-//         can_per_indigena = 1;
-//     else
-//         can_per_indigena = 0;
-
-//     if ($('#can_per_transgenero').prop('checked'))
-//         can_per_transgenero = 1;
-//     else {
-//         can_per_transgenero = 0;
-//     }
-
-//     var data = new FormData();
-//     data.append('func', 'fn_guardar_victima_can');
-//     data.append('id', id);
-//     data.append('can_nom_vic', can_nom_vic);
-//     data.append('can_edad_vic', can_edad_vic);
-//     data.append('can_per_tercera_edad', can_per_tercera_edad);
-//     data.append('can_per_discapacidad', can_per_discapacidad);
-//     data.append('can_per_violencia', can_per_violencia);
-//     data.append('can_per_indigena', can_per_indigena);
-//     data.append('can_per_transgenero', can_per_transgenero);
-//     data.append('can_sexo_victima', can_sexo_victima);
-
-//     $.ajax({
-//         url: "../controllers/fun_canalizacion.php",
-//         type: "POST",
-//         data: data,
-//         contentType: false,
-//         processData: false,
-//         cache: false
-//     }).done(function (res) {
-//         if (res.estatus === "ok") {
-//             Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
-//             $('#modal_canalizacion').modal('hide');
-//             fn_listar_canalizaciones();
-
-//         }
-//         else {
-//             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showCnfirmButton: false, timer: 1500 });
-//             $('#btn_create_can').prop('disabled', false);
-//             $('#modalCanalizacion').modal('hide');
-
-
-//             return false;
-//         }
-
-
-//     })
-// }
 
 function fun_editar_victima() {
     id = $('#id_can_victima_edit').val();
+    folio_exp = $.trim($('#can_exp_folio_victima_edit').val());    
+
     id_can_del_victima_edit = $.trim($('#id_can_del_victima_edit').val());
     can_delito_edit = $.trim($('#can_delito_edit').val());
+    can_delito_edit_c=can_delito_edit.split(",");
+    can_num_del_edit=can_delito_edit_c.length;
     id_can_der_victima_edit = $.trim($('#id_can_der_victima_edit').val());
     can_der_vul_vic_edit = $.trim($('#can_der_vul_vic_edit').val());
     can_edad_vic_edit = $.trim($('#can_edad_vic_edit').val());
@@ -778,6 +616,30 @@ function fun_editar_victima() {
     can_per_transgenero_edit = $.trim($('#can_per_transgenero_edit').val());
     can_per_discapacidad_edit = $.trim($('#can_per_discapacidad_edit').val());
     can_per_violencia_edit = $.trim($('#can_per_violencia_edit').val());
+    if (can_edad_vic_edit == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Seleccionar la edad de la victima!');
+        $('#can_edad_vic_edit').focus();
+        return false;
+    }
+    if (can_nom_vic_edit == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡El nombre de la victima no puede estar vacio!');
+        $('#can_nom_vic_edit').focus();
+        return false;
+    }
+    if (can_delito_edit == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Seleccionar un delito!');
+        $('#can_delito_edit').focus();
+        return false;
+    }
+    if (can_der_vul_vic_edit == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Seleccionar un derecho vulnerado!');
+        $('#can_der_vul_vic_edit').focus();
+        return false;
+    }
     if ($('#can_per_discapacidad_edit').prop('checked'))
         can_per_discapacidad_edit = 1;
     else
@@ -819,7 +681,9 @@ function fun_editar_victima() {
     data.append('can_per_discapacidad_edit', can_per_discapacidad_edit);
     data.append('can_per_violencia_edit', can_per_violencia_edit);
     data.append('can_sexo_victima_edit', can_sexo_victima_edit);
+    data.append('can_num_del_edit', can_num_del_edit);
 
+    
     $.ajax({
         url: "../controllers/fun_canalizacion.php",
         type: "POST",
@@ -831,7 +695,7 @@ function fun_editar_victima() {
         if (res.estatus === "ok") {
             Swal.fire({ icon: 'success', title: 'Datos Actualizados correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_victima').modal('hide');
-            $("#actualizar_canalizaciones").click();
+            fn_listar_victimas(folio_exp);
         }
         else {
             Swal.fire({ icon: 'warning', title: 'Datos no guardados correctamente', showConfirmButton: false, timer: 1500 });
@@ -898,33 +762,7 @@ function fn_eliminar_canalizacion(id, can_no_oficio) {
             $('#btn_user').prop('disabled', false);
     })
 }
-//Victima
-// function mod_can_victima(origen, id) {
 
-//     if (origen == 1) {
-//         $('#id_victima').val(0);
-//         $('#can_nom_victima').val("");
-//         $('#can_edad_victima').val("");
-//         $('#can_gen_victima').val("");
-//         $('#modalCanVictima').modal('show');
-
-//     }
-//     else if (origen == 2) {
-//         $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_grupo', id: id }, function (res) {
-//             $('#id_gt').val(id);
-//             $('#nom_gt').val(res.nom_grupo);
-//             $('#sig_gt').val(res.siglas);
-//             $('#municipio_gt').val(res.id_municipio);
-//             $('#editarCanalizacion').modal('show');
-
-
-//         });
-//     }
-
-// }
-function fun_reportante() {
-    $.post("../controllers/fun_canalizacion.php", { func: 'fn_reportante' });
-}
 function fn_listar_victimas(folio_exp) {
     $("#ver_lista_victimas").html(cargando);
     $.post("../controllers/fun_canalizacion.php", { func: 'fn_listar_victimas', folio_exp: folio_exp }, function (data) {
@@ -1257,7 +1095,9 @@ function carrito_victima(evento, id) {
             return false;
         }
         can_sexo_victima = document.querySelector('input[name="can_sexo_victima"]:checked').value;
-        can_num_del = $.trim($('#can_num_del').val());
+    
+        can_delito_c=can_delito.split(",");
+        can_num_del=can_delito_c.length;
     }
     else {
         can_edad_vic = '';

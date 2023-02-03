@@ -72,7 +72,7 @@ class CasosC4 extends Conexion
 			if ($conn->lastInsertId() > 0) {
 			} else {
 				$conn->rollback();
-				$estatus = 'Error al registrar Expediente';
+				$estatus = 'expediente_c4';
 				
 			}
 			$c4_exp_folio_desc_caso = $c4_folio_expediente;
@@ -98,7 +98,7 @@ class CasosC4 extends Conexion
 				
 			} else {
 				$conn->rollback();
-				$estatus = 'Error al registrar datos del caso';
+				$estatus = 'expediente_caso';
 				
 			}
 			
@@ -128,7 +128,7 @@ class CasosC4 extends Conexion
 					
 					} else {
 						$conn->rollback();
-						$estatus = 'Error al registrar Probable Responsable';
+						$estatus = 'expediente_responsable';
 						break;
 					}
 
@@ -145,7 +145,6 @@ class CasosC4 extends Conexion
 					$sql5   = $conn->prepare("INSERT INTO tbl_c4_victimas 
 													(	
 														c4_edad_victima,
-														c4_edad_ms_victima,
 														c4_nom_victima,
 														c4_num_delitos,
 														c4_per_tercera_edad,
@@ -158,26 +157,25 @@ class CasosC4 extends Conexion
 														c4_created_by,
 														c4_id_desc_caso
 														)
-												values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+												values (?,?,?,?,?,?,?,?,?,?,?,?)");
 					$sql5->bindParam(1, $row["c4_edad_vic"], PDO::PARAM_STR, 30);
-					$sql5->bindParam(2, $row["c4_edad_ms_vic"], PDO::PARAM_STR, 30);
-					$sql5->bindParam(3, $row["c4_nom_vic"], PDO::PARAM_STR, 50);
-					$sql5->bindParam(4, $row["c4_num_delitos"], PDO::PARAM_STR, 2);
-					$sql5->bindParam(5, $row["c4_per_tercera_edad"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(6, $row["c4_per_violencia"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(7, $row["c4_per_discapacidad"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(8, $row["c4_per_indigena"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(9, $row["c4_per_transgenero"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(10, $row["c4_sexo_victima"], PDO::PARAM_STR, 11);
-					$sql5->bindParam(11, $c4_exp_folio_victima, PDO::PARAM_STR, 50);
-					$sql5->bindParam(12, $nombre_creador, PDO::PARAM_STR, 50);
-					$sql5->bindParam(13, $id_caso, PDO::PARAM_STR, 50);
+					$sql5->bindParam(2, $row["c4_nom_vic"], PDO::PARAM_STR, 50);
+					$sql5->bindParam(3, $row["c4_num_delitos"], PDO::PARAM_STR, 2);
+					$sql5->bindParam(4, $row["c4_per_tercera_edad"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(5, $row["c4_per_violencia"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(6, $row["c4_per_discapacidad"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(7, $row["c4_per_indigena"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(8, $row["c4_per_transgenero"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(9, $row["c4_sexo_victima"], PDO::PARAM_STR, 11);
+					$sql5->bindParam(10, $c4_exp_folio_victima, PDO::PARAM_STR, 50);
+					$sql5->bindParam(11, $nombre_creador, PDO::PARAM_STR, 50);
+					$sql5->bindParam(12, $id_caso, PDO::PARAM_STR, 50);
 					$sql5->execute();
 					if ($conn->lastInsertId() > 0) {
 					
 					} else {
 						$conn->rollback();
-						$estatus = 'Error al registrar victima';
+						$estatus = 'expediente_victima';
 						break;
 					}
 					$last_id = $conn->lastInsertId();
@@ -197,7 +195,7 @@ class CasosC4 extends Conexion
 						
 					} else {
 						$conn->rollback();
-						$estatus = 'Error al registrar Delito';
+						$estatus = 'expediente_delito';
 						break;
 					}
 					$sql7   = $conn->prepare("INSERT iNTO 	tbl_c4_der_vul_victima
@@ -216,17 +214,17 @@ class CasosC4 extends Conexion
 						
 					} else {
 						$conn->rollback();
-						$estatus = 'Error al registrar Derecho';
+						$estatus = 'expediente_derecho';
 						break;
 					}
 				}
 			}
 			if ($last_id = $conn->lastInsertId() > 0) {
 				$conn->commit();
-				$estatus = 'ok expediente registrado';
+				$estatus = 'ok';
 			} else {
 				$conn->rollback();
-				$estatus = 'Error al registrar victima';
+				$estatus = 'expediente_victima';
 			}
 		} catch (Exception $e) {
 			$estatus = $e;
@@ -275,9 +273,10 @@ class CasosC4 extends Conexion
 		} else
 			return 'error';
 	}
+	
 	//historico
 	//Registrar Caso Expediente
-	public function fn_registrar_caso_c4($nom_archivo_c4, $datos_exp_c4)
+	public function fn_registrar_caso_c4($nom_archivo_c4, $datos_exp_c4,$id_c4_anio)
 	{
 		try {
 			//  print_r($datos_exp_c4);
@@ -290,6 +289,7 @@ class CasosC4 extends Conexion
 			$conn->beginTransaction();
 			$sql   = $conn->prepare("INSERT INTO 		tbl_c4_expedientes 
 													(	
+														id_c4_anio,
 														c4_folio,
 														c4_numero,
 														c4_no_oficio,
@@ -306,22 +306,24 @@ class CasosC4 extends Conexion
 														c4_anio,
 														c4_created_by
 													) 	
-											VALUES 		(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			$sql->bindParam(1, $datos_exp_c4['c4_folio'], PDO::PARAM_STR);
-			$sql->bindParam(2, $datos_exp_c4['c4_numero'], PDO::PARAM_STR, 30);
-			$sql->bindParam(3, $datos_exp_c4['c4_no_oficio'], PDO::PARAM_STR, 30);
-			$sql->bindParam(4, $nom_archivo_c4, PDO::PARAM_STR);
-			$sql->bindParam(5, $datos_exp_c4['c4_fecha_inicio'], PDO::PARAM_STR);
-			$sql->bindParam(6, $datos_exp_c4['c4_pais'], PDO::PARAM_STR);
-			$sql->bindParam(7, $datos_exp_c4['otros_estados_c4'], PDO::PARAM_STR);
-			$sql->bindParam(8, $datos_exp_c4['c4_edo'], PDO::PARAM_STR);
-			$sql->bindParam(9, $datos_exp_c4['c4_mun'], PDO::PARAM_STR);
-			$sql->bindParam(10, $datos_exp_c4['c4_mun_edo'], PDO::PARAM_STR, 15);
-			$sql->bindParam(11, $datos_exp_c4['c4_dirigido'], PDO::PARAM_STR, 30);
-			$sql->bindParam(12, $datos_exp_c4['c4_dg'], PDO::PARAM_STR, 30);
-			$sql->bindParam(13, $c4_folio_expediente, PDO::PARAM_STR);
-			$sql->bindParam(14, $c4_anio);
-			$sql->bindParam(15, $nombre_creador, PDO::PARAM_STR, 30);
+											VALUES 		(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+									");
+			$sql->bindParam(1, $id_c4_anio, PDO::PARAM_STR);
+			$sql->bindParam(2, $datos_exp_c4['c4_folio'], PDO::PARAM_STR);
+			$sql->bindParam(3, $datos_exp_c4['c4_numero'], PDO::PARAM_STR, 30);
+			$sql->bindParam(4, $datos_exp_c4['c4_no_oficio'], PDO::PARAM_STR, 30);
+			$sql->bindParam(5, $nom_archivo_c4, PDO::PARAM_STR);
+			$sql->bindParam(6, $datos_exp_c4['c4_fecha_inicio'], PDO::PARAM_STR);
+			$sql->bindParam(7, $datos_exp_c4['c4_pais'], PDO::PARAM_STR);
+			$sql->bindParam(8, $datos_exp_c4['otros_estados_c4'], PDO::PARAM_STR);
+			$sql->bindParam(9, $datos_exp_c4['c4_edo'], PDO::PARAM_STR);
+			$sql->bindParam(10, $datos_exp_c4['c4_mun'], PDO::PARAM_STR);
+			$sql->bindParam(11, $datos_exp_c4['c4_mun_edo'], PDO::PARAM_STR, 15);
+			$sql->bindParam(12, $datos_exp_c4['c4_dirigido'], PDO::PARAM_STR, 30);
+			$sql->bindParam(13, $datos_exp_c4['c4_dg'], PDO::PARAM_STR, 30);
+			$sql->bindParam(14, $c4_folio_expediente, PDO::PARAM_STR);
+			$sql->bindParam(15, $c4_anio);
+			$sql->bindParam(16, $nombre_creador, PDO::PARAM_STR, 30);
 			$sql->execute();
 			if ($conn->lastInsertId() > 0) {
 			} else {
@@ -398,7 +400,6 @@ class CasosC4 extends Conexion
 					$sql5   = $conn->prepare("INSERT INTO tbl_c4_victimas 
 													(	
 														c4_edad_victima,
-														c4_edad_ms_victima,
 														c4_nom_victima,
 														c4_num_delitos,
 														c4_per_tercera_edad,
@@ -411,20 +412,19 @@ class CasosC4 extends Conexion
 														c4_created_by,
 														c4_id_desc_caso
 														)
-												values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+												values (?,?,?,?,?,?,?,?,?,?,?,?)");
 					$sql5->bindParam(1, $row["c4_edad_vic"], PDO::PARAM_STR, 30);
-					$sql5->bindParam(2, $row["c4_edad_ms_vic"], PDO::PARAM_STR, 30);
-					$sql5->bindParam(3, $row["c4_nom_vic"], PDO::PARAM_STR, 50);
-					$sql5->bindParam(4, $row["c4_num_delitos"], PDO::PARAM_STR, 2);
-					$sql5->bindParam(5, $row["c4_per_tercera_edad"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(6, $row["c4_per_violencia"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(7, $row["c4_per_discapacidad"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(8, $row["c4_per_indigena"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(9, $row["c4_per_transgenero"], PDO::PARAM_INT, 2);
-					$sql5->bindParam(10, $row["c4_sexo_victima"], PDO::PARAM_STR, 11);
-					$sql5->bindParam(11, $c4_exp_folio_victima, PDO::PARAM_STR, 50);
-					$sql5->bindParam(12, $nombre_creador, PDO::PARAM_STR, 50);
-					$sql5->bindParam(13, $id_caso_reportado_victima, PDO::PARAM_STR, 50);
+					$sql5->bindParam(2, $row["c4_nom_vic"], PDO::PARAM_STR, 50);
+					$sql5->bindParam(3, $row["c4_num_delitos"], PDO::PARAM_STR, 2);
+					$sql5->bindParam(4, $row["c4_per_tercera_edad"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(5, $row["c4_per_violencia"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(6, $row["c4_per_discapacidad"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(7, $row["c4_per_indigena"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(8, $row["c4_per_transgenero"], PDO::PARAM_INT, 2);
+					$sql5->bindParam(9, $row["c4_sexo_victima"], PDO::PARAM_STR, 11);
+					$sql5->bindParam(10, $c4_exp_folio_victima, PDO::PARAM_STR, 50);
+					$sql5->bindParam(11, $nombre_creador, PDO::PARAM_STR, 50);
+					$sql5->bindParam(12, $id_caso_reportado_victima, PDO::PARAM_STR, 50);
 					$sql5->execute();
 					if ($conn->lastInsertId() > 0) {
 					
@@ -442,7 +442,7 @@ class CasosC4 extends Conexion
 															c4_created_by)
 													VALUES	(?,?,?,?)");
 					$sql6->bindParam(1, $c4_exp_folio_victima, PDO::PARAM_STR, 30);
-					$sql6->bindParam(2, $row["c4_delitos"], PDO::PARAM_INT, 11);
+					$sql6->bindParam(2, $row["c4_delitos"], PDO::PARAM_STR, 11);
 					$sql6->bindParam(3, $last_id, PDO::PARAM_INT, 11);
 					$sql6->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
 					$sql6->execute();
@@ -711,7 +711,7 @@ class CasosC4 extends Conexion
 		$sql = $this->dbh->prepare("
 										SELECT	id_victima,
 												c4_edad_victima,
-												c4_edad_ms_victima,
+												
 												c4_nom_victima,
 												c4_num_delitos,
 												c4_exp_folio_victima,
@@ -742,8 +742,7 @@ class CasosC4 extends Conexion
 	{
 		$sql = $this->dbh->prepare(
 			"SELECT 	id_victima,
-												c4_edad_victima,
-												c4_edad_ms_victima,
+												c4_edad_victima,					
 												c4_nom_victima,
 												c4_num_delitos,
 												c4_per_tercera_edad,
@@ -772,7 +771,7 @@ class CasosC4 extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
-	public function editar_victima_c4($edad,$edad_ms, $nom, $num_del, $per_ter, $per_vio, $per_dis, $per_ind, $per_tran, $c4_sex, $nombre_creador, 	$id)
+	public function editar_victima_c4($edad, $nom, $num_del, $per_ter, $per_vio, $per_dis, $per_ind, $per_tran, $c4_sex, $nombre_creador, 	$id)
 	{
 		$conn = $this->dbh;
 		$conn->beginTransaction();
@@ -780,7 +779,6 @@ class CasosC4 extends Conexion
 		try {
 			$sql = $conn->prepare("UPDATE 	tbl_c4_victimas
 									SET 	c4_edad_victima=?,
-											c4_edad_ms_victima=?,
 											c4_nom_victima=?,
 											c4_num_delitos=?,
 											c4_per_tercera_edad=?,
@@ -793,7 +791,6 @@ class CasosC4 extends Conexion
 									WHERE	id_victima= ?");
 			if ($sql->execute(array(
 				$edad,
-				$edad_ms,
 				$nom,
 				$num_del,
 				$per_ter,
@@ -1016,63 +1013,7 @@ class CasosC4 extends Conexion
 		return $row;
 	}
 
-	//Avances
-	public function insertar_avance($can_tipo_avance, $can_fecha_avance, $can_estatus_avance, $can_desc_avance)
-	{
-
-		try {
-			$sql   = $this->dbh->prepare("insert into tbl_can_avances (can_tipo_avance,can_fecha_avance,can_estatus_avance,can_desc_avance) values (?,?,?,?)");
-			$sql->bindParam(1, $can_tipo_avance, PDO::PARAM_STR);
-			$sql->bindParam(2, $can_fecha_avance, PDO::PARAM_STR);
-			$sql->bindParam(3, $can_estatus_avance, PDO::PARAM_STR);
-			$sql->bindParam(4, $can_desc_avance, PDO::PARAM_STR);
-
-
-			if ($sql->execute()) {
-				$estatus = 'ok';
-			} else
-				$estatus = 'error_registro';
-		} catch (Exception $e) {
-			$estatus = $e;
-		}
-
-		return $estatus;
-	}
-	public function lista_avances()
-	{
-
-		$sql = $this->dbh->prepare("
-		select id_can_avance,can_tipo_avance,can_fecha_avance,can_estatus_avance,can_desc_avance from tbl_can_avances
-		");
-
-		$sql->execute(array());
-		$row = $sql->fetchAll();
-		return $row;
-	}
-	public function obtener_avance($id)
-	{
-		$sql = $this->dbh->prepare("select id_can_avance,can_tipo_avance,can_fecha_avance,can_estatus_avance,can_des_avance  from tbl_can_avances where id_can_avance = ?");
-		$sql->execute(array($id));
-		$row = $sql->fetchAll();
-		return $row;
-	}
-	public function eliminar_avance($id_can_avance)
-	{
-		$sql = $this->dbh->prepare("delete from tbl_can_avances where id_can_avance = ?");
-		if ($sql->execute(array($id_can_avance))) {
-			return 'ok';
-		} else
-			return 'error';
-	}
-	public function editar_avance($id, $can_tipo_avance, $can_fecha_avance, $can_estatus_avance, $can_des_avance)
-	{
-		$sql = $this->dbh->prepare("update tbl_can_avances set id_can_avance= ?, can_tipo_avance = ?, can_fecha_avance = ?, can_estatus_avance = ? ,can_desc_avance=? where id_can_avance = ?");
-		if ($sql->execute(array($can_tipo_avance, $can_fecha_avance, $can_estatus_avance, $can_des_avance, $id))) {
-			return 'ok';
-		} else
-			return 'error';
-	}
-
+	
 
 	//catalogos
 	public function fn_lista_municipios()

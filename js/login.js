@@ -37,7 +37,7 @@ function login_roles() {
 
 
     postAjax("POST", arreglo, f).then((data) => {
-
+        
         switch (data.estatus) {
             case 200:
 
@@ -48,7 +48,10 @@ function login_roles() {
                     timer: 1500
                 });
 
-                setTimeout("window.location.href = 'vistas/canalizacion-index.php'", 1000);
+                setTimeout("window.location.href = 'vistas/administracion.php'", 1000);
+                
+                
+                
                 break;
 
             case 404:

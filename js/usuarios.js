@@ -6,7 +6,7 @@ $(document).ready(function () {
   $("#action").click(function () {
 
     insertUserX();
- 
+
 
   });
   $("#btnAgregar").click(function (e) {
@@ -15,6 +15,7 @@ $(document).ready(function () {
     $("#formulario")[0].reset();
     $(".img_formUser").hide();
     $("#operacion").val("Crear");
+    $(".pass").show();
     listRol();
 
 
@@ -147,6 +148,8 @@ function getUsers() {
             $("#operacion").val("Editar")
             $(".img_formUser").show();
 
+            $(".pass").hide();
+
 
           });//Click Editar
 
@@ -192,7 +195,7 @@ function insertUserX() {
 
   const evento = $("#operacion").val();
 
-  
+
   let nombre = $("#nombre").val();
   let apellidos = $("#apellidos").val();
   let departamento = $("#departamento").val();
@@ -210,79 +213,113 @@ function insertUserX() {
 
     formData.append("accion", "editar_usuario")
 
+    postAjaxForm("POST", formData, MAINCTRL).then((response) => {
+
+      let jsonparse = JSON.parse(response);
+
+      switch (jsonparse.estatus) {
+        case 200:
+          if (jsonparse.lastId > 0) {
+            /* revisar funcion MessageSwal para ver la interpretacion de los tipos de mensajes a enviar */
+
+            //Se manda a llamar la imagen desde la carpeta en el servidor
+            imagenhtml = '<img src="../vistas/usuario/imgUser/' + jsonparse.imagen + '" class="img_user" />'
+
+            mitabla = $("#datos_usuario").DataTable();
+
+            if (evento == "Editar") {
+
+              var rowIndex = $("#idRow").val();
+              var temp = mitabla.row(rowIndex).data();
+              temp[1] = nombre;
+              temp[2] = apellidos;
+              temp[3] = departamento;
+              temp[4] = usuario;
+              temp[5] = email;
+              temp[6] = imagenhtml;
+
+              $('#datos_usuario').dataTable().fnUpdate(temp, rowIndex, undefined, false);
+
+              MessageSwal('ok', 'Usuario Actualizado!!!', jsonparse.message)
+            }
+
+            $("#formulario")[0].reset();
+            $("#modalUsuario").modal("hide");
+
+
+          } else {
+            MessageSwal('!', 'Agregar usuario!!!', 'El usuario no pudo ser agregado a la base de datos...');
+
+          }
+          break;
+
+        default:
+          MessageSwal("x", "Agregar usuario!!!", jsonparse.message);
+          break;
+      }
+    });
+
   } else if (evento == "Crear") {
 
     formData.append("accion", "nuevo_usuario")
+
+
+
   }
 
 
 
-  if (nombre != "" && apellidos != "" && usuario != "" && email != "" && rol_usuario != 0 ) {
+  if (nombre != "" && apellidos != "" && usuario != "" && email != "" && rol_usuario != 0) {
     if (contrasena.length >= 8) {
 
-      if (contrasena  == d_contrasena) {
-        
+      if (contrasena == d_contrasena) {
+
         postAjaxForm("POST", formData, MAINCTRL).then((response) => {
-      
+
           let jsonparse = JSON.parse(response);
-      
+
           switch (jsonparse.estatus) {
             case 200:
               if (jsonparse.lastId > 0) {
                 /* revisar funcion MessageSwal para ver la interpretacion de los tipos de mensajes a enviar */
-      
+
                 //Se manda a llamar la imagen desde la carpeta en el servidor
                 imagenhtml = '<img src="../vistas/usuario/imgUser/' + jsonparse.imagen + '" class="img_user" />'
-      
+
                 mitabla = $("#datos_usuario").DataTable();
                 if (evento == "Crear") {
-      
+
                   mitabla.row.add([jsonparse.lastId, nombre, apellidos, departamento, usuario, email, imagenhtml]).draw(false);
-      
+
                   MessageSwal('ok', 'Usuario Agregado!!!', jsonparse.message)
-      
-                } else if (evento == "Editar") {
-      
-                  var rowIndex = $("#idRow").val();
-                  var temp = mitabla.row(rowIndex).data();
-                  temp[1] = nombre;
-                  temp[2] = apellidos;
-                  temp[3] = departamento;
-                  temp[4] = usuario;
-                  temp[5] = email;
-                  temp[6] = imagenhtml;
-      
-                  $('#datos_usuario').dataTable().fnUpdate(temp, rowIndex, undefined, false);
-      
-                  MessageSwal('ok', 'Usuario Actualizado!!!', jsonparse.message)
+
                 }
-                //MessageSwal('ok', 'Usuario Agregado!!!', jsonparse.message)
-      
+
                 $("#formulario")[0].reset();
-                //$(".modal-backdrop").remove();
                 $("#modalUsuario").modal("hide");
-      
+
+
               } else {
                 MessageSwal('!', 'Agregar usuario!!!', 'El usuario no pudo ser agregado a la base de datos...');
-      
+
               }
               break;
-      
+
             default:
               MessageSwal("x", "Agregar usuario!!!", jsonparse.message);
               break;
           }
         });
 
-      }else{
+      } else {
         //contraseña diferentes
         MessageSwal("x", "!!!Contraseñas no coinciden¡¡¡", "Verifica las contraseña");
       }
-      
-    }else{
 
-    // contraseña corta
-    MessageSwal("!", "!!!Contraseña Corta¡¡¡", "Minimo deben ser 8 caracteres");
+    } else {
+
+      // contraseña corta
+      MessageSwal("!", "!!!Contraseña Corta¡¡¡", "Minimo deben ser 8 caracteres");
 
     }
 
@@ -357,19 +394,19 @@ function listRol() {
   var arreglo = "";
   var arreglo = {
     accion: "obtener_roles",
-    
+
   };
 
   postAjax("POST", arreglo, MAINCTRL).then((response) => {
     switch (response.estatus) {
       case 200:
-      if (response.total > 0){
-        var micombo = document.getElementById("rol_usuario")
-        $("#rol_usuario").empty().append('<option value="0">Seleccione rol de usuario</option>');
-        for (var i = 0; i < response.data.length; i++) {
-          micombo.options.add(new Option(response.data[i].rol, response.data[i].idRol));
+        if (response.total > 0) {
+          var micombo = document.getElementById("rol_usuario")
+          $("#rol_usuario").empty().append('<option value="0">Seleccione rol de usuario</option>');
+          for (var i = 0; i < response.data.length; i++) {
+            micombo.options.add(new Option(response.data[i].rol, response.data[i].idRol));
+          }
         }
-      }
 
         break;
 
@@ -377,7 +414,7 @@ function listRol() {
         break;
     }
   });
- 
+
 
 }
 

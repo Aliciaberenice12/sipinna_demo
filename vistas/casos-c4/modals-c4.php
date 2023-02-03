@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-secondary">
-                <h5 class="modal-title" id="tit_mod_c4" style="color:white;"></h5>
+                <h5 class="modal-title" id="tit_mod_c4"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -148,9 +148,9 @@
                                 <div class="col-md-4">
                                     <label for="c4_edad_responsable">Edad Probable responsable(Años):</label>
                                     <select name="c4_edad_responsable" id="c4_edad_responsable" class="form-select">
-                                        <option value="0" disabled  selected>Se desconoce</option>
+                                        <option value="0" >Se desconoce</option>
                                         <?php
-                                        for ($i = 0; $i <= 100; $i++) {
+                                        for ($i = 1; $i <= 100; $i++) {
                                             echo "<option value=" . $i . ">" . $i . " Años</option>";
                                         }
                                         ?>
@@ -181,10 +181,12 @@
                             <input type="hidden" name="id_victima_c4" id="id_victima_c4" value="0">
 
                             <div class="row card-body" id="add_victimas">
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="c4_edad_vic">Edad(Años):</label>
                                     <select name="c4_edad_vic" id="c4_edad_vic" class="form-select">
-                                        <option value="0" disabled selected>Se Desconoce</option>
+                                        <option value="se desconoce" disabled selected>Se Desconoce</option>
+                                        <option value="0"  >Menos de 1 año </option>
+
                                         <?php
                                         for ($i = 0; $i <= 100; $i++) {
                                             echo "<option value=" . $i . ">" . $i . " Años</option>";
@@ -192,18 +194,8 @@
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="c4_edad_ms_vic">Edad(Meses):</label>
-                                    <select name="c4_edad_ms_vic" id="c4_edad_ms_vic" class="form-select">
-                                        <option value="0" disabled selected>Se Desconoce</option>
-                                        <?php
-                                        for ($i = 1; $i <= 11; $i++) {
-                                            echo "<option value=" . $i . ">" . $i . " Meses</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
+                               
+                                <div class="col-md-5">
                                     <label for="c4_nom_vic">Nombre Victima:</label>
                                     <input type="text" class="form-control" placeholder="Nombre Victima" id="c4_nom_vic" name="c4_nom_vic" required>
                                 </div>
@@ -290,8 +282,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- Modal Problable Responsable-->
 <div class="modal" tabindex="-1" id="modal_pro_resp_c4">
     <div class="modal-dialog modal-lg">
@@ -308,9 +298,9 @@
                     <br>
                     <label for="c4_edad_responsable_edit">Edad(Años):</label>
                     <select name="c4_edad_responsable_edit" id="c4_edad_responsable_edit" class="form-select">
-                        <option value="0" selected disabled>Seleccionar</option>
+                        <option value="0">Se desconoce</option>
                         <?php
-                        for ($i = 0; $i <= 100; $i++) {
+                        for ($i = 1; $i <= 100; $i++) {
                             echo "<option value=" . $i . ">" . $i . " Años</option>";
                         }
                         ?>
@@ -351,10 +341,12 @@
                         <h5><strong>Datos de presunta(s) victima(s) :</strong></h5>
                     </div>
                     <div class="row col-md-12" id="victimas">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="c4_edad_victima_edit">Edad(Años):</label>
                             <select name="c4_edad_victima_edit" id="c4_edad_victima_edit" class="form-select">
-                                <option value="0"  >Se Desconoce</option>
+                                <option value="se desconoce" disabled selected>Se Desconoce</option>
+                                <option value="0">Menos de 1 año</option>
+
 
                                 <?php
                                 for ($i = 0; $i <= 100; $i++) {
@@ -363,23 +355,13 @@
                                 ?>
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <label for="c4_edad_ms_vic_edit">Edad(Meses):</label>
-                            <select name="c4_edad_ms_vic_edit" id="c4_edad_ms_vic_edit" class="form-select">
-                            <option value="0"  >Se Desconoce</option>
-                                <?php
-                                for ($i = 0; $i <= 11; $i++) {
-                                    echo "<option value=" . $i . ">" . $i . " Meses</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
+                     
+                        <div class="col-md-8">
                             <label for="c4_nom_victima_edit">Nombre Victima:</label>
                             <input type="text" class="form-control" placeholder="Nombre Victima" id="c4_nom_victima_edit" name="c4_nom_victima_edit" required>
                         </div>
                      
-                        <div class="col-md-10">
+                        <div class="col-md-12">
                             <br>
                             <label for="id_c4_del_victima_edit">Tipo de Delito:</label>
                             <input type="hidden" name="id_c4_del_victima_edit" id="id_c4_del_victima_edit" value="0">

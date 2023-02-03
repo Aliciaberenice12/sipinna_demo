@@ -112,14 +112,12 @@ function mod_caso_c4(origen, id, fol_c4) {
         $('#c4_fecha_inicio').val("");
         $('#c4_edo').val("");
         $('#otros_estados_c4').val("");
-
         $('#c4_mun').val("");
         $('#c4_mun_edo').val("");
         $('#c4_dirigido').val("");
         $('#c4_dg').val("");
         $('#imagen_subida_c4').val("");
         $('#c4_ruta_sol_oficio_edit').val("");
-
         $('#c4_inst_rep').val("");
         $('#c4_nom_rep').val("");
         $('#c4_nom_responsable').val("");
@@ -152,6 +150,7 @@ function mod_caso_c4(origen, id, fol_c4) {
         $("#lista_bd_probable_res").show();
         $("#lista_bd_victimas").show();
         $("#c4_municipio").show();
+        $('#c4_ruta_sol_oficio').val("");
         $("#imagen_subida_c4").show();
         $("#imagen_c4").show();//imagen_c4
         $.post("../controllers/fun_casos_c4.php", { func: 'fn_obtener_caso_c4', id: id }, function (res) {
@@ -187,6 +186,8 @@ function mod_caso_c4(origen, id, fol_c4) {
             if (res.c4_edo == '30') {
                 $("#c4_mun").show(400),
                 $("#c4_municipio").show(400),
+                $("#c4_mun_edo").hide(),
+
                 $("#c4_mun_edo").val("")
             }
             else {
@@ -233,6 +234,9 @@ function mod_caso_c4(origen, id, fol_c4) {
         $.post("../controllers/fun_casos_c4.php", { func: 'fn_obtener_datos_pro_res_c4', id: id, fol_c4: fol_c4 }, function (res) {
             $('#id_pro_responsable_edit').val(id);
             $('#c4_edad_responsable_edit').val(res.c4_edad_responsable);
+            setTimeout(function () {
+                $('#c4_edad_responsable_edit').val(res.c4_edad_responsable);
+            }, 500);
             $('#c4_nom_responsable_edit').val(res.c4_nom_responsable);
             $('#c4_exp_folio_resp_edit').val(res.c4_exp_folio_resp);
 
@@ -248,19 +252,19 @@ function mod_caso_c4(origen, id, fol_c4) {
         $.post("../controllers/fun_casos_c4.php", { func: 'fn_obtener_datos_victimas_c4', id: id, fol_c4: fol_c4 }, function (res) {
             $('#id_c4_victima_edit').val(id);
             $('#c4_edad_victima_edit').val(res.c4_edad_victima);
-            $('#c4_edad_ms_vic_edit').val(res.c4_edad_ms_victima);
             setTimeout(function () {
-                $('#c4_edad_ms_vic_edit').val(res.c4_edad_ms_victima);
+                $('#c4_edad_victima_edit').val(res.c4_edad_victima);
             }, 500);
             $('#c4_nom_victima_edit').val(res.c4_nom_victima);
             $('#c4_num_delitos_edit').val(res.c4_num_delitos);
             $('#id_c4_del_victima_edit').val(res.id_c4_delito_victima);
             $('#can_exp_folio_victima_edit').val(res.c4_exp_folio_victima);
-
-            
             $('#c4_delito_edit').val(res.c4_delito);
+            // $('#c4_delito_edit').val(res.c4_delito);
+
+            c4_delitos=res.c4_delito.split(",");
             setTimeout(function () {
-                $('#c4_delito_edit').val(res.c4_delito);
+                $('#c4_delito_edit').val(c4_delitos);
             }, 500);
             
             $('#id_c4_der_victima_edit').val(res.id_c4_derecho);
@@ -394,8 +398,8 @@ function fun_agregar_caso_c4() {
         processData: false,
         cache: false
     }).done(function (result) {
-        console.log(result);
-        if (result.estatus === "ok expediente registrado") {
+        
+        if (result.estatus === "ok") {
             Swal.fire({ icon: 'success', title: 'Expediente guardado correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_c4').modal('hide');
             fn_listar_casos_c4();
@@ -657,41 +661,40 @@ function mod_can_victima(origen, id) {
     }
 
 }
-function fun_agregar_victima_c4() {
-    id = $('#id_victima_c4').val();
-    var data = new FormData();
-    data.append('func', 'fn_guardar_victima_c4');
-    data.append('id', id);
-    $.ajax({
-        url: "../controllers/fun_casos_c4.php",
-        type: "POST",
-        data: data,
-        contentType: false,
-        processData: false,
-        cache: false
-    }).done(function (res) {
+// function fun_agregar_victima_c4() {
+//     id = $('#id_victima_c4').val();
+//     var data = new FormData();
+//     data.append('func', 'fn_guardar_victima_c4');
+//     data.append('id', id);
+//     $.ajax({
+//         url: "../controllers/fun_casos_c4.php",
+//         type: "POST",
+//         data: data,
+//         contentType: false,
+//         processData: false,
+//         cache: false
+//     }).done(function (res) {
 
-        if (res.estatus === "ok") {
-            Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
-            $('#modal_c4').modal('hide');
-            fn_listar_casos_c4();
+//         if (res.estatus === "ok") {
+//             Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
+//             $('#modal_c4').modal('hide');
+//             fn_listar_casos_c4();
 
-        }
-        else {
-            Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showCnfirmButton: false, timer: 1500 });
-            $('#btn_create_can').prop('disabled', false);
-            $('#modal_c4').modal('hide');
-            return false;
-        }
+//         }
+//         else {
+//             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showCnfirmButton: false, timer: 1500 });
+//             $('#btn_create_can').prop('disabled', false);
+//             $('#modal_c4').modal('hide');
+//             return false;
+//         }
 
-    })
+//     })
 
-}
+// }
 function fun_editar_victima_c4() {
     id = $('#id_c4_victima_edit').val();
     fol_c4 = $.trim($('#can_exp_folio_victima_edit').val());    
     c4_edad_victima_edit = $.trim($('#c4_edad_victima_edit').val());
-    c4_edad_ms_vic_edit = $.trim($('#c4_edad_ms_vic_edit').val());
     c4_nom_victima_edit = $.trim($('#c4_nom_victima_edit').val());
     // c4_num_delitos_edit = $.trim($('#c4_num_delitos_edit').val());
     id_c4_del_victima_edit = $.trim($('#id_c4_del_victima_edit').val());
@@ -706,17 +709,60 @@ function fun_editar_victima_c4() {
     c4_per_discapacidad_edit = $.trim($('#c4_per_discapacidad_edit').val());
     c4_per_violencia_edit = $.trim($('#c4_per_violencia_edit').val());
     c4_sexo_victima_edit = document.querySelector('input[name="c4_sexo_victima_edit"]:checked').value;
-     if (c4_delito_edit == '') {
+    if (c4_edad_victima_edit == '') {
         toastr.options.timeOut = 2500;
-        toastr.warning('Debe Seleccionar Delito!');
+        toastr.warning('¡Debes Seleccionar la edad de la victima!');
+        $('#c4_edad_victima_edit').focus();
+        return false;
+    }
+    if (c4_nom_victima_edit == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡El nombre de la victima no puede estar vacio!');
+        $('#c4_nom_victima_edit').focus();
+        return false;
+    }
+    if (c4_delito_edit == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Seleccionar un delito!');
         $('#c4_delito_edit').focus();
         return false;
     }
+    if (c4_der_vul_vic_edit == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes Seleccionar un derecho vulnerado!');
+        $('#c4_der_vul_vic_edit').focus();
+        return false;
+    }
+    if ($('#c4_per_discapacidad_edit').prop('checked'))
+        c4_per_discapacidad_edit = 1;
+    else
+        c4_per_discapacidad_edit = 0;
+
+    if ($('#c4_per_tercera_edad_edit').prop('checked'))
+        c4_per_tercera_edad_edit = 1;
+    else
+        c4_per_tercera_edad_edit = 0;
+
+    if ($('#c4_per_violencia_edit').prop('checked'))
+        c4_per_violencia_edit = 1;
+    else
+        c4_per_violencia_edit = 0;
+
+    if ($('#c4_per_indigena_edit').prop('checked'))
+        c4_per_indigena_edit = 1;
+    else
+        c4_per_indigena_edit = 0;
+
+    if ($('#c4_per_transgenero_edit').prop('checked'))
+        c4_per_transgenero_edit = 1;
+    else {
+        c4_per_transgenero_edit = 0;
+    }
+
     var data = new FormData();
     data.append('func', 'fn_guardar_victima_c4');
     data.append('id', id);
     data.append('c4_edad_victima_edit', c4_edad_victima_edit);
-    data.append('c4_edad_ms_vic_edit', c4_edad_ms_vic_edit);
     data.append('c4_nom_victima_edit', c4_nom_victima_edit);
     data.append('c4_num_delitos_edit', c4_num_delitos_edit);
     data.append('id_c4_del_victima_edit', id_c4_del_victima_edit);

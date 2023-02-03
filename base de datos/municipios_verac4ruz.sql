@@ -1,4 +1,4 @@
-﻿CREATE TABLE cat_municipios(id_municipio DOUBLE,municipio VARCHAR(10));
+﻿CREATE TABLE cat_municipios(id_municipio INT,municipio VARCHAR(50));
 INSERT INTO cat_municipios (id_municipio,municipio) VALUES (1,'Acajete');
 INSERT INTO cat_municipios (id_municipio,municipio) VALUES (2,'Acatlán');
 INSERT INTO cat_municipios (id_municipio,municipio) VALUES (3,' Acayucan');

@@ -2,29 +2,6 @@
 require_once('../models/class_canalizacion.php');
 $v = new Canalizacion();
 session_start();
-function compressImage($source, $destination, $quality)
-{
-	// Obtenemos la información de la imagen
-	$imgInfo = getimagesize($source);
-	$mime    = $imgInfo['mime'];
-
-	// Creamos una imagen
-	switch ($mime) {
-		case 'image/jpeg':
-			$image = imagecreatefromjpeg($source);
-			break;
-		case 'image/png':
-			$image = imagecreatefrompng($source);
-			break;
-		case 'image/gif':
-			$image = imagecreatefromgif($source);
-			break;
-		default:
-			$image = imagecreatefromjpeg($source);
-	}
-	// Guardamos la imagen
-	return imagejpeg($image, $destination, $quality);
-}
 
 if (isset($_REQUEST['func'])) {
 	switch ($_REQUEST['func']) {
@@ -36,6 +13,7 @@ if (isset($_REQUEST['func'])) {
 					$can_edad_vic = $_POST["can_edad_vic"];
 					$can_nom_vic  = $_POST["can_nom_vic"];
 					$can_delito  = $_POST["can_delito"];
+					
 					$can_der_vul_vic  = $_POST["can_der_vul_vic"];
 					$can_per_tercera_edad  = $_POST["can_per_tercera_edad"];
 					$can_per_violencia  = $_POST["can_per_violencia"];
@@ -108,7 +86,11 @@ if (isset($_REQUEST['func'])) {
 									<div class="d-none d-sm-block">
 										<div class="row" align="center">
 											<div class="col-lg-2 ">' . $row["can_nom_vic"] . '</div>
-											<div class="col-lg-1 " >' . $row["can_edad_vic"] . '</div>
+											<div class="col-lg-1 " >
+											' . ($row["can_edad_vic"] == "0" ? "Menos de 1 año" : $row["can_edad_vic"]) . '
+
+											</div>
+
 
 											<div class="col-lg-3"align="left">
 											' . $aux2 . '<br>
@@ -170,7 +152,7 @@ if (isset($_REQUEST['func'])) {
 					$_SESSION["nombre"]
 				);
 
-				$estatus2 = $v->editar_delito_victima_can($_REQUEST["id_can_del_victima_edit"], $_REQUEST["can_delito_edit"], $_SESSION["nombre"]);
+				$estatus2 = $v->editar_delito_victima_can($_REQUEST["id_can_del_victima_edit"], $_REQUEST["can_delito_edit"], $_REQUEST["can_num_del_edit"], $_SESSION["nombre"]);
 
 				$estatus3 = $v->editar_derecho_victima_can($_REQUEST["id_can_der_victima_edit"], $_REQUEST["can_der_vul_vic_edit"], $_SESSION["nombre"]);
 			}
@@ -278,7 +260,8 @@ if (isset($_REQUEST['func'])) {
 									<div class="row">
 										<td class="col-md-1">
 											<div>
-											' . $row["can_edad_vic"] . '
+											' . ($row["can_edad_vic"] == "0" ? "Menor de 1 año" : $row["can_edad_vic"]) . '
+
 											</div>
 										</td>
 										<td class="col-md-2">
@@ -352,13 +335,6 @@ if (isset($_REQUEST['func'])) {
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
 			break;
-
-
-
-
-
-
-
 			//Canalizacion Reportante
 		case 'fn_guardar_reportante':
 			if ($_REQUEST["id"] == '0') {
@@ -505,15 +481,9 @@ if (isset($_REQUEST['func'])) {
 				</div>';
 			}
 			echo $html;
-			break;
+			break; 
 
-		case 'fn_reportante':
-			unset($_SESSION['reportante']);
-			unset($_SESSION['victima']);
-
-			break;
-
-
+		
 			//Guardar solicitante
 		case 'fn_guardar_solicitante':
 			if ($_REQUEST["id"] == '0') {
@@ -592,69 +562,243 @@ if (isset($_REQUEST['func'])) {
 			//Canalizacion Expediente
 		
 		case 'fn_guardar_canalizacion':
-			if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] != '4') {
+			
+			if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] == '1') //Rol Administrador 
+			{
 				if ($_REQUEST["id"] == '0') // nuevo registro
 				{
 					$nom_archivo_can = '';
-					if ($_FILES["archivo_can"]["size"] > 500000) //Si el archivo es mayor a 500 Kb
-						$estatus = 'arch_pesado';
+					if (isset($_FILES["archivo_can"]) and $_FILES["archivo_can"] != '') //si lleva archivo
+					{
+						if ($_FILES["archivo_can"]["size"] > 1000000) //Si el archivo es mayor a 
+							$estatus = 'arch_pesado';
 
-					else {
+						else {
+							$folio_img_1    = str_replace(' ', '', $_REQUEST["can_num_oficio"]);
+							$folio_img      = str_replace('/', '_', $folio_img_1);
+							$fichero = $_FILES["archivo_can"];
+							$ext            = explode(".", $_FILES['archivo_can']['name']);
+							$extension      = end($ext);
+							$nom_archivo_can    = $folio_img . '_' . rand() . '.' . $extension;
+
+							move_uploaded_file($fichero["tmp_name"], "../images/canalizacion/" . $nom_archivo_can);
+							$datos_exp_can = $_POST;
+							$estatus = $v->insertar_canalizacion($nom_archivo_can, $datos_exp_can);
+							
+						}	
+					}
+					else //Nuevo Registro Sin imagen
+					{
+						
+						$datos_exp_can = $_POST;
+						$sin_imagen='no.png';
+						$estatus = $v->insertar_canalizacion($sin_imagen, $datos_exp_can);
+						
+
+					}
+					
+				}
+				else ///Editar Registro Administrador
+				{
+					if (isset($_FILES["archivo_can"]) and $_FILES["archivo_can"] != '') //Si lleva Archivo de canalización
+					{
 						$folio_img_1    = str_replace(' ', '', $_REQUEST["can_num_oficio"]);
 						$folio_img      = str_replace('/', '_', $folio_img_1);
-						$nombre_archivo_can = $_FILES['archivo_can']['name'];
-						$tmp_archivo    = $_FILES['archivo_can']['tmp_name'];
+						$fichero = $_FILES["archivo_can"];
+						$obt_fecha_folio = $_POST["can_fecha"];
 						$ext            = explode(".", $_FILES['archivo_can']['name']);
 						$extension      = end($ext);
-						$nom_archivo_can    = $folio_img . '_' . rand() . '.' . $extension;
+						$nom_archivo    = $folio_img . '_' . rand() . '.' . $extension;
 						$upload_folder  = '../images/canalizacion/';
-						$archivador     = $upload_folder . $nom_archivo_can;
-						$nom_gd=$nom_archivo_can;
-						if (compressImage($tmp_archivo, $archivador, 30)) {
-							$datos_expediente=$_POST;
-							$estatus = $v->insertar_canalizacion($nom_gd,$datos_expediente);
-							if ($estatus == 'error_registro') {
-								if (file_exists($archivador));
-								unlink($archivador);
-							}
-						} else
-							$estatus = 'error_subida_archivo';
-					}	
-				}
-				else
-				{
+						move_uploaded_file($fichero["tmp_name"], "../images/canalizacion/" . $nom_archivo);
+						unlink($upload_folder . $_REQUEST["can_ruta_sol_oficio_edit"]);
+
+						$estatus = $v->editar_canalizacion(
+							$_POST["can_via_rec"],
+							$_POST["can_numero"],
+							$_POST["can_folio"],
+							$_POST["can_num_oficio"],
+							$_POST["can_pais"],
+							$_POST["can_otros_estados"],
+							$_POST["can_estado"],
+							$_POST["can_municipio"],
+							$_POST["can_mun_edo"],
+							$_POST["can_fecha"],
+							$_POST["estatus_expediente"],
+							$nom_archivo,
+							$_SESSION["nombre"],
+							$_POST["id"]
+						);
+						$estatus2 = $v->editar_caso_reportado(
+							$_POST["id_caso"],
+							$_POST["can_des_suncita_rep"],
+							$_POST["can_ges_reporte"],
+							$_POST["ins_con_hechos"],
+							$_SESSION["nombre"]
+						);
+						$estatus3 = $v->editar_solicitante(
+							$_POST["id_solicitante"],
+							$_POST["can_inst_sol"],
+							$_POST["can_nom_sol"],
+							$_SESSION["nombre"]
+						);
+						
+						
+					} 
+					else 
+					{
+						$estatus = $v->editar_canalizacion(
+							
+							$_POST["can_via_rec"],
+							$_POST["can_numero"],
+							$_POST["can_folio"],
+							$_POST["can_num_oficio"],
+							$_POST["can_pais"],
+							$_POST["can_otros_estados"],
+							$_POST["can_estado"],
+							$_POST["can_municipio"],
+							$_POST["can_mun_edo"],
+							$_POST["can_fecha"],
+							$_POST["estatus_expediente"],
+							$_POST["can_ruta_sol_oficio_edit"],
+							$_SESSION["nombre"],
+							$_POST["id"]
+
+						);
+						$estatus2 = $v->editar_caso_reportado(
+							$_POST["id_caso"],
+							$_POST["can_des_suncita_rep"],
+							$_POST["can_ges_reporte"],
+							$_POST["ins_con_hechos"],
+							$_SESSION["nombre"]
+						);
+						$estatus3 = $v->editar_solicitante(
+							$_POST["id_solicitante"],
+							$_POST["can_inst_sol"],
+							$_POST["can_nom_sol"],
+							$_SESSION["nombre"]
+						);
+						
+					}
 				}
 			}
-			else// Registro Historico 
+			else if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] == '4')// Rol Historico 
 			{
-				if ($_REQUEST["id"] == '0') // historico nuevo registro
+				if($_REQUEST["id"] == '0') // historico nuevo registro
 				{
 					$nom_archivo_can = '';
-					if ($_FILES["archivo_can"]["size"] > 500000) //Si el archivo es mayor a 500 Kb
-						$estatus = 'arch_pesado';
+					if (isset($_FILES["archivo_can"]) and $_FILES["archivo_can"] != '') {  ///Si lleva imagen en perfil administrador
+						if ($_FILES["archivo_can"]["size"] > 500000) //Si el archivo es mayor a 500 Kb
+							$estatus = 'arch_pesado';
 
+						else {
+							$folio_img_1    = str_replace(' ', '', $_REQUEST["can_num_oficio"]);
+							$folio_img      = str_replace('/', '_', $folio_img_1);
+							$fichero = $_FILES["archivo_can"];
+							$obt_fecha_folio = $_POST["can_fecha"];
+							$anio_fol = explode("-", $obt_fecha_folio);
+							$anio_folio = $anio_fol['0'];
+							$ext            = explode(".", $_FILES['archivo_can']['name']);
+
+							$extension      = end($ext);
+							$nom_archivo    = $folio_img . '_' . rand() . '.' . $extension;
+
+							move_uploaded_file($fichero["tmp_name"], "../images/canalizacion/" . $nom_archivo);
+							$datos_exp_historico_can = $_POST;
+							$estatus = $v->insertar_canalizacion_historico($nom_archivo, $datos_exp_historico_can, $anio_folio);
+						}
+					}
+					else{ // si no lleva imagen en perfil Histirico
+						$obt_fecha_folio = $_POST["can_fecha"];
+						$anio_fol = explode("-", $obt_fecha_folio);
+						$anio_folio = $anio_fol['0'];
+						$datos_exp_historico_can = $_POST;
+						$nom_archivo='no.png';
+						$estatus = $v->insertar_canalizacion_historico($nom_archivo, $datos_exp_historico_can, $anio_folio);
+
+					}
+				}	
+				 
+				else//   Editar Historico
+				{  
+					$datos_historico_edit_can=$_POST;
+					if (isset($_POST['archivo_can'])) {//si no se cambia la imagen 
+						$estatus = $v->editar_canalizacion(
+							
+							$_POST["can_via_rec"],
+							$_POST["can_numero"],
+							$_POST["can_folio"],
+							$_POST["can_num_oficio"],
+							$_POST["can_pais"],
+							$_POST["can_otros_estados"],
+							$_POST["can_estado"],
+							$_POST["can_municipio"],
+							$_POST["can_mun_edo"],
+							$_POST["can_fecha"],
+							$_POST["estatus_expediente"],
+							$_POST["can_ruta_sol_oficio_edit"],
+							$_SESSION["nombre"],
+							$_POST["id"]
+
+						);
+						$estatus2 = $v->editar_caso_reportado(
+							$_POST["id_caso"],
+							$_POST["can_des_suncita_rep"],
+							$_POST["can_ges_reporte"],
+							$_POST["ins_con_hechos"],
+							$_SESSION["nombre"]
+						);
+						$estatus3 = $v->editar_solicitante(
+							$_POST["id_solicitante"],
+							$_POST["can_inst_sol"],
+							$_POST["can_nom_sol"],
+							$_SESSION["nombre"]
+						);
+					} 
 					else 
 					{
 						$folio_img_1    = str_replace(' ', '', $_REQUEST["can_num_oficio"]);
 						$folio_img      = str_replace('/', '_', $folio_img_1);
 						$fichero = $_FILES["archivo_can"];
 						$obt_fecha_folio = $_POST["can_fecha"];
-						$anio_fol = explode("-", $obt_fecha_folio);
-						$anio_folio = $anio_fol['0'];
 						$ext            = explode(".", $_FILES['archivo_can']['name']);
 						$extension      = end($ext);
 						$nom_archivo    = $folio_img . '_' . rand() . '.' . $extension;
-
+						$upload_folder  = '../images/canalizacion/';
 						move_uploaded_file($fichero["tmp_name"], "../images/canalizacion/" . $nom_archivo);
-						$datos_exp_historico = $_POST;
-						$estatus = $v->fn_registrar_caso_c4_historico($nom_archivo, $datos_exp_historico, $anio_folio);
+						unlink($upload_folder . $_REQUEST["can_ruta_sol_oficio_edit"]);
+
+						$estatus = $v->editar_canalizacion(
+							$_POST["can_via_rec"],
+							$_POST["can_numero"],
+							$_POST["can_folio"],
+							$_POST["can_num_oficio"],
+							$_POST["can_pais"],
+							$_POST["can_otros_estados"],
+							$_POST["can_estado"],
+							$_POST["can_municipio"],
+							$_POST["can_mun_edo"],
+							$_POST["can_fecha"],
+							$_POST["estatus_expediente"],
+							$nom_archivo,
+							$_SESSION["nombre"],
+							$_POST["id"]
+						);
+						$estatus2 = $v->editar_caso_reportado(
+							$_POST["id_caso"],
+							$_POST["can_des_suncita_rep"],
+							$_POST["can_ges_reporte"],
+							$_POST["ins_con_hechos"],
+							$_SESSION["nombre"]
+						);
+						$estatus3 = $v->editar_solicitante(
+							$_POST["id_solicitante"],
+							$_POST["can_inst_sol"],
+							$_POST["can_nom_sol"],
+							$_SESSION["nombre"]
+						);
 					}
-						
-				}	
-				//   Editar Historico 
-				else
-				{  
-					$datos_exp_historico_edit = $_POST;
+
 				}
 			}
 			header('Content-Type: application/json');
@@ -712,7 +856,7 @@ if (isset($_REQUEST['func'])) {
 					$session  = 3;
  
 					$html .= '
-								<tr class="text-11" align="center" id="l_can' . $row["id_canalizacion"] . '">
+								<tr class="text-11" align="center" id="l_can' . $row["id"] . '">
 									<div class="row">
 										
 										<td class="col-md-2">
@@ -729,6 +873,9 @@ if (isset($_REQUEST['func'])) {
 											<div>
 											
 											' . $row["estado"] . '
+											' . $row["can_otros_estados"] . '
+
+
 											</div>
 										</td>
 										<td class="col-md-1">
@@ -754,11 +901,11 @@ if (isset($_REQUEST['func'])) {
 										<td class="col-md-1">								
 											<div>
 											
-												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id_canalizacion"] . ',\'' . $row["can_folio_expediente"] . '\');">
+												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');">
 													<i class="bi bi-pencil-square"></i>
 													<span></span>
 												</button>
-												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_canalizacion(' . $row["id_canalizacion"] . ',\'' . $row["can_numero"] . '\');" ' . ($session == 3 ? "" : "hidden") . '>
+												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_canalizacion(' . $row["id"] . ',\'' . $row["can_numero"] . '\');" ' . ($session == 3 ? "" : "hidden") . '>
 													<i class="bi bi-trash"></i>
 													<span></span>
 												</button>
@@ -796,10 +943,11 @@ if (isset($_REQUEST['func'])) {
 				header('Content-Type: application/json');
 				$datos = array(
 					'can_folio' => $row["can_folio"],
-					'can_pais' => $row["can_pais"],
 					'can_numero'    => $row["can_numero"],
 					'can_numero_oficio'    => $row["can_numero_oficio"],
 					'can_fecha'      => $row["can_fecha"],
+					'can_pais' => $row["can_pais"],
+					'can_otros_estados' => $row["can_otros_estados"],
 					'can_estado'       => $row["can_estado"],
 					'can_municipio'       => $row["can_municipio"],
 					'can_mun_edo'       => $row["can_mun_edo"],

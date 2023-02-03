@@ -11,6 +11,7 @@
     <!--css-->
     <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
     <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>
+   
     <link href="../lib/bootstrap-5.2.1-dist/css/bootstrap.min.css" rel='stylesheet'>
     <script type='text/javascript' src='../lib/jquery.min.js'></script>
     <link type="text/css" href="../css/sipinna.css" rel="stylesheet" />
@@ -18,7 +19,8 @@
     <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
     <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
     <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="../lib/bootstrap-select-v-1-14/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="../lib/multiselect/css/multi-select.css">
+
 
 
 
@@ -111,9 +113,9 @@
     <script src="../lib/datatables/jquery.dataTables.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
-    <script src="../js/fun_canalizacion.js?x=<?php echo time(); ?>"></script>
-    <script src="../lib/bootstrap-select-v-1-14/js/bootstrap-select.min.js"></script>
-    <script src="../lib/bootstrap-select-v-1-14/js/i18n//defaults-am_ET.min.js"></script>
+    <!-- <script src="../js/fun_canalizacion.js?x=<?php echo time(); ?>"></script> -->
+    <script src="../lib/multiselect/js/jquery.multi-select.js"></script>
+
 
 </body>
 

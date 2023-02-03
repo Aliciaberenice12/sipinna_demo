@@ -42,197 +42,175 @@ if (isset($_SESSION['nombre'])) {
     <input type="hidden" id="hoy" value="<?php echo date('Y-m-d'); ?>">
     <!--Container -->
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2">
-                <h6><strong>Generar Reporte de:</strong> </h6>
-                
-                <select class="form-select" name="gen_reporte" id="gen_reporte">
-                    <option value="0" selected disabled>Seleccione</option>
-                    <option value="1">Canalización</option>
-                    <option value="2">Casos c4</option>
+        <div class="card">
+            <div class="card-header">
+                <h4>Generar Reporte</h4>
+                <div class="row">
+                    <div class="col-md-2">
+                        <h6><strong>Generar Reporte de:</strong> </h6>
+
+                        <select class="form-select" name="gen_reporte" id="gen_reporte">
+                            <option value="0" selected disabled>Seleccione</option>
+                            <option value="1">Canalización</option>
+                            <option value="2">Casos c4</option>
+                     
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="id_reporte">Reporte a consultar:</label>
+                        <select class="form-select" id="id_reporte" name="id_reporte">
+                            <option value="0" selected disabled>Seleccione</option>
+                            <option value="1">Reporte por municipios</option>
+                            <option value="2">Reporte por General(Sin Municipios)</option>
+                            <option value="3">Reporte por General Total</option>     
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="desde_fecha">Fecha Desde:</label>
+                        <input type="date" class="form-control" placeholder="Start" name="desde_fecha" id="desde_fecha" />
+                    </div>
+                    <div class="col-md-2">
+                        <label for="hasta_fecha">Fecha hasta:</label>
+                        <input type="date" class="form-control" placeholder="End" name="hasta_fecha" id="hasta_fecha" />
+                    </div>
+                    <div class="col-md-2">
+                        <br>
+                        <button type="button" class="btn btn-success" onclick="consulta()">consultar</button>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div id="div_reportes_canalizacion">
+                        <!-- <div id="consulta_sexo_municipio"></div> -->
+                       
+                        <h5> Se muestran los datos de Canalización</h5>
+                        <div class="col-md-12" align="center">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4" id="numero_casos"></div>
+                            <div class="col-md-4"></div>
+
+                        </div>
+                        <div id="div_consulta_general">
+                            <h5 align="center"><strong>Todos los Reportes(Sin Municipios)</strong></h5>
+                        </div>
+                        <div id="div_consulta_mes_num_casos_can">
+                            <h5 align="center"><strong>Total de casos agrupados por mes </strong></h5>
+                            <div id="consulta_meses_num_casos_can"></div>
+                        </div>
+                        <div id="div_cunsulta_genero_can">
+                            <h5 align="center"><strong>Total de victimas por genero de todos los casos</strong></h5>
+                            <div id="consulta_genero">
+                            </div>
+                        </div>
+                        <div id="div_consulta_edad_can">
+                            <h5 align="center"><strong>Total de victimas por edades de todos los casos</strong></h5>
+                        
+                            <div id="consulta_edad_can"></div>
+                            <div id="consulta_edad_mayores_can"></div>
+                            <div id="consulta_per_vul_can"></div>
+                        </div>                  
+                        <div id="div_consulta_num_delitos_casos_can">
+                            <h5 align="center"><strong>Total de delitos hacia victimas todos los casos</strong></h5>
+                            <div id="consulta_delitos_todos_casos_can"></div>
+                        </div>
+                  
+                        <div id="div_consulta_casos_por_municipio_can">
+                            <h5 align="center"><strong>Total de casos en cada municipio</strong></h5>
+                            <div id="consulta_casos_por_municipio_veracruz_can"></div>
+                        </div>
+                       
+
+                    </div>
+                    <div id="div_reportes_casos_c4">
+                        <h5> Se muestran los datos de Casos C4</h5>
+                        <div class="col-md-12" align="center">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4" id="numero_casos_c4"></div>
+                            <div class="col-md-4"></div>
+
+                        </div>
+                        <div id="div_consulta_mes_num_casos_c4">
+                            <h5 align="center"><strong>Total de casos agrupados por mes </strong></h5>
+                            <div id="consulta_meses_num_casos_c4"></div>
+                        </div>
+                        
+                        <div id="div_cunsulta_genero_c4">
+                            <h5 align="center"><strong>Total de victimas por genero todos los casos</strong></h5>
+                            <div id="consulta_genero_c4"></div>
+                        </div>
+                        <div id="div_consulta_edad_c4">
+                            <h5 align="center"><strong>Total de todas victimas por edades casos</strong></h5>
+                           
+                            <div id="consulta_edad_c4"></div>
+                            <div id="consulta_edad_mayores_c4"></div>
+                            <div id="consulta_suma_datos_per_vul_c4"></div>
+                        </div>
+                        
+                        <div id="div_consulta_num_delitos_casos_c4">
+                            <h5 align="center"><strong>Total de delitos hacia victimas todos los casos</strong></h5>
+                            
+                            <div id="consulta_delitos_todos_casos_c4"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_municipio_c4">
+                            
+                            <h5 align="center"><strong>Total casos en cada municipio</strong></h5>
+                            <div id="consulta_casos_por_municipio_veracruz_c4"></div>
+                        </div>
+                        
+                    </div>
+                  
+
+                </div>
+                <div class="card-footer">
+                    <br>
+                    <p align="center">*NOTA: Cabe hacer mención que los casos involucran a más de una niña, niño o adolescente</p>
+                    <br>
                    
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label for="id_reporte">Reporte a consultar:</label>
-                <select class="form-select" id="id_reporte" name="id_reporte">
-                    <option value="0" selected>Seleccione</option>
-                    <option value="1">Suma por Genero</option>
-                    <option value="2">Suma por tipo de Violencia</option>
-                    <option value="3">Suma por Agresión Extraordinaria</option>
-                    <option value="4">Suma por Edades de victimas</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label for="desde_fecha">Fecha Desde:</label>
-                <input type="date" class="form-control" placeholder="Start" name="desde_fecha" id="desde_fecha" />
-            </div>
-            <div class="col-md-2">
-                <label for="hasta_fecha">Fecha hasta:</label>
-                <input type="date" class="form-control" placeholder="End" name="hasta_fecha" id="hasta_fecha" />
-            </div>
-            <div class="col-md-2">
-                <br>
-                <button type="button" class="btn btn-success" onclick="consulta()">consultar</button>
-
-            </div>
-
-            <div class="col-md-12">
-                <p></p>
-            </div>
-
-            <div class="card" id="suma_genero">
-                <div class="card-body">
-
-                    <h3>Suma Por Género</h3>
-
-                    <div id="consulta_sexo_municipio"></div>
-
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h3>Suma Por tipo de Violencia</h3>
-                    <button type="button" class="btn btn-secondary">
-                        <i class="fas fa-file-export"></i>
-                        exportar
-                    </button>
-                    <table class="table table-responsive" id="tabla_tp_violencia" style="width:100%">
-                        <thead class="tbl-estadisticas">
-                            <tr align="center">
-                                <th>Municipio</th>
-                                <th>violencia familiar</th>
-                                <th>Omisión de cuidado</th>
-                                <th>Abuso sexual contra menores</th>
-                                <th>Amenazas</th>
-                                <th>Maltrato a persona incapaz</th>
-                                <th>Corrupción de menores</th>
-                                <th>Trata de personas</th>
-                                <th>Narco menudeo</th>
-                                <th>Violación</th>
-                                <th>Arma de fuego</th>
-                                <th>Estupro</th>
-                                <th>Pederastia</th>
-                                <th>Robo</th>
-                                <th>Contra el medio ambiente</th>
-                                <th>Suman número de delitos</th>
-
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr align="center">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-
                 </div>
 
             </div>
-            <div class="table-responsive col-md-12">
-                <br>
 
 
-                <h3>Suma Por ....</h3>
-                <button type="button" class="btn btn-secondary">
-                    <i class="fas fa-file-export"></i>
-                    exportar
-                </button>
-                <table class="table table-hover" id="" style="width:100%">
-                    <thead class="tbl-estadisticas">
-                        <tr align="center">
-                            <th>Municipio</th>
-                            <th>Suma Violencia Contra la mujer</th>
-                            <th>Suma de Persona con alguna discapacidad</th>
-                            <th>Suma de Otros (personas de la tercera edad)</th>
-                            <th>Suma de Se desconoce</th>
-
-
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr align="center">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-                <h3>Suma Por ....</h3>
-                <button type="button" class="btn btn-secondary">
-                    <i class="fas fa-file-export"></i>
-                    exportar
-                </button>
-                <table class="table table-hover" id="" style="width:100%">
-                    <thead class="tbl-estadisticas">
-                        <tr align="center">
-                            <th>Municipio</th>
-                            <th>Cuenta de Edad victima 1</th>
-                            <th>Cuenta de Edad victima 2</th>
-                            <th>Cuenta de Edad victima 3</th>
-                            <th>Cuenta de Edad victima 4</th>
-                            <th>Cuenta de Se desconoce</th>
-                            <th>Suma de Número de victimas</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr align="center">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
         </div>
-        <br></br>
-        <br></br>
-
-    </div>
-    <?php include("../layout/footer.php"); ?>
+        <?php include("../layout/footer.php"); ?>
 
 
-    <!--script-->
-    <script src="../lib/swetalert/sweetalert2.min.js"></script>
-    <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../lib/jquery.min.js"></script>
-    <script src="../js/funciones.js"></script>
-    <script src="../js/estadisticas.js?x=<?php echo time(); ?>"></script>
+        <!--script-->
+        <script src="../lib/swetalert/sweetalert2.min.js"></script>
+        <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../lib/jquery.min.js"></script>
+        <script src="../js/funciones.js"></script>
+        <script src="../js/estadisticas.js?x=<?php echo time(); ?>"></script>
 
 
 </body>
+<!-- Button trigger modal -->
 
+
+<!-- Modal -->
+<div class="modal fade" id="modal_pdf" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary">
+                <h1 class="modal-title fs-5" id="tit_modal_pdf" style="color:white;">pdf</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+             
+            </div>
+            <div class="col-md-12">
+               
+                <span class="" id="reporte"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="../lib/datatables/jquery.dataTables.min.js"></script>
 
 
