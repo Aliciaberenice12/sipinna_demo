@@ -134,16 +134,14 @@ class Estadisticas extends Conexion
 		//  print_r($dato);
 		//  die();
 		
-			$sql = $this->dbh->prepare("SELECT 		can_delito,delito,
-													count(*) as Numero
-													
+			$sql = $this->dbh->prepare("SELECT 		can_delito,delito, count(*) as Numero
 										FROM 		((tbl_can_delitos_victimas
 										LEFT JOIN	tbl_can_expediente
 										ON			tbl_can_delitos_victimas.can_exp_folio_delito=tbl_can_expediente.can_folio_expediente)
 										LEFT JOIN  	cat_tipos_delitos
-										ON 			tbl_can_delitos_victimas.can_delito=cat_tipos_delitos.id_delito)
+										ON 			(tbl_can_delitos_victimas.can_delito=cat_tipos_delitos.id_delito))
 										WHERE 		can_fecha BETWEEN ? AND ?
-										GROUP BY 	delito
+										GROUP BY	delito
 										");
 			$sql->execute(array($fecha_in,$fecha_fin));
 			$row = $sql->fetchAll();
@@ -363,6 +361,28 @@ class Estadisticas extends Conexion
 
 	}
 	//Consulta por Municipo
+	public function lista_consulta_mun($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+		
+			$sql = $this->dbh->prepare(" 	SELECT 		can_pais,can_estado,can_otros_estados,estado,can_mun_edo,can_municipio,
+														municipio,COUNT(*) AS Numero
+											FROM 		((tbl_can_expediente
+											LEFT JOIN 	cat_municipios
+											on			tbl_can_expediente.can_municipio=cat_municipios.id_municipio)
+											LEFT JOIN 	cat_estados
+											ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
+											WHERE 		can_fecha 
+											BETWEEN 	? AND ?
+											GROUP BY 	can_municipio	
+											ORDER BY	can_municipio
+										");
+			$sql->execute(array($fecha_in,$fecha_fin));
+			$row = $sql->fetchAll();
+			return $row;
+
+	}
 	public function obtener_consul_mun($fecha_in,$fecha_fin)
 	{
 	
@@ -384,27 +404,6 @@ class Estadisticas extends Conexion
 			return 'error';	
 
 	}
-	public function lista_consulta_mun($fecha_in,$fecha_fin)
-	{
-		//  print_r($dato);
-		//  die();
-		
-			$sql = $this->dbh->prepare(" 	SELECT 		can_pais,can_estado,estado,municipio, can_municipio,COUNT(*) AS Numero
-											FROM 		((tbl_can_expediente
-											LEFT JOIN 	cat_municipios
-											ON 			tbl_can_expediente.can_municipio= cat_municipios.id_municipio)
-											LEFT JOIN 	cat_estados
-											ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
-											WHERE 		can_fecha 
-											BETWEEN 	? AND ?
-											GROUP BY 	municipio
-											ORDER BY	municipio
-										");
-			$sql->execute(array($fecha_in,$fecha_fin));
-			$row = $sql->fetchAll();
-			return $row;
-
-	}
 	public function obtener_total_mun($fecha_in,$fecha_fin)
 	{
 		//  print_r($dato);
@@ -423,6 +422,85 @@ class Estadisticas extends Conexion
 			return $row2;
 
 	}
+	//Obtener consulta por Estado Diferente
+	
+	public function lista_consulta_edo_mun($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+		
+			$sql = $this->dbh->prepare(" 	SELECT 		can_pais,can_estado,estado,can_mun_edo,COUNT(*) AS Numero
+											FROM 		(tbl_can_expediente
+											LEFT JOIN 	cat_estados
+											ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
+											WHERE 		can_fecha 
+											BETWEEN 	? AND ?
+											GROUP BY 	can_estado
+											ORDER BY	can_estado
+										");
+			$sql->execute(array($fecha_in,$fecha_fin));
+			$row = $sql->fetchAll();
+			return $row;
+
+	}
+	public function obtener_total_edo_mun($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+		
+			$sql = $this->dbh->prepare("SELECT 		COUNT(Case When can_mun_edo !='0' then 1 ELSE 0 END) AS Total,
+													can_estado
+										FROM 		tbl_can_expediente 
+										WHERE 		can_fecha 
+										BETWEEN 	? 
+										AND 		? 
+										");
+			$sql->execute(array($fecha_in,$fecha_fin));
+			$row2 = $sql->fetchAll();
+			return $row2;
+
+	}
+	//Obtener consulta por Pais Diferente
+	public function lista_consulta_pais($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+		
+			$sql = $this->dbh->prepare(" 	SELECT 		can_pais,can_estado,can_otros_estados,estado,can_mun_edo,can_municipio,
+														municipio,COUNT(*) AS Numero
+											FROM 		((tbl_can_expediente
+											LEFT JOIN 	cat_municipios
+											on			tbl_can_expediente.can_municipio=cat_municipios.id_municipio)
+											LEFT JOIN 	cat_estados
+											ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
+											WHERE 		can_fecha 
+											BETWEEN 	? AND ?
+											GROUP BY 	can_pais	
+											ORDER BY	can_pais
+										");
+			$sql->execute(array($fecha_in,$fecha_fin));
+			$row = $sql->fetchAll();
+			return $row;
+
+	}
+	public function obtener_total_pais($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+			$sql = $this->dbh->prepare("SELECT 		can_pais as pais 
+										FROM 		(tbl_can_expediente 
+										LEFT JOIN 	cat_municipios 
+										ON 			tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
+										WHERE 		can_fecha 
+										BETWEEN 	? 
+										AND 		? 
+										");
+			$sql->execute(array($fecha_in,$fecha_fin));
+			$row2 = $sql->fetchAll();
+			return $row2;
+			print_r($row2);
+	}
+
 	///Consultas de c4 
 	///
 	/// Consulta por municipio

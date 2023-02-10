@@ -20,7 +20,7 @@ if (isset($_SESSION['nombre'])) {
     <!--CSS-->
     <script type='text/javascript' src='../lib/jquery.min.js'></script>
     <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
-
+    
     <?php include("../layout/sipinna.php"); ?>
 
     <div class="div-al row col-md-12">

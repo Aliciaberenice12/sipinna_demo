@@ -2,6 +2,23 @@ var cargando =
     '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
 
 $(document).ready(function () {
+    var ultimoValorValido = null;
+    $("#c4_delitos").on("change", function () {
+        if ($("#c4_delitos option:checked").length > 4) {
+            $("#c4_delitos").val(ultimoValorValido);
+        } else {
+            ultimoValorValido = $("#c4_delitos").val();
+        }
+    });
+    var ultimoValorValido_edit = null;
+    $("#id_c4_der_victima_edit").on("change", function () {
+        if ($("#id_c4_der_victima_edit option:checked").length > 4) {
+            $("#id_c4_der_victima_edit").val(ultimoValorValido_edit);
+        } else {
+            ultimoValorValido_edit = $("#id_c4_der_victima_edit").val();
+        }
+    });
+    
     $("#c4_mun").hide();
     $("#c4_mun_edo").hide();
     $("#c4_municipio").hide();

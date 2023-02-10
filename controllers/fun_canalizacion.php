@@ -12,7 +12,7 @@ if (isset($_REQUEST['func'])) {
 				{
 					$can_edad_vic = $_POST["can_edad_vic"];
 					$can_nom_vic  = $_POST["can_nom_vic"];
-					$can_delito  = $_POST["can_delito"];
+					// $can_delito  = $_POST["can_delito"];
 					
 					$can_der_vul_vic  = $_POST["can_der_vul_vic"];
 					$can_per_tercera_edad  = $_POST["can_per_tercera_edad"];
@@ -21,7 +21,7 @@ if (isset($_REQUEST['func'])) {
 					$can_per_indigena  = $_POST["can_per_indigena"];
 					$can_per_transgenero  = $_POST["can_per_transgenero"];
 					$can_sexo_victima  = $_POST["can_sexo_victima"];
-					$can_num_del  = $_POST["can_num_del"];
+					// $can_num_del  = $_POST["can_num_del"];
 
 
 					$id           = date('is') . rand(5, 15);
@@ -29,9 +29,9 @@ if (isset($_REQUEST['func'])) {
 					//Creamos el array con sus valores
 					$_SESSION["victima"][$id] = array(
 						'id' => $id, 'can_edad_vic' => $can_edad_vic, 'can_nom_vic' => $can_nom_vic,
-						'can_delito' => $can_delito, 'can_der_vul_vic' => $can_der_vul_vic, 'can_per_tercera_edad' => $can_per_tercera_edad,
+						 'can_der_vul_vic' => $can_der_vul_vic, 'can_per_tercera_edad' => $can_per_tercera_edad,
 						'can_per_violencia' => $can_per_violencia, 'can_per_discapacidad' => $can_per_discapacidad,
-						'can_per_indigena' => $can_per_indigena, 'can_per_transgenero' => $can_per_transgenero, 'can_sexo_victima' => $can_sexo_victima, 'can_num_del' => $can_num_del
+						'can_per_indigena' => $can_per_indigena, 'can_per_transgenero' => $can_per_transgenero, 'can_sexo_victima' => $can_sexo_victima
 					);
 				} //Cierre del if de la accion 1
 				elseif ($_REQUEST["evento"] == 2) //Elimina un registro en particular
@@ -48,11 +48,10 @@ if (isset($_REQUEST['func'])) {
 									<div class="row" align="center">
 										<div class="col-lg-2 col-sm-12 col-12 margin5">Nombre</div>
 										<div class="col-lg-1 col-sm-10 col-12 margin5">Edad</div>
-										<div class="col-lg-3 col-sm-10 col-12 margin5">Delito</div>
-										<div class="col-lg-2 col-sm-10 col-12 margin5">Derecho Vulnerado</div>
+										<div class="col-lg-3 col-sm-10 col-12 margin5">Derecho Vulnerado</div>
 										<div class="col-lg-2 col-sm-10 col-12 margin5">Agresión Extraordinaria</div>
-										<div class="col-lg-1 col-sm-10 col-12 margin5">Sexo</div>
-										<div class="col-lg-1 col-sm-10 col-12 margin5">Borrar
+										<div class="col-lg-2 col-sm-10 col-12 margin5">Sexo</div>
+										<div class="col-lg-2 col-sm-10 col-12 margin5">Borrar
 											<button type="button" class="btn btn-sm btn-dark" onclick="carrito_victima(3,0)">
 												<i class="bi bi-trash"></i>
 											</button>
@@ -62,14 +61,14 @@ if (isset($_REQUEST['func'])) {
 							</td>
 						</tr>';
 					foreach ($_SESSION['victima'] as $row) {
-						$aux = [];
-						$delitos = $row['can_delito'];
-						$delitos = explode(',', $row['can_delito']);
-						unset($_SESSION['cat_delito']);
-						foreach ($delitos as $delito) {
-							array_push($aux, "■" . $_SESSION['cat_delitos'][$delito][0]);
-						}
-						$aux2 = implode("<br>", $aux);
+						// $aux = [];
+						// $delitos = $row['can_delito'];
+						// $delitos = explode(',', $row['can_delito']);
+						// unset($_SESSION['cat_delito']);
+						// foreach ($delitos as $delito) {
+						// 	array_push($aux, "■" . $_SESSION['cat_delitos'][$delito][0]);
+						// }
+						// $aux2 = implode("<br>", $aux);
 
 						$der = [];
 						$arr_der_vul = $row['can_der_vul_vic'];
@@ -92,13 +91,9 @@ if (isset($_REQUEST['func'])) {
 											</div>
 
 
-											<div class="col-lg-3"align="left">
-											' . $aux2 . '<br>
-											<strong>Número Delitos:' . $row["can_num_del"] . '
-											</strong>
-											</div>
+											
 
-											<div class="col-lg-2" align="left">
+											<div class="col-lg-3" align="left">
 											' . $res_der_vul . '.<br>
 											</div>
 											<div class="col-lg-2 "align="left">
@@ -109,8 +104,8 @@ if (isset($_REQUEST['func'])) {
 											' . ($row["can_per_violencia"] == "1" ? "■ Violencia contra la mujer.</br>" : "") . '
 
 											</div>
-											<div class="col-lg-1">' . $row["can_sexo_victima"] . '</div>
-											<div class="col-lg-1">
+											<div class="col-lg-2">' . $row["can_sexo_victima"] . '</div>
+											<div class="col-lg-2">
 												<button type="button" class="btn btn-sm btn-danger" onclick="carrito_victima(2,' . $row["id"] . ')">
 												<i class="bi bi-trash"></i>
 												</button>
@@ -152,9 +147,9 @@ if (isset($_REQUEST['func'])) {
 					$_SESSION["nombre"]
 				);
 
-				$estatus2 = $v->editar_delito_victima_can($_REQUEST["id_can_del_victima_edit"], $_REQUEST["can_delito_edit"], $_REQUEST["can_num_del_edit"], $_SESSION["nombre"]);
+				
 
-				$estatus3 = $v->editar_derecho_victima_can($_REQUEST["id_can_der_victima_edit"], $_REQUEST["can_der_vul_vic_edit"], $_SESSION["nombre"]);
+				$estatus1 = $v->editar_derecho_victima_can($_REQUEST["id_can_der_victima_edit"], $_REQUEST["can_der_vul_vic_edit"], $_SESSION["nombre"]);
 			}
 
 			header('Content-Type: application/json');
@@ -177,12 +172,11 @@ if (isset($_REQUEST['func'])) {
 					'can_per_transgenero'    => $row["can_per_transgenero"],
 					'can_sexo_victima'    => $row["can_sexo_victima"],
 					'can_der_vul_vic'    => $row["can_der_vul_vic"],
-					'can_delito'    => $row["can_delito"],
-					'id_del_victima'    => $row["id_del_victima"],
+					
+					
 					'id_derecho'    => $row["id_derecho"],
 					'can_exp_folio_victima'    => $row["can_exp_folio_victima"],
-					'can_numero_delitos'    => $row["can_numero_delitos"],
-
+					
 
 				);
 				echo json_encode($datos, JSON_FORCE_OBJECT);
@@ -216,9 +210,7 @@ if (isset($_REQUEST['func'])) {
 								<th>
 									Nombre
 								</th>
-								<th>
-									Delito
-								</th>
+								
 								<th>
 									Derecho Vulnerado
 								</th>
@@ -238,14 +230,7 @@ if (isset($_REQUEST['func'])) {
 							<tbody>';
 				foreach ($arr_res as $row) {
 					$session  = 3;
-					$aux = [];
-					$delitos = $row['can_delito'];
-					$delitos = explode(',', $row['can_delito']);
-					unset($_SESSION['cat_delito']);
-					foreach ($delitos as $delito) {
-						array_push($aux, "■" . $_SESSION['cat_delitos'][$delito][0]);
-					}
-					$aux2 = implode("<br>", $aux);
+					
 
 					$der = [];
 					$arr_der_vul = $row['can_der_vul_vic'];
@@ -269,14 +254,7 @@ if (isset($_REQUEST['func'])) {
 											' . $row["can_nom_vic"] . '
 											</div>
 										</td>
-										<td class="col-md-2"align="left">
-											<div>
-											' . $aux2 . '<br>
-											<strong>N° delitos:' . $row["can_numero_delitos"] . '
-											</strong>
-											
-											</div>
-										</td>
+										
 										<td class="col-md-2" align="left">
 											<div>
 										
@@ -320,11 +298,6 @@ if (isset($_REQUEST['func'])) {
 			}
 			echo $html;
 			break;
-
-
-
-
-
 		case 'fun_guardar_delito_victima':
 			if ($_REQUEST["id"] == '0') {
 				$estatus = 'no insertado delito';
@@ -528,18 +501,18 @@ if (isset($_REQUEST['func'])) {
 			}
 			echo $html;
 			break;
-		case 'fn_carga_delitos':
-			$html = '<option value="0" disabled>Seleccionar</option>';
-			$arr_res = $v->fn_lista_delitos();
+		// case 'fn_carga_delitos':
+		// 	$html = '<option value="0" disabled>Seleccionar</option>';
+		// 	$arr_res = $v->fn_lista_delitos();
 
-			foreach ($arr_res as $row) {
-				$html .= '<option value="' . $row["id_delito"] . '">' . $row["delito"] . '</option>';
-				$_SESSION['cat_delitos'][$row["id_delito"]] = [$row["delito"]];
-			}
-			echo $html;
-			break;
+		// 	foreach ($arr_res as $row) {
+		// 		$html .= '<option value="' . $row["id_delito"] . '">' . $row["delito"] . '</option>';
+		// 		$_SESSION['cat_delitos'][$row["id_delito"]] = [$row["delito"]];
+		// 	}
+		// 	echo $html;
+		// 	break;
 		case 'fn_carga_derechos':
-			$html = '<option value="0" disabled>Seleccionar</option>';
+			$html = '<option value="0" disabled selected>Seleccionar</option>';
 			$arr_res = $v->fn_lista_derechos();
 			foreach ($arr_res as $row) {
 				$html .= '<option value="' . $row["id_derecho"] . '">' . $row["derecho"] . '</option>';
@@ -563,7 +536,7 @@ if (isset($_REQUEST['func'])) {
 		
 		case 'fn_guardar_canalizacion':
 			
-			if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] == '1') //Rol Administrador 
+			if (isset($_SESSION["rol_id"]) and $_SESSION["rol_id"] != '4') //Rol Administrador 
 			{
 				if ($_REQUEST["id"] == '0') // nuevo registro
 				{

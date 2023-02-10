@@ -500,66 +500,66 @@ if ($stmtMes->rowCount() > 0) {
 	$pdf->Ln();
 }
 
-// Datos por tipo de delito
-$pdf->Ln();
-$pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
-$pdf->SetTextColor(255);
-$pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5,  'Tabla de tipos de delitos', 1, 0, 'C', true);
-$pdf->Ln();//Salto de Linea
-$pdf->SetFont('Arial', 'B', 8);
-$pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
-$pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(102, 5, utf8_decode('Tipo de delito'), 1, 0, 'C', true);
-$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
-$pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
-$pdf->SetFillColor(255);
-$pdf->SetTextColor(0);
-$pdf->SetAligns(array('C','C'));
-$pdf->Ln();
+// // Datos por tipo de delito
+// $pdf->Ln();
+// $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
+// $pdf->SetTextColor(255);
+// $pdf->SetFont('Arial', 'B', 8);
+// $pdf->Cell(204, 5,  'Tabla de tipos de delitos', 1, 0, 'C', true);
+// $pdf->Ln();//Salto de Linea
+// $pdf->SetFont('Arial', 'B', 8);
+// $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
+// $pdf->SetTextColor(255);//Color del texto
+// $pdf->Cell(102, 5, utf8_decode('Tipo de delito'), 1, 0, 'C', true);
+// $pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
+// $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
+// $pdf->SetFillColor(255);
+// $pdf->SetTextColor(0);
+// $pdf->SetAligns(array('C','C'));
+// $pdf->Ln();
 
-$queryDelito = 	"SELECT 		delito AS Delito,COUNT(*) AS Numero
-				FROM 			((tbl_can_delitos_victimas
-				LEFT JOIN		tbl_can_expediente
-				ON				tbl_can_delitos_victimas.can_exp_folio_delito=tbl_can_expediente.can_folio_expediente)
-				LEFT JOIN  		cat_tipos_delitos
-				ON 				tbl_can_delitos_victimas.can_delito=cat_tipos_delitos.id_delito)
-				WHERE 			can_fecha BETWEEN ? AND ?
-				GROUP BY 		delito
-				ORDER BY		id_delito
-				";
-$stmtDelito = $conexion->dbh->prepare($queryDelito);
-$stmtDelito->execute(array($desde,$hasta));
+// $queryDelito = 	"SELECT 		delito AS Delito,COUNT(*) AS Numero
+// 				FROM 			((tbl_can_delitos_victimas
+// 				LEFT JOIN		tbl_can_expediente
+// 				ON				tbl_can_delitos_victimas.can_exp_folio_delito=tbl_can_expediente.can_folio_expediente)
+// 				LEFT JOIN  		cat_tipos_delitos
+// 				ON 				tbl_can_delitos_victimas.can_delito=cat_tipos_delitos.id_delito)
+// 				WHERE 			can_fecha BETWEEN ? AND ?
+// 				GROUP BY 		delito
+// 				ORDER BY		id_delito
+// 				";
+// $stmtDelito = $conexion->dbh->prepare($queryDelito);
+// $stmtDelito->execute(array($desde,$hasta));
 
 
 
-$queryTotal = "SELECT 		COUNT(*) AS Total 
-				FROM 			((tbl_can_delitos_victimas
-				LEFT JOIN		tbl_can_expediente
-				ON				tbl_can_delitos_victimas.can_exp_folio_delito=tbl_can_expediente.can_folio_expediente)
-				LEFT JOIN  		cat_tipos_delitos
-				ON 				tbl_can_delitos_victimas.can_delito=cat_tipos_delitos.id_delito)
-				WHERE 		can_fecha 
-				BETWEEN 	? 
-				AND 		? 
-				";
-$stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
-$total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
+// $queryTotal = "SELECT 		COUNT(*) AS Total 
+// 				FROM 			((tbl_can_delitos_victimas
+// 				LEFT JOIN		tbl_can_expediente
+// 				ON				tbl_can_delitos_victimas.can_exp_folio_delito=tbl_can_expediente.can_folio_expediente)
+// 				LEFT JOIN  		cat_tipos_delitos
+// 				ON 				tbl_can_delitos_victimas.can_delito=cat_tipos_delitos.id_delito)
+// 				WHERE 		can_fecha 
+// 				BETWEEN 	? 
+// 				AND 		? 
+// 				";
+// $stmtTotal = $conexion->dbh->prepare($queryTotal);
+// $stmtTotal->execute(array($desde,$hasta));
+// $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
-if ($stmtDelito->rowCount() > 0) {
-	while ($delito = $stmtDelito->fetch(PDO::FETCH_ASSOC)) {
-		$pdf->Row(array(utf8_decode($delito["Delito"]), utf8_decode($delito["Numero"])));
-	}
+// if ($stmtDelito->rowCount() > 0) {
+// 	while ($delito = $stmtDelito->fetch(PDO::FETCH_ASSOC)) {
+// 		$pdf->Row(array(utf8_decode($delito["Delito"]), utf8_decode($delito["Numero"])));
+// 	}
 	
-	$pdf->Cell(102, 5,  'Total de personas vulneradas: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
-	$pdf->Ln();
-	$pdf->Ln();
-} else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-	$pdf->Ln();
-}
+// 	$pdf->Cell(102, 5,  'Total de personas vulneradas: ', 1, 0, 'C', true);
+// 	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
+// 	$pdf->Ln();
+// 	$pdf->Ln();
+// } else {
+// 	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+// 	$pdf->Ln();
+// }
 
 //2159 mm x 2794 mm
 

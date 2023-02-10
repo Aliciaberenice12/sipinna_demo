@@ -125,11 +125,11 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="c4_des_hechos">Hechos *</label>
-                                    <textarea id="c4_des_hechos" name="c4_des_hechos" placeholder="Descripción..." class="form-control" rows="3" maxlength="250"></textarea>
+                                    <textarea id="c4_des_hechos" name="c4_des_hechos" placeholder="Descripción..." class="form-control" rows="3" maxlength="400"></textarea>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="c4_observaciones">Observaciones:</label>
-                                    <textarea id="c4_observaciones" name="c4_observaciones" placeholder="Observaciones..." class="form-control" rows="3" maxlength="250"></textarea>
+                                    <textarea id="c4_observaciones" name="c4_observaciones" placeholder="Observaciones..." class="form-control" rows="3" maxlength="400"></textarea>
                                 </div>
                                 <!--Aqui Termina desc caso c4-->
 
@@ -203,6 +203,8 @@
                                     <label for="c4_delitos">Tipo de Delito:</label>
                                     <select name="c4_delitos" id="c4_delitos" size="5" class="form-select"  multiple>
                                     </select>
+                                    <small id="help_c4_del" class="form-text text-muted">Seleccione min. 1 max. 4</small>
+
                                 </div>
                                 
                                 <div class="col-md-12">
@@ -369,10 +371,11 @@
                             <select name="c4_delito_edit" id="c4_delito_edit" class="form-select" multiple>
                                 <option value="0"></option>
                             </select>
+                            <small id="help_c4_del_edit" class="form-text text-muted">Seleccione min. 1 max. 4</small>
                         </div>
                         <div class="col-md-12">
                             <label for="c4_der_vul_vic_edit">Derechos Vulnerados o restringidos:</label><br>
-                            <input type="hidden" name="id_c4_der_victima_edit" id="id_c4_der_victima_edit" value="0">
+                            <input type="hidden" name="id_c4_der_victima_edit" id="id_c4_der_victima_edit" value="0" row="5">
                             <select name="c4_der_vul_vic_edit" id="c4_der_vul_vic_edit" class="form-select">
                                 <option value="0"></option>
                             </select>

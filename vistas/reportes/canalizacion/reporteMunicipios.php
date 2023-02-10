@@ -154,7 +154,7 @@ $pdf->SetTextColor(0);
 $pdf->Ln();
 $pdf->SetX(50);
 
-$queryMun = "	SELECT 			can_fecha,count(*) as Numero
+$queryMun = "	SELECT 			can_fecha, COUNT(CASE WHEN can_municipio != '0' THEN 1 ELSE NULL END)  as Numero
 				FROM			tbl_can_expediente
 				WHERE 			can_fecha 
 				BETWEEN			?
@@ -208,8 +208,10 @@ $queryMun = "	SELECT 		can_pais,estado,municipio, can_municipio,COUNT(*) AS Nume
 $stmtMun = $conexion->dbh->prepare($queryMun);
 $stmtMun->execute(array($desde,$hasta));
 
-$queryTotal = "SELECT COUNT(*) AS Total FROM (tbl_can_expediente 
-LEFT JOIN cat_municipios ON tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
+$queryTotal = "SELECT COUNT(CASE WHEN can_municipio != '0' THEN 1 ELSE NULL END) AS Total
+FROM (tbl_can_expediente 
+LEFT JOIN cat_municipios 
+ON tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
 WHERE can_fecha 
 BETWEEN ? AND ? ";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
@@ -218,14 +220,28 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 if ($stmtMun->rowCount() > 0) {
 	while ($municipio = $stmtMun->fetch(PDO::FETCH_ASSOC)) {
-        $pdf->Row(array(utf8_decode($municipio["municipio"]), utf8_decode($municipio["Numero"])));
+		if($municipio["can_municipio"] == '0')
+		{
+
+		}
+		else{
+			$pdf->Row(array(utf8_decode($municipio["municipio"]), utf8_decode($municipio["Numero"])));
+
+		}
 	}
 	
 	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
 	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
 	$pdf->Ln();
 } else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+	if($municipio["can_municipio"] == '0')
+		{
+
+		}
+		else{
+			$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+
+		}
 	$pdf->Ln();
 }
 

@@ -334,8 +334,8 @@ if (isset($_POST['func'])) {
 			$arr_res = $v->lista_consulta_delito($_POST['desde_fecha'],$_POST['hasta_fecha']);
 			
 			$arr_res2 = $v->obtener_total_delito($_POST['desde_fecha'],$_POST['hasta_fecha']);
-			$cat_del=$v->fn_lista_delitos();
-
+			$arr_del = $v->fn_lista_delitos();
+		
 			$size    = sizeof($arr_res);
 
 			if (empty($arr_res)) {
@@ -362,21 +362,27 @@ if (isset($_POST['func'])) {
 							</tr>
 							</thead>
 							<tbody>';
-				foreach ($arr_res as $row) {
-					$session  = 3;
-					
+				
+				foreach ($arr_res as $row) 
+				{
+					$datos=explode(",",$row['can_delito']);
+				
+					foreach($datos as $dato){
+						$session  = 3;
+						print_r($datos);
 					$html .= '
 								<tr class="text-11" align="center" id="l_con_del">
 										<td width="50%">
-										'.$row['delito'].'
-										
+										'.$dato.'
 										</td>								
 										<td width="50%">
-										'.$row['Numero'].'
-									
+										
+													
+											
+											
 										</td>
 								</tr>';		
-					
+					}
 					
 				}
 				
@@ -803,7 +809,168 @@ if (isset($_POST['func'])) {
 			}
 			echo $html;
 			break;
+		case 'fun_listar_consulta_edo_mun':
+		
+			$gen_reporte=$_POST['gen_reporte'];
+			$id_reporte=$_POST['id_reporte'];
+			$desde=$_POST['desde_fecha'];
+			$hasta=$_POST['hasta_fecha'];
+			$arr_res = $v->lista_consulta_edo_mun($_POST['desde_fecha'],$_POST['hasta_fecha']);
+			$arr_edo_mun=$v->obtener_total_edo_mun($_POST['desde_fecha'],$_POST['hasta_fecha']);
+			
+			$size    = sizeof($arr_res);
+			
+			if (empty($arr_res)) {
+				$html =
+					'
+				<center>
+					<h5>¡ No hay datos de consulta por Municipio !</h5>
+				</center>';
+			} else {
+				$html = '  
+				<div class="row">
+					
+					
+					<div class="col-md-12">
+						<table id="tbl_consulta_mun_edo" class="table">
+							<thead class="tbl-estadisticas">
+							<tr align="center">
+							
+								<th width="25%">
+									Estado
+								</th>
+								<th width="25%">
+									Descripción estado
+								</th>
+								<th  width="50%">
+									Número
+								</th>
+								
+							</tr>
+							</thead>
+							<tbody>';
+				foreach ($arr_res as $row_mun) {
+					$session  = 3;
+					if( $row_mun["can_estado"]!='30' & $row_mun["can_estado"]!='0'){
+					$html .= '
+								<tr class="text-11" align="center" id="l_con_mun_can">
+										<td  width="35%">
+											' .$row_mun["estado"] . ' 
+										</td>
+										<td  width="35%">
+											' .$row_mun["can_mun_edo"] . ' 
+										</td>
+										<td  width="30%">
+											' . $row_mun["Numero"] . '
+										</td>
+								</tr>';
+					}
+				}
+				foreach ($arr_edo_mun as $row_edo) {
+					
+				$html .= '
+							</tbody>
+							<tfoot>
+								<tr class="text-11" align="center">
+									<td width="35%"><strong></strong></td>
+									<td width="35%"><strong>Total</strong></td>
+									<td width="30%"><strong></strong></td>
+								</tr>
 
+							</tfood>
+						</table>
+					</div>
+				</div>';
+					
+				}
+			}
+			echo $html;
+			break;
+		case 'fun_listar_consulta_pais_can':
+	
+			$gen_reporte=$_POST['gen_reporte'];
+			$id_reporte=$_POST['id_reporte'];
+			$desde=$_POST['desde_fecha'];
+			$hasta=$_POST['hasta_fecha'];
+			$arr_res = $v->lista_consulta_pais($_POST['desde_fecha'],$_POST['hasta_fecha']);
+			$arr_pais=$v->obtener_total_pais($_POST['desde_fecha'],$_POST['hasta_fecha']);
+			
+			$size    = sizeof($arr_res);
+			
+			if (empty($arr_res)) {
+				$html =
+					'
+				<center>
+					<h5>¡ No hay datos de consulta por Pais Diferente a Mexico !</h5>
+				</center>';
+			} else {
+				$html = '  
+				<div class="row">
+					
+					
+					<div class="col-md-12">
+						<table id="tbl_consulta_pais" class="table">
+							<thead class="tbl-estadisticas">
+							<tr align="center">
+							
+								<th width="35%">
+									Pais
+								</th>
+								<th  width="35%">
+									Descripción Estado
+								</th>
+								<th  width="30%">
+									Total
+								</th>
+								
+							</tr>
+							</thead>
+							<tbody>';
+				foreach ($arr_res as $row_mun) {
+					$session  = 3;
+				
+					if($row_mun['can_pais']!='México'){
+						
+					$html .= '
+								<tr class="text-11" align="center" id="l_con_pais">
+										<td width="35%">
+											' .$row_mun["can_pais"] . ' 
+										</td>
+										<td width="35%">
+											' .$row_mun["can_otros_estados"] . ' 
+										</td>
+										<td width="30%">
+										' .$row_mun["Numero"] . ' 
+									</td>
+										
+								</tr>';
+					}
+					
+				}
+				foreach ($arr_pais as $row_pais) {
+					$html .= '
+								</tbody>
+								<tfoot>
+									<tr class="text-11" align="center">
+										
+										<td width="35%"></td>
+										<td width="35%"><strong>Total</strong></td>
+										<td width="30%"><strong>'.$row_pais['Total'].'</strong></td>
+									</tr>
+
+								</tfood>
+							</table>
+						</div>
+					</div>';
+				}
+			
+			}
+			echo $html;
+			break;
+	
+			
+			
+		
 		///Casos c4
 
 		case 'fun_listar_consulta_mun_c4':

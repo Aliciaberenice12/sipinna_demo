@@ -17,6 +17,7 @@
                                 <small id="helpCamposObligatorios" class="form-text text-muted">*Campos Obligatorios</small>
 
                             </div>
+                          
                             <div class="col-md-6">
                                 <label for="estatus">
                                     <strong>Estatus del caso* </strong>
@@ -159,6 +160,7 @@
                                     <label for="can_des_suncita_rep">Descripción sucinta del caso *</label>
 
                                     <textarea name="can_des_suncita_rep" id="can_des_suncita_rep" class="form-control" rows="3" maxlength="500"></textarea>
+                                    <div id="contador">0/100</div>
                                 </div>
                                 <div class="col-md-6">
 
@@ -219,6 +221,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Victimas-->
                         <div class="card">
                             <div class="card-body" id="card_victima">
                                 <div>
@@ -230,29 +233,34 @@
                                         <div class="col-md-2">
                                             <label for="can_edad_vic">Edad(Años):</label>
                                             <select name="can_edad_vic" id="can_edad_vic" class="form-select">
-                                            <option value="0"  >Menos de 1 año</option>                                                <?php
-                                                for ($i = 0; $i <= 100; $i++) {
-                                                    echo "<option value=" . $i . ">" . $i . " Años</option>";
-                                                }
+                                                <option value="0" >Menos de 1 año</option> 
+                                                <?php
+                                                    for ($i = 1; $i <= 100; $i++) {
+                                                        echo "<option value=" . $i . ">" . $i . " Años</option>";
+                                                    }
                                                 ?>
                                             </select>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="can_nom_vic">Nombre Victima:</label>
-                                            <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic" name="can_nom_vic" maxlength="50">
+                                            <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic" name="can_nom_vic" maxlength="50" onkeypress="return check(event)">
+                                            <small id="help_nom_vic" class="form-text text-muted">*Solo Aaepta letras</small>
+
                                         </div>
-                                        <div class="col-md-6">
+                                        <!-- <div class="col-md-6">
                                             <label for="can_delito">Tipo de Delito:</label>
-                                            <select name="can_delito[]" id="can_delito" class="form-select" multiple>
+                                            <select name="can_delito[]" size="5" id="can_delito" class="form-select" multiple>
                                             </select>
-                                            
-                                        </div>
-                                     
-                                        <p></p>
-                                        <div class="col-md-12">
+                                            <small id="can_delito" class="form-text text-muted">Seleccione min. 1 max. 4</small>
+
+
+                                        </div> -->
+
+                                        
+                                        <div class="col-md-6">
                                             <label for="can_der_vul_vic">Derechos Vulnerados o restringidos:</label>
-                                            <select name="can_der_vul_vic[]" id="can_der_vul_vic" class="form-select" >
+                                            <select name="can_der_vul_vic[]" id="can_der_vul_vic" class="form-select">
                                             </select>
                                         </div>
                                         <p></p>
@@ -384,11 +392,11 @@
                         <h5><strong>Datos de presunta(s) victima(s) :</strong></h5>
                     </div>
                     <div class="row col-md-12" id="victimas">
-                       
+
                         <div class="col-md-4">
                             <label for="can_edad_vic_edit">Edad(Años):</label>
                             <select name="can_edad_vic_edit" id="can_edad_vic_edit" class="form-select">
-                                <option value="0"  >Menos de un año</option>
+                                <option value="0">Menos de un año</option>
                                 <?php
                                 for ($i = 1; $i <= 100; $i++) {
                                     echo "<option value=" . $i . ">" . $i . " Años</option>";
@@ -398,16 +406,16 @@
                         </div>
                         <div class="col-md-8">
                             <label for="can_nom_vic_edit">Nombre Victima:</label>
-                            <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic_edit" name="can_nom_vic_edit" required>
+                            <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic_edit" name="can_nom_vic_edit" onkeypress="return check(event)">
                         </div>
-                        <div class="col-md-12">
+                        <!-- <div class="col-md-12">
                             <label for="can_delito_edit">Tipo de Delito:</label>
                             <input type="hidden" name="id_can_del_victima_edit" id="id_can_del_victima_edit" value="0">
                             <small id="helpDel" class="form-text text-muted">(Multiple)</small>
                             <select name="can_delito_edit" id="can_delito_edit" class="form-select" multiple>
                                 <option value="0"></option>
                             </select>
-                        </div>
+                        </div> -->
                         <!-- <div class="col-md-3">
                             <label for="can_num_del_edit">Numero delitos:</label>
                             <input type="numer" class="form-control" placeholder="Numero delitos" id="can_num_del_edit" name="can_num_del_edit" maxlength="11">
@@ -545,7 +553,7 @@
 
                                     <div class="col-md-6">
                                         <label>Actividades específicas:</label>
-                                        <textarea name="textarea" id="can_desc_avance" name="can_desc_avance" class="form-control" rows="2"></textarea>
+                                        <textarea name="textarea" id="can_desc_avance" name="can_desc_avance" class="form-control" rows="2" maxlength="500" > </textarea>
 
                                     </div>
                                     <div class="col-md-2">

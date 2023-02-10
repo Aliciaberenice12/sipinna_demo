@@ -250,25 +250,25 @@ class Canalizacion extends Conexion
 					}
 
 					$last_id = $conn->lastInsertId();
-					$sql6   = $conn->prepare("INSERT INTO 	tbl_can_delitos_victimas
-															(can_exp_folio_delito,
-															can_delito,
-															can_numero_delitos,
-															can_id_victima,
-															can_created_by)
-													VALUES	(?,?,?,?,?)");
-					$sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
-					$sql6->bindParam(2, $row["can_delito"], PDO::PARAM_STR, 11);
-					$sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
-					$sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
-					$sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
-					$sql6->execute();
-					if ($last_2 = $conn->lastInsertId() > 0) {
-					} else {
-						$conn->rollback();
-						$estatus = 'Error al registrar Delito';
-						break;
-					}
+					// $sql6   = $conn->prepare("INSERT INTO 	tbl_can_delitos_victimas
+					// 										(can_exp_folio_delito,
+					// 										can_delito,
+					// 										can_numero_delitos,
+					// 										can_id_victima,
+					// 										can_created_by)
+					// 								VALUES	(?,?,?,?,?)");
+					// $sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
+					// $sql6->bindParam(2, $row["can_delito"], PDO::PARAM_STR, 11);
+					// $sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
+					// $sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
+					// $sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
+					// $sql6->execute();
+					// if ($last_2 = $conn->lastInsertId() > 0) {
+					// } else {
+					// 	$conn->rollback();
+					// 	$estatus = 'Error al registrar Delito';
+					// 	break;
+					// }
 
 					$sql7= $conn->prepare("INSERT INTO 			tbl_can_der_vul_victima
 																(can_exp_folio_derecho,
@@ -459,26 +459,26 @@ class Canalizacion extends Conexion
 
 					$last_id = $conn->lastInsertId();
 					
-				
-					$sql6   = $conn->prepare("INSERT INTO 	tbl_can_delitos_victimas
-															(can_exp_folio_delito,
-															can_delito,
-															can_numero_delitos,
-															can_id_victima,
-															can_created_by)
-													VALUES	(?,?,?,?,?)");
-					$sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
-					$sql6->bindParam(2, $row["can_delito"], PDO::PARAM_STR, 11);
-					$sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
-					$sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
-					$sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
-					$sql6->execute();
-					if ($last_2 = $conn->lastInsertId() > 0) {
-					} else {
-						$conn->rollback();
-						$estatus = 'Error_Delito';
-						break;
-					}
+					
+					// $sql6   = $conn->prepare("INSERT INTO 	tbl_can_delitos_victimas
+					// 										(can_exp_folio_delito,
+					// 										can_delito,
+					// 										can_numero_delitos,
+					// 										can_id_victima,
+					// 										can_created_by)
+					// 								VALUES	(?,?,?,?,?)");
+					// $sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
+					// $sql6->bindParam(2, $row["can_delito"], PDO::PARAM_STR, 11);
+					// $sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
+					// $sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
+					// $sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
+					// $sql6->execute();
+					// if ($last_2 = $conn->lastInsertId() > 0) {
+					// } else {
+					// 	$conn->rollback();
+					// 	$estatus = 'Error_Delito';
+					// 	break;
+					// }
 
 					$sql7= $conn->prepare("INSERT INTO 			tbl_can_der_vul_victima
 																(can_exp_folio_derecho,
@@ -770,6 +770,7 @@ class Canalizacion extends Conexion
 		$conn->beginTransaction();
 		$estatus2 = '';
 		try {
+			
 			$sql = $conn->prepare("UPDATE 	tbl_can_delitos_victimas
 									SET 	can_delito=?,
 											can_numero_delitos=?,
@@ -831,17 +832,15 @@ class Canalizacion extends Conexion
 											can_per_transgenero,
 											can_sexo_victima,
 											can_der_vul_vic,
-											can_delito,
-											can_numero_delitos,
-											id_del_victima,
+										
+											
 											id_derecho,
 											can_exp_folio_victima,
 											tbl_can_victimas.id_can_victima,
-											tbl_can_delitos_victimas.can_id_victima,
+											
 											tbl_can_der_vul_victima.can_id_victima
-									FROM 	((tbl_can_victimas
-								INNER JOIN 	tbl_can_delitos_victimas 
-									ON 		tbl_can_victimas.id_can_victima = tbl_can_delitos_victimas.can_id_victima)
+									FROM 	(tbl_can_victimas
+							
 								INNER JOIN 	tbl_can_der_vul_victima
 									ON 		tbl_can_victimas.id_can_victima = tbl_can_der_vul_victima.can_id_victima)
 									WHERE	id_can_victima =?
@@ -865,13 +864,8 @@ class Canalizacion extends Conexion
 												can_sexo_victima,
 												can_exp_folio_victima,
 												can_der_vul_vic,
-												can_delito,
-												can_numero_delitos,
-												tbl_can_victimas.id_can_victima,
-												tbl_can_delitos_victimas.can_id_victima
-										FROM 	((tbl_can_victimas
-									INNER JOIN 	tbl_can_delitos_victimas 
-										ON 		tbl_can_victimas.id_can_victima = tbl_can_delitos_victimas.can_id_victima)
+												tbl_can_victimas.id_can_victima
+										FROM 	(tbl_can_victimas
 									INNER JOIN 	tbl_can_der_vul_victima
 										ON 		tbl_can_victimas.id_can_victima = tbl_can_der_vul_victima.can_id_victima)
 										WHERE	can_exp_folio_victima =?

@@ -112,13 +112,20 @@ if (isset($_SESSION['nombre'])) {
                             <div id="consulta_edad_mayores_can"></div>
                             <div id="consulta_per_vul_can"></div>
                         </div>                  
-                        <div id="div_consulta_num_delitos_casos_can">
+                        <!-- <div id="div_consulta_num_delitos_casos_can">
                             <h5 align="center"><strong>Total de delitos hacia victimas todos los casos</strong></h5>
                             <div id="consulta_delitos_todos_casos_can"></div>
+                        </div> -->
+                        <!-- <div id="div_consulta_casos_por_pais_can">
+                            <h5 align="center"><strong>Total de casos en cada Pais(Diferente a México)</strong></h5>
+                            <div id="consulta_casos_por_pais_can"></div>
                         </div>
-                  
+                        <div id="div_consulta_casos_por_edo_mun_can">
+                            <h5 align="center"><strong>Total de casos en cada municipio(Diferente estado )</strong></h5>
+                            <div id="consulta_casos_por_municipio_edo_mun_can"></div>
+                        </div> -->
                         <div id="div_consulta_casos_por_municipio_can">
-                            <h5 align="center"><strong>Total de casos en cada municipio</strong></h5>
+                            <h5 align="center"><strong>Total de casos en cada municipio(Estado de Veracruz )</strong></h5>
                             <div id="consulta_casos_por_municipio_veracruz_can"></div>
                         </div>
                        

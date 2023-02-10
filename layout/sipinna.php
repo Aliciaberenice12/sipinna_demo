@@ -1,6 +1,7 @@
 <?php if (session_status() == PHP_SESSION_NONE) {
     session_start();
 } 
+
 ?>
 <!doctype html>
 <html>
@@ -18,13 +19,7 @@
     <link rel="stylesheet" type="text/css" href="../lib/toastr/toastr.min.css">
     <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
     <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="../lib/multiselect/css/multi-select.css">
-
-
-
-
-
+    
 
 
 </head>
@@ -67,18 +62,22 @@
                     </a>
                 </li>
                 <li>
-                    <a href="../vistas/administracion.php">
-                        <button type="button" class="btn btn-nav">Administración</button>
-
-                    </a>
+                    <?php 
+                    if(($_SESSION['rol_id']) and $_SESSION['rol_id']=='1'){?>
+                      
+                        <li><a href="../vistas/administracion.php">
+                        <button type="button" class="btn btn-nav">Administración</button></a>
+                        </li>
+                        <li>
+                        <a href="../vistas/catalogos.php">
+                        <button type="button" class="btn btn-nav">Catálogos</button> </a>
+                        </li>
+                       
+                    <?php }
+                    ?>
+                   
                 </li>
-                <li>
-                    <a href="../vistas/catalogos.php">
-                        <button type="button" class="btn btn-nav">Catálogos</button>
-
-                    </a>
-                </li>
-                <li></li>
+               
                 <li>
                     <button type="button" id="salir" class="btn btn-nav2" onclick="close_sesion()">Salir</button>
 
@@ -114,7 +113,7 @@
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
     <!-- <script src="../js/fun_canalizacion.js?x=<?php echo time(); ?>"></script> -->
-    <script src="../lib/multiselect/js/jquery.multi-select.js"></script>
+
 
 
 </body>
