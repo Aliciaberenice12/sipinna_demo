@@ -540,16 +540,6 @@ if (isset($_REQUEST['func'])) {
 				echo json_encode($datos, JSON_FORCE_OBJECT);
 			}
 			break;
-
-
-
-
-
-
-
-
-
-			//Descripción Caso
 		case 'fn_guardar_desc_caso_c4':
 			if ($_REQUEST["id"] == 0) {
 				$estatus = $v->insertar_desc_caso_c4(
@@ -901,6 +891,121 @@ if (isset($_REQUEST['func'])) {
 			}
 			echo $html;
 			break;
+		case 'fn_listar_casos_c4_inactivos':
+			$arr_res = $v->lista_casos_c4_inactivo();
+			$size    = sizeof($arr_res);
+
+			if (empty($arr_res)) {
+				$html =
+					'
+				<center>
+					<h2>¡ No hay datos !</h2>
+				</center>';
+			} else {
+				$html = '  
+				<div class="row">
+					<div class="col-12" style="overflow-x:auto;">
+						<table id="tbl_caso_c4" class="table">
+							<thead class="tbl-estadisticas">
+							<tr align="center">
+								<th>
+									Fecha
+								</th>
+								<th>
+									No.oficio
+								</th>
+								<th>
+									Folio
+								</th>
+								
+								<th>
+									Pais
+								</th>
+								<th>
+									Estado
+								</th>
+								<th>
+									Municipio
+								</th>
+								
+								<th>
+									Acciones
+								</th>
+								
+								
+							</tr>
+							</thead>
+							<tbody>';
+				foreach ($arr_res as $row) {
+
+					$html .= '
+								<tr class="text-11" align="left" id="l_c4' . $row["id"] . '">
+									<div class="row">
+										<td>	
+											' . $row["c4_fecha_inicio"] . '
+										</td>
+										<td>
+											
+											' . $row["c4_no_oficio"] . '
+											
+										</td>
+										<td>
+											
+											' . $row["c4_folio"] . '
+											
+										</td>
+										
+										<td>
+										
+											' . $row["c4_pais"] . '
+	
+										</td>
+										<td>
+										
+										' . ($row["estado"] == "Seleccionar" ? "" : $row["estado"]) . '
+										
+											' . $row["c4_otros_estados"] . '
+	
+										</td>
+										<td>
+										
+											' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '
+
+											' . $row["c4_mun_edo"] . '
+
+									
+											
+										</td>
+										
+										
+										<td>								
+											<div >
+											
+												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
+													<i class="bi bi-pencil-square"></i>
+													<span></span>
+												</button>
+												
+												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_caso_c4(' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
+													<i class="bi bi-trash"></i>
+													<span></span>
+												</button>
+											
+											</div>
+										</td>   
+											
+									</div>
+								</tr>';
+				}
+				$html .= '
+							</tbody>
+						</table>
+					</div>
+				</div>';
+			}
+			echo $html;
+			break;
+			
 		case 'fn_eliminar_caso_c4':
 			$estatus = $v->eliminar_caso_c4($_REQUEST["id"], $_REQUEST["desc_eliminar_c4"]);
 			header('Content-Type: application/json');

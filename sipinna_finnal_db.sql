@@ -89,9 +89,8 @@ INSERT INTO `cat_estados` (`id_estado`, `estado`) VALUES
 
 -- Volcando estructura para tabla sipinna.cat_municipios
 CREATE TABLE IF NOT EXISTS `cat_municipios` (
-  `id_municipio` int(11) NOT NULL,
-  `municipio` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id_municipio`)
+  `id_municipio` int(11) DEFAULT NULL,
+  `municipio` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla sipinna.cat_municipios: ~212 rows (aproximadamente)
@@ -316,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `cat_parentescos` (
   `id_parentesco` int(11) NOT NULL AUTO_INCREMENT,
   `parentesco` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_parentesco`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla sipinna.cat_parentescos: ~94 rows (aproximadamente)
 /*!40000 ALTER TABLE `cat_parentescos` DISABLE KEYS */;
@@ -425,7 +424,7 @@ CREATE TABLE IF NOT EXISTS `cat_tipos_delitos` (
   PRIMARY KEY (`id_delito`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla sipinna.cat_tipos_delitos: ~15 rows (aproximadamente)
+-- Volcando datos para la tabla sipinna.cat_tipos_delitos: ~16 rows (aproximadamente)
 /*!40000 ALTER TABLE `cat_tipos_delitos` DISABLE KEYS */;
 INSERT INTO `cat_tipos_delitos` (`id_delito`, `delito`) VALUES
 	(1, 'violencia familiar'),
@@ -442,7 +441,7 @@ INSERT INTO `cat_tipos_delitos` (`id_delito`, `delito`) VALUES
 	(12, 'Pederastia'),
 	(13, 'Robo'),
 	(14, 'Contra el medio ambiente'),
-	(15, 'Número de delitos');
+	(15, 'Maltrato Infantil');
 /*!40000 ALTER TABLE `cat_tipos_delitos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla sipinna.roles
@@ -503,7 +502,7 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_desc_casos` (
   `c4_lugar_hechos` varchar(400) DEFAULT NULL,
   `c4_des_hechos` varchar(400) DEFAULT NULL,
   `c4_exp_folio_desc_caso` varchar(50) DEFAULT NULL,
-  `c4_exp_id_caso` int(11) DEFAULT NULL,
+  `c4_exp_id_caso` varchar(50) DEFAULT NULL,
   `c4_observaciones` varchar(400) DEFAULT NULL,
   `c4_created_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `c4_created_by` varchar(50) DEFAULT NULL,
@@ -519,7 +518,7 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_desc_casos` (
 -- Volcando estructura para tabla sipinna.tbl_c4_expedientes
 CREATE TABLE IF NOT EXISTS `tbl_c4_expedientes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_c4_anio` int(11) NOT NULL,
+  `id_c4_anio` int(11) DEFAULT NULL,
   `c4_folio` varchar(50) DEFAULT NULL,
   `c4_numero` varchar(150) DEFAULT NULL,
   `c4_no_oficio` varchar(150) DEFAULT NULL,
@@ -527,7 +526,7 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_expedientes` (
   `c4_fecha_inicio` date DEFAULT NULL,
   `c4_pais` varchar(50) NOT NULL,
   `c4_otros_estados` varchar(100) NOT NULL DEFAULT '0',
-  `id_estado` varchar(50) NOT NULL DEFAULT '0',
+  `c4_edo` varchar(50) NOT NULL DEFAULT '0',
   `c4_mun` varchar(50) NOT NULL DEFAULT '0',
   `c4_mun_edo` varchar(50) NOT NULL DEFAULT '0',
   `c4_dirigido` varchar(2000) DEFAULT NULL,
@@ -540,7 +539,7 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_expedientes` (
   `c4_update_by` varchar(50) DEFAULT NULL,
   `des_eliminar` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `IdEstado` (`id_estado`),
+  KEY `IdEstado` (`c4_edo`),
   KEY `IdMunicipio` (`c4_mun`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -554,7 +553,7 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_probable_responsable` (
   `c4_edad_responsable` varchar(50) DEFAULT NULL,
   `c4_nom_responsable` varchar(50) DEFAULT NULL,
   `c4_parentesco` int(11) DEFAULT NULL,
-  `c4_id_victima` int(11) DEFAULT NULL,
+  `c4_id_victima` varchar(50) DEFAULT NULL,
   `c4_exp_folio_resp` varchar(50) DEFAULT NULL,
   `c4_created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `c4_created_by` varchar(50) DEFAULT NULL,
@@ -572,9 +571,8 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_probable_responsable` (
 CREATE TABLE IF NOT EXISTS `tbl_c4_victimas` (
   `id_victima` int(11) NOT NULL AUTO_INCREMENT,
   `c4_edad_victima` varchar(50),
-  `c4_edad_ms_victima` varchar(50),
   `c4_nom_victima` varchar(50) DEFAULT NULL,
-  `c4_num_delitos` int(11) NOT NULL DEFAULT '0',
+  `c4_num_delitos` varchar(50) NOT NULL DEFAULT '0',
   `c4_per_tercera_edad` int(11) DEFAULT '0',
   `c4_per_violencia` int(11) DEFAULT '0',
   `c4_per_discapacidad` int(11) DEFAULT '0',
@@ -583,7 +581,7 @@ CREATE TABLE IF NOT EXISTS `tbl_c4_victimas` (
   `c4_sexo_victima` varchar(50) DEFAULT NULL,
   `c4_exp_folio_victima` varchar(50) DEFAULT NULL,
   `c4_created_by` varchar(50) DEFAULT NULL,
-  `c4_id_desc_caso` int(11) DEFAULT NULL,
+  `c4_id_desc_caso` varchar(50) DEFAULT NULL,
   `c4_created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `c4_update_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_victima`),
@@ -622,7 +620,7 @@ CREATE TABLE IF NOT EXISTS `tbl_can_casos_reportados` (
   `ins_con_hechos` varchar(250) DEFAULT NULL,
   `can_created_by` varchar(50) NOT NULL,
   `can_created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `expediente_id_caso` int(11) NOT NULL,
+  `expediente_id_caso` varchar(50) NOT NULL,
   `can_update_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_caso_reportado`),
   KEY `fk_can_caso_fk_can_exp` (`expediente_id_caso`)
@@ -654,7 +652,7 @@ CREATE TABLE IF NOT EXISTS `tbl_can_delitos_victimas` (
 -- Volcando estructura para tabla sipinna.tbl_can_der_vul_victima
 CREATE TABLE IF NOT EXISTS `tbl_can_der_vul_victima` (
   `id_derecho` int(11) NOT NULL AUTO_INCREMENT,
-  `can_der_vul_vic` varchar(50) DEFAULT NULL,
+  `can_der_vul_vic` int(11) DEFAULT NULL,
   `can_exp_folio_derecho` varchar(50) DEFAULT NULL,
   `can_id_victima` int(11) DEFAULT NULL,
   `can_created_by` varchar(50) DEFAULT NULL,
@@ -678,6 +676,7 @@ CREATE TABLE IF NOT EXISTS `tbl_can_expediente` (
   `can_numero` varchar(50) DEFAULT NULL,
   `can_fecha` date DEFAULT NULL,
   `can_pais` varchar(50) DEFAULT NULL,
+  `can_otros_estados` varchar(200) DEFAULT NULL,
   `can_estado` int(11) DEFAULT NULL,
   `can_municipio` int(11) DEFAULT NULL,
   `can_mun_edo` varchar(50) DEFAULT NULL,
@@ -708,7 +707,7 @@ CREATE TABLE IF NOT EXISTS `tbl_can_reportante` (
   `exp_id_reportante` varchar(50) NOT NULL,
   `can_created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `can_created_by` varchar(50) NOT NULL,
-  `caso_id_reportante` int(11) DEFAULT NULL,
+  `caso_id_reportante` varchar(50) DEFAULT NULL,
   `can_update_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_reportante`),
   KEY `fk_can_rep_fk_can_caso` (`caso_id_reportante`)
@@ -726,7 +725,7 @@ CREATE TABLE IF NOT EXISTS `tbl_can_solicitante` (
   `exp_id_solicitante` varchar(50) DEFAULT NULL,
   `can_created_by` varchar(50) DEFAULT NULL,
   `can_created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `caso_id_solicitante` int(11) DEFAULT NULL,
+  `caso_id_solicitante` varchar(50) DEFAULT NULL,
   `can_update_by` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_solicitate`),
   KEY `fk_can_sol_fk_can_caso` (`caso_id_solicitante`)
@@ -739,7 +738,7 @@ CREATE TABLE IF NOT EXISTS `tbl_can_solicitante` (
 -- Volcando estructura para tabla sipinna.tbl_can_victimas
 CREATE TABLE IF NOT EXISTS `tbl_can_victimas` (
   `id_can_victima` int(11) NOT NULL AUTO_INCREMENT,
-  `can_edad_vic` varchar(50) DEFAULT NULL,
+  `can_edad_vic` int(11) DEFAULT NULL,
   `can_nom_vic` varchar(50) DEFAULT NULL,
   `can_per_tercera_edad` varchar(50) DEFAULT NULL,
   `can_per_violencia` varchar(50) DEFAULT NULL,
@@ -751,7 +750,7 @@ CREATE TABLE IF NOT EXISTS `tbl_can_victimas` (
   `can_exp_folio_victima` varchar(50) DEFAULT NULL,
   `can_created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `can_update_by` varchar(50) DEFAULT NULL,
-  `id_caso_reportando_victima` int(11) DEFAULT NULL,
+  `id_caso_reportando_victima` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_can_victima`),
   KEY `fk_can_vic_fk_can_casos` (`id_caso_reportando_victima`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -775,13 +774,15 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `rol_id` int(11) NOT NULL,
   PRIMARY KEY (`id_usuario`),
   KEY `rol_id` (`rol_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
--- Volcando datos para la tabla sipinna.usuarios: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla sipinna.usuarios: ~3 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellidos`, `departamento`, `usuario`, `email`, `contrasena`, `imagen`, `estado`, `perfil`, `rol_id`) VALUES
 	(1, 'admin', 'admin', 'admin', 'admin', 'admin', '$2a$07$125Rdvlaptdf98112dsrqe6OQLyNre0JieQ4jGKy4eyouqwSdw99m', 'avatar.jpg', 1, 0, 1),
-	(3, 'historico', 'historico', 'historico', 'historico', 'historico', '$2a$07$125Rdvlaptdf98112dsrqeFm/kemh9.eJZrHOYw11GeBf0vfvKxZe', '1391721160.jpg', 1, 0, 4);
+	(3, 'historico', 'historico', 'historico', 'historico', 'historico', '$2a$07$125Rdvlaptdf98112dsrqeFm/kemh9.eJZrHOYw11GeBf0vfvKxZe', '1458266754.png', 1, 0, 4),
+	(4, 'Capturista', 'Capturista', 'Departamento', 'Capturista', 'capturista@gmail.com', '$2a$07$125Rdvlaptdf98112dsrqe9rxgeW5Ayub3nDymMxeEUHSSyTbSaQq', '795055725.jpg', 0, 0, 2),
+	(5, 'capturista', 'capturista', 'capturista', 'capturista', 'capturista@gmail.com', '$2a$07$125Rdvlaptdf98112dsrqeE.V3WMDOmOPRdmAZsqNAZmEHqEu5gnq', '704401058.jpg', 1, 0, 2);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

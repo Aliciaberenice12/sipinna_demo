@@ -160,7 +160,7 @@ if (isset($_POST['func'])) {
 				$hasta=$_POST['hasta_fecha'];
 				$desde_mes=explode('-',$_POST['desde_fecha']);
 				$hasta_mes=explode('-',$_POST['hasta_fecha']);
-
+ 
 
 				
 			$casos_can = $v->lista_casos_can($desde,$hasta);
@@ -1286,7 +1286,7 @@ if (isset($_POST['func'])) {
 			break;
 		case 'fun_listar_consulta_mes_c4':
 			$id_reporte=$_POST['id_reporte'];
-			$desde=$_POST['desde_fecha'];
+			$desde=$_POST['desde_fecha']; 
 			$hasta=$_POST['hasta_fecha'];
 			$arr_res = $v->lista_consulta_mes_c4($_POST['desde_fecha'],$_POST['hasta_fecha']);
 			$arr_res2 = $v->obtener_total_mes_c4($_POST['desde_fecha'],$_POST['hasta_fecha']);
@@ -1422,7 +1422,7 @@ if (isset($_POST['func'])) {
 			$arr_res2_a = $v->obtener_total_per_vul_c4($_POST['desde_fecha'],$_POST['hasta_fecha']);
 			
 			$size    = sizeof($arr_res_a);
-			print_r($size);
+			
 			if (empty($arr_res_a)) {
 				$html =
 					'

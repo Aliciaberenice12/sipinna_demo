@@ -171,10 +171,11 @@ $queryMun = "	SELECT 			can_fecha,count(*) as Numero
 				FROM			tbl_can_expediente
 				WHERE 			can_fecha 
 				BETWEEN			?
-				AND 			?		
+				AND 			?	
+				AND				activo = ?	
 ";
 $stmtMun = $conexion->dbh->prepare($queryMun);
-$stmtMun->execute(array($desde,$hasta));
+$stmtMun->execute(array($desde,$hasta,1));
 
 
 
@@ -216,11 +217,12 @@ $queryEdad = "SELECT 			can_edad_vic AS Edad ,COUNT(*) AS Numero
 								WHERE 			can_fecha 
 								BETWEEN			?
 								AND 			?
+								AND 			activo = ?
 								GROUP BY 		can_edad_vic
 								ORDER BY 		can_edad_vic ASC
 				";
 $stmtEdad = $conexion->dbh->prepare($queryEdad);
-$stmtEdad->execute(array($desde,$hasta));
+$stmtEdad->execute(array($desde,$hasta,1));
 
 $queryTotal = "SELECT 		sum(Case When 	can_edad_vic <=18 then 1 ELSE 0 END) AS Total
 				FROM 		(tbl_can_victimas 
@@ -229,9 +231,10 @@ $queryTotal = "SELECT 		sum(Case When 	can_edad_vic <=18 then 1 ELSE 0 END) AS T
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtEdad->rowCount() > 0) {
 	while ($edades = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
@@ -275,11 +278,12 @@ $queryEdad = "SELECT 			can_edad_vic AS Edad ,COUNT(*) AS Numero
 								WHERE 			can_fecha 
 								BETWEEN			?
 								AND 			?
+								AND 			activo = ?
 								GROUP BY 		can_edad_vic
 								ORDER BY 		can_edad_vic ASC
 				";
 $stmtEdad = $conexion->dbh->prepare($queryEdad);
-$stmtEdad->execute(array($desde,$hasta));
+$stmtEdad->execute(array($desde,$hasta,1));
 
 $queryTotal = "SELECT 		sum(Case When 	can_edad_vic >=19 then 1 ELSE 0 END) AS Total
 				FROM 		(tbl_can_victimas 
@@ -288,9 +292,11 @@ $queryTotal = "SELECT 		sum(Case When 	can_edad_vic >=19 then 1 ELSE 0 END) AS T
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		? 
+				AND			activo = ?
+
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtEdad->rowCount() > 0) {
 	while ($edades = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
@@ -339,10 +345,11 @@ $queryPerVul = "SELECT 			sum(Case When 	can_per_tercera_edad then 1 ELSE 0 END)
 				WHERE 			can_fecha 
 				BETWEEN			?
 				AND 			?		
+				AND 			activo = ?
 
 ";
 $stmtPerVul = $conexion->dbh->prepare($queryPerVul);
-$stmtPerVul->execute(array($desde,$hasta));
+$stmtPerVul->execute(array($desde,$hasta,1));
 
 $queryTotal = "	SELECT persona_tercera,persona_violencia,persona_discapacidad,persona_indigena,persona_transgenero,
 						(persona_tercera+persona_violencia+persona_discapacidad+persona_indigena+persona_transgenero) AS Total
@@ -358,10 +365,11 @@ $queryTotal = "	SELECT persona_tercera,persona_violencia,persona_discapacidad,pe
 				WHERE 		can_fecha 
 				BETWEEN 		?
 				AND 			?
+				AND 			activo = ?
 				) AS tabla_Z	
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtPerVul->rowCount() > 0) {
 	while ($perVul = $stmtPerVul->fetch(PDO::FETCH_ASSOC)) {
@@ -416,10 +424,11 @@ $queryGenero = "SELECT 		can_sexo_victima As Genero,
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		?
+				AND 		activo = ?
 				GROUP BY 	can_sexo_victima";
 //Se prepara la sentecia para hacer la busqueda en el servidor
 $stmtGenero = $conexion->dbh->prepare($queryGenero);
-$stmtGenero->execute(array($desde,$hasta));
+$stmtGenero->execute(array($desde,$hasta,1));
 
 $queryTotal = "SELECT 		COUNT(*) AS Total 
 				FROM 		(tbl_can_victimas 
@@ -428,9 +437,10 @@ $queryTotal = "SELECT 		COUNT(*) AS Total
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 
@@ -469,19 +479,21 @@ $pdf->Ln();
 $queryMes = "	SELECT 		can_fecha,MONTH(can_fecha)Mes , COUNT(*) AS Numero
 			FROM 		tbl_can_expediente
 			WHERE		can_fecha BETWEEN ? AND ?
+			AND 		activo = ?
 			GROUP BY 	Mes
 			ORDER BY	Mes ASC;
 			";
 $stmtMes = $conexion->dbh->prepare($queryMes);
-$stmtMes->execute(array($desde,$hasta));
+$stmtMes->execute(array($desde,$hasta,1));
 $queryTotal = "SELECT 		COUNT(*) AS Total 
 				FROM 		tbl_can_expediente 
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 

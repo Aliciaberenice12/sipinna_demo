@@ -93,62 +93,9 @@ $(document).ready(function () {
 
 
         }
-        else if ($(this).val() == "3"){
-            $("#div_reportes_canalizacion").hide(),
-            $("#div_reportes_casos_c4").hide(),
-            $("#div_reportes_general").hide()
-                $("#id_reporte").change(function () {
-                    if ($(this).val() == "1") {
-                        $("#div_reportes_canalizacion").hide(),
-                        $("#div_reportes_general").show(),
-                        $("#general_municipio").show(),
-                        $("#general_sin_municipio").hide(),
-                        $("#general_total_municipio").hide(),
-                        $("#div_reportes_casos_c4").hide(),
-                        $("#div_consulta_general").hide(),
-                        $("#div_consulta_mes_num_casos_can").hide(),
-                        $("#div_cunsulta_genero_can").hide(),
-                        $("#div_consulta_edad_can").hide(),
-                        $("#div_consulta_num_delitos_casos_can").hide(),
-                        $("#div_consulta_casos_por_municipio_can").show()
-                        
-                    }
-                    else if ($(this).val() == "2") {
-                        $("#div_reportes_canalizacion").hide(),
-                        $("#div_reportes_general").show(),
-                        $("#general_municipio").hide(),
-                        $("#general_sin_municipio").show(),
-                        $("#general_total_municipio").hide(),
-                        $("#div_reportes_casos_c4").hide(),
-                        $("#div_consulta_general").hide(),
-                        $("#div_consulta_mes_num_casos_can").hide(),
-                        $("#div_cunsulta_genero_can").hide(),
-                        $("#div_consulta_edad_can").hide(),
-                        $("#div_consulta_num_delitos_casos_can").hide(),
-                        $("#div_consulta_casos_por_municipio_can").hide()
-
-                    }
-                    else if ($(this).val() == "3") {
-                        $("#div_reportes_canalizacion").hide(),
-                        $("#div_reportes_general").show(),
-                        $("#general_municipio").hide(),
-                        $("#general_sin_municipio").hide(),
-                        $("#general_total_municipio").show(),
-                        $("#div_reportes_casos_c4").hide(),
-                        $("#div_consulta_general").hide(),
-                        $("#div_consulta_mes_num_casos_can").hide(),
-                        $("#div_cunsulta_genero_can").hide(),
-                        $("#div_consulta_edad_can").hide(),
-                        $("#div_consulta_num_delitos_casos_can").hide(),
-                        $("#div_consulta_casos_por_municipio_can").hide()
-
-                        
-                    }
-                });
-
-        }
+        
     });
-    fn_listar_consulta_sexo_municipio();
+    
 });
 function limpiarModal(){
     $('#gen_reporte').val('0'),
@@ -378,7 +325,7 @@ function fn_listar_pais_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha) {
     $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_pais_can',gen_reporte:gen_reporte,id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
         $('#consulta_casos_por_pais_can').html(data);
         
-    });
+    }); 
 }
 function fn_listar_mes_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha) {
     $("#consulta_meses_num_casos_can").html(cargando);
@@ -458,12 +405,7 @@ function fn_listar_mes_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha) {
     $("#consulta_meses_num_casos_c4").html(cargando);
     $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_mes_c4',gen_reporte:gen_reporte,id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
         $('#consulta_meses_num_casos_c4').html(data);
-        // $('#tbl_con_sexo').DataTable({
-        //     language: { "url": "../lib/datatables/Spanish.json" },
-        //     order: [[0, "asc"]],
-        //     searching: true,
-        // });
-        
+      
     });
 }
 function fn_listar_gen_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha) {
@@ -485,12 +427,7 @@ function fn_listar_edad_mayores_c4(id_reporte,desde_fecha,hasta_fecha) {
     $("#consulta_edad_mayores_c4").html(cargando);
     $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edades_mayores_c4',id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
         $('#consulta_edad_mayores_c4').html(data);
-        // $('#tbl_con_sexo').DataTable({
-        //     language: { "url": "../lib/datatables/Spanish.json" },
-        //     order: [[0, "asc"]],
-        //     searching: true,
-        // });
-        
+      
     });
 }
 function fn_listar_per_vul_c4(id_reporte,desde_fecha,hasta_fecha) {

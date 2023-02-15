@@ -5,7 +5,7 @@ session_start();
 
 if (isset($_REQUEST['func'])) {
 	switch ($_REQUEST['func']) {
-			//Victimas
+		
 		case 'carrito_victima':
 			if ($_REQUEST["evento"] == 1 || $_REQUEST["evento"] == 2 || $_REQUEST["evento"] == 3) {
 				if ($_REQUEST["evento"] == 1) //Agregar al carrito
@@ -780,7 +780,7 @@ if (isset($_REQUEST['func'])) {
 			break;
 		case 'fn_listar_canalizaciones':
 			$arr_res = $v->lista_canalizaciones();
-
+ 
 			$size    = sizeof($arr_res);
 
 			if (empty($arr_res)) {
@@ -904,6 +904,133 @@ if (isset($_REQUEST['func'])) {
 			}
 			echo $html;
 			break;
+		case 'fn_listar_can_inactivas':
+			$arr_res = $v->lista_can_inactivas();
+
+			$size    = sizeof($arr_res);
+
+			if (empty($arr_res)) {
+				$html =
+					'
+				<center>
+					<h2>¡ No hay datos Registrados !</h2>
+				</center>';
+			} else {
+				$html = '  
+				<div class="row">
+					<div class="col-md-12">
+						<table id="tbl_can_inactivas" class="table">
+							<thead class="tbl-estadisticas">
+							<tr align="center">
+							
+								<th>
+									Numero Oficio
+								</th>
+								<th>
+									Fecha
+								</th>
+								<th>
+									Estado
+								</th>
+								<th>
+									Municipio
+								</th>
+								<th>
+									via de Recepción
+								</th>
+								<th>
+									Estatus del caso 
+								</th>
+								<th>
+									Acciones
+								</th>
+								<th>
+									Avance
+								</th>
+								
+							</tr>
+							</thead>
+							<tbody>';
+				foreach ($arr_res as $row) {
+					$session  = 3;
+	
+					$html .= '
+								<tr class="text-11" align="center" id="l_can_inactiva' . $row["id"] . '">
+									<div class="row">
+										
+										<td class="col-md-2">
+											<div>
+											' . $row["can_numero_oficio"] . '
+											</div>
+										</td>
+										<td class="col-md-1">
+											<div>
+											' . $row["can_fecha"] . '
+											</div>
+										</td>
+										<td class="col-md-2">
+											<div>
+											
+											' . $row["estado"] . '
+											' . $row["can_otros_estados"] . '
+
+
+											</div>
+										</td>
+										<td class="col-md-1">
+											<div >
+											' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '
+
+											' . $row["can_mun_edo"] . '
+
+									
+											</div>
+										</td>							
+										<td class="col-md-2">
+											<div>
+												' . $row["can_via_rec"] . '
+											</div>
+										</td>
+										<td class="col-md-2">
+											<div >
+											
+											' . $row["estatus_expediente"] . '
+											</div>
+										</td>
+										<td class="col-md-1">								
+											<div>
+											
+												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');">
+													<i class="bi bi-pencil-square"></i>
+													<span></span>
+												</button>
+												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_canalizacion(' . $row["id"] . ',\'' . $row["can_numero"] . '\');" ' . ($session == 3 ? "" : "hidden") . '>
+													<i class="bi bi-trash"></i>
+													<span></span>
+												</button>
+												
+											
+											</div>
+										</td>   
+										<td class="col-md-1">
+											<button type="button" class="btn btn-sm btn-secondary " aria-label="Avance Canalizacion" onclick="fn_modal_avance(1,\'' . $row["can_folio_expediente"] . '\',0);">
+												<i class="bi bi-eye"></i>
+												<span></span>
+											</button>
+										</td>
+												
+									</div>
+								</tr>';
+				}
+				$html .= '
+							</tbody>
+						</table>
+					</div>
+				</div>';
+			}
+			echo $html;
+			break;
+			
 		case 'fn_eliminar_canalizacion':
 			$estatus = $v->eliminar_canalizacion($_REQUEST["id"], $_REQUEST["desc_eliminar"]);
 			header('Content-Type: application/json');

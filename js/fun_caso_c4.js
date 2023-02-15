@@ -2,6 +2,8 @@ var cargando =
     '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
 
 $(document).ready(function () {
+    $("#canalizaciones_inactivas_c4").hide();
+    $("#canalizaciones_activas_c4").show();
     var ultimoValorValido = null;
     $("#c4_delitos").on("change", function () {
         if ($("#c4_delitos option:checked").length > 4) {
@@ -98,6 +100,34 @@ function onlyNumberKey(evt) {
     if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
         return false;
     return true;
+}
+function tgl() {
+    var t = document.getElementById("myBtn_c4");
+    if (t.value == "Inactivos") {
+
+        t.value = "Activos";
+        fn_listar_casos_c4();
+        $("#canalizaciones_inactivas_c4").hide();
+        $("#canalizaciones_activas_c4").show();
+    }
+    else if (t.value == "Activos") {
+        t.value = "Inactivos";
+        fn_listar_canalizaciones_c4_inactivas();
+        $("#canalizaciones_inactivas_c4").show();
+        $("#canalizaciones_activas_c4").hide();
+    }
+}
+
+function fn_listar_canalizaciones_c4_inactivas() {
+    $("#ver_lista_canalizaciones_inactivas_c4").html(cargando);
+    $.post("../controllers/fun_casos_c4.php", { func: 'fn_listar_casos_c4_inactivos' }, function (data) {
+        $('#ver_lista_canalizaciones_inactivas_c4').html(data);
+        $('#tbl_caso_c4').DataTable({
+            language: { "url": "../lib/datatables/Spanish.json" },
+            order: [[0, "asc"]],
+            searching: true,
+        });
+    });
 }
 function mod_caso_c4(origen, id, fol_c4) {
     fn_carga_municipios('c4_mun');
@@ -458,7 +488,6 @@ function fn_listar_casos_c4() {
         });
     });
 }
-
 function fn_listar_pro_res_c4(fol_c4) {
     $("#lista_bd_probable_res").html(cargando);
     $.post("../controllers/fun_casos_c4.php", { func: 'fn_lista_pro_res_c4', fol_c4: fol_c4 }, function (data) {
@@ -599,60 +628,7 @@ function fun_editar_pro_res_c4() {
         }
     })
 }
-//Agregar Caso
-// function fun_agregar_des_caso_c4() {
-//     id = $('#id_desc_caso').val();
-//     c4_lugar_hechos = $.trim($('#c4_lugar_hechos').val());
-//     c4_des_hechos = $.trim($('#c4_des_hechos').val());
-//     c4_observaciones = $.trim($('#c4_observaciones').val());
 
-//     if (c4_lugar_hechos == '') {
-//         toastr.options.timeOut = 2500;
-//         toastr.warning('¡Ingresa Lugar de los hechos!');
-//         $('#c4_lugar_hechos').focus();
-//         return false;
-//     }
-//     else if (c4_des_hechos == '') {
-//         toastr.options.timeOut = 2500;
-//         toastr.warning('¡Ingresa lugar de los hechos!');
-//         $('#c4_des_hechos').focus();
-//         return false;
-//     }
-
-
-//     var data = new FormData();
-//     data.append('func', 'fn_guardar_desc_caso_c4');
-//     data.append('c4_lugar_hechos', c4_lugar_hechos);
-//     data.append('c4_des_hechos', c4_des_hechos);
-//     data.append('c4_observaciones', c4_observaciones);
-//     data.append('id', id);
-
-
-//     $.ajax({
-//         url: "../controllers/fun_casos_c4.php",
-//         type: "POST",
-//         data: data,
-//         contentType: false,
-//         processData: false,
-//         cache: false
-//     }).done(function (res) {
-
-//         if (res.estatus === "ok") {
-//             fun_agregar_reportante_c4();
-
-//         }
-//         else {
-//             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showCnfirmButton: false, timer: 1500 });
-//             $('#modal_c4').modal('hide');
-
-
-//             return false;
-//         }
-
-
-//     })
-
-// }
 //Victima
 function mod_can_victima(origen, id) {
     fn_carga_delitos('can_delitos');
@@ -678,36 +654,7 @@ function mod_can_victima(origen, id) {
     }
 
 }
-// function fun_agregar_victima_c4() {
-//     id = $('#id_victima_c4').val();
-//     var data = new FormData();
-//     data.append('func', 'fn_guardar_victima_c4');
-//     data.append('id', id);
-//     $.ajax({
-//         url: "../controllers/fun_casos_c4.php",
-//         type: "POST",
-//         data: data,
-//         contentType: false,
-//         processData: false,
-//         cache: false
-//     }).done(function (res) {
 
-//         if (res.estatus === "ok") {
-//             Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
-//             $('#modal_c4').modal('hide');
-//             fn_listar_casos_c4();
-
-//         }
-//         else {
-//             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showCnfirmButton: false, timer: 1500 });
-//             $('#btn_create_can').prop('disabled', false);
-//             $('#modal_c4').modal('hide');
-//             return false;
-//         }
-
-//     })
-
-// }
 function fun_editar_victima_c4() {
     id = $('#id_c4_victima_edit').val();
     fol_c4 = $.trim($('#can_exp_folio_victima_edit').val());    

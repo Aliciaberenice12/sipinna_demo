@@ -159,10 +159,11 @@ $queryMun = "	SELECT 			c4_fecha_inicio,count(*) as Numero
 				FROM			tbl_c4_expedientes
 				WHERE 			c4_fecha_inicio 
 				BETWEEN			?
-				AND 			?		
+				AND 			?	
+				AND 			activo = ?	
 ";
 $stmtMun = $conexion->dbh->prepare($queryMun);
-$stmtMun->execute(array($desde,$hasta));
+$stmtMun->execute(array($desde,$hasta,1));
 
 
 
@@ -204,13 +205,14 @@ $queryMun = "	SELECT 		municipio,c4_pais,c4_edo,c4_mun,c4_mun_edo,COUNT(*) AS Nu
 				ON 			tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
 				WHERE 		c4_fecha_inicio
 				BETWEEN 	? AND ?
+				AND			activo = ?
 				GROUP BY 	municipio
 				ORDER BY	municipio
 
 
 				";
 $stmtMun = $conexion->dbh->prepare($queryMun);
-$stmtMun->execute(array($desde,$hasta));
+$stmtMun->execute(array($desde,$hasta,1));
 
 $queryTotal = "	SELECT 		sum(Case When c4_mun then 1 ELSE 0 END) AS Total 
 				FROM 		(tbl_c4_expedientes 
@@ -218,9 +220,11 @@ $queryTotal = "	SELECT 		sum(Case When c4_mun then 1 ELSE 0 END) AS Total
 				ON 			tbl_c4_expedientes.c4_mun=cat_municipios.id_municipio) 
 				WHERE 		c4_fecha_inicio 
 				BETWEEN 	? 
-				AND 		? ";
+				AND 		?
+				AND			activo = ?
+				 ";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 if ($stmtMun->rowCount() > 0) {

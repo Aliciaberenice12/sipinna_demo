@@ -9,7 +9,7 @@ class CasosC4 extends Conexion
 		$this->conectar();
 	}
 	//historico
-	public function gen_folio_historico($tabla, $id,$anio_folio)
+	public function gen_folio_historico($tabla, $id, $anio_folio)
 	{
 		$sql = $this->dbh->prepare("select max(" . $id . ")+1 as fol from " . $tabla . " where c4_anio = ? ;");
 		$sql->execute(array($anio_folio));
@@ -19,16 +19,16 @@ class CasosC4 extends Conexion
 		else
 			return $row["fol"];
 	}
-	public function fn_registrar_caso_c4_historico($nom_archivo_c4, $datos_exp_histirico,$anio_folio)
+	public function fn_registrar_caso_c4_historico($nom_archivo_c4, $datos_exp_histirico, $anio_folio)
 	{
 		try {
 			//   print_r($anio_folio);
 			//   die();
 			$nombre_creador = $_SESSION['nombre'];
-			$id = $this->gen_folio_historico('tbl_c4_expedientes', 'id_c4_anio',$anio_folio);
+			$id = $this->gen_folio_historico('tbl_c4_expedientes', 'id_c4_anio', $anio_folio);
 			$c4_anio  = $anio_folio;
-			$c4_folio_expediente = 'C4/DG/' . $anio_folio . '/' . sprintf("%04s",$id);
-			
+			$c4_folio_expediente = 'C4/DG/' . $anio_folio . '/' . sprintf("%04s", $id);
+
 			$conn = $this->dbh;
 			$conn->beginTransaction();
 			$sql   = $conn->prepare("INSERT INTO 		tbl_c4_expedientes 
@@ -73,11 +73,10 @@ class CasosC4 extends Conexion
 			} else {
 				$conn->rollback();
 				$estatus = 'expediente_c4';
-				
 			}
 			$c4_exp_folio_desc_caso = $c4_folio_expediente;
-			$id_caso = $anio_folio.'/'.$id;
-			
+			$id_caso = $anio_folio . '/' . $id;
+
 			$sql2   = $conn->prepare("INSERT into 	tbl_c4_desc_casos(
 														c4_lugar_hechos,
 														c4_des_hechos,
@@ -95,18 +94,16 @@ class CasosC4 extends Conexion
 
 			$sql2->execute();
 			if ($conn->lastInsertId() > 0) {
-				
 			} else {
 				$conn->rollback();
 				$estatus = 'expediente_caso';
-				
 			}
-			
-			
+
+
 			if (isset($_SESSION['probable_res']) and !empty($_SESSION['probable_res'])) {
 
 				$c4_exp_folio_resp = $c4_folio_expediente;
-			
+
 
 				foreach ($_SESSION['probable_res'] as $row) {
 					$sql4   = $conn->prepare("INSERT INTO 	tbl_c4_probable_responsable
@@ -125,20 +122,18 @@ class CasosC4 extends Conexion
 					$sql4->bindParam(6, $nombre_creador, PDO::PARAM_STR, 30);
 					$sql4->execute();
 					if ($conn->lastInsertId() > 0) {
-					
 					} else {
 						$conn->rollback();
 						$estatus = 'expediente_responsable';
 						break;
 					}
-
 				}
 			}
 			if (isset($_SESSION['victima_c4']) and !empty($_SESSION['victima_c4'])) {
 
 				$c4_exp_folio_victima = $c4_folio_expediente;
-				
-		
+
+
 
 				foreach ($_SESSION['victima_c4'] as $row) {
 
@@ -172,7 +167,6 @@ class CasosC4 extends Conexion
 					$sql5->bindParam(12, $id_caso, PDO::PARAM_STR, 50);
 					$sql5->execute();
 					if ($conn->lastInsertId() > 0) {
-					
 					} else {
 						$conn->rollback();
 						$estatus = 'expediente_victima';
@@ -192,7 +186,6 @@ class CasosC4 extends Conexion
 					$sql6->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
 					$sql6->execute();
 					if ($conn->lastInsertId() > 0) {
-						
 					} else {
 						$conn->rollback();
 						$estatus = 'expediente_delito';
@@ -211,7 +204,6 @@ class CasosC4 extends Conexion
 					$sql7->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
 					$sql7->execute();
 					if ($conn->lastInsertId() > 0) {
-						
 					} else {
 						$conn->rollback();
 						$estatus = 'expediente_derecho';
@@ -232,9 +224,22 @@ class CasosC4 extends Conexion
 
 		return $estatus;
 	}
-	public function editar_caso_c4_c_img( $c4_folio, $c4_numero, $c4_no_oficio, $c4_fecha_inicio, 
-	$c4_pais,$otros_estados_c4, $c4_edo, $c4_mun, $c4_mun_edo, $c4_dirigido, $c4_dg,$nom_archo,$nombre_creador,$id)
-	{
+	public function editar_caso_c4_c_img(
+		$c4_folio,
+		$c4_numero,
+		$c4_no_oficio,
+		$c4_fecha_inicio,
+		$c4_pais,
+		$otros_estados_c4,
+		$c4_edo,
+		$c4_mun,
+		$c4_mun_edo,
+		$c4_dirigido,
+		$c4_dg,
+		$nom_archo,
+		$nombre_creador,
+		$id
+	) {
 		$sql = $this->dbh->prepare("UPDATE 	tbl_c4_expedientes 
 									SET		
 										 	c4_folio=?,
@@ -251,32 +256,33 @@ class CasosC4 extends Conexion
 											c4_ruta_sol_oficio=?,
 											c4_update_by=?
 									WHERE	id = ?");
-		if ($sql->execute(array( 	$c4_folio,
-									$c4_numero,
-									$c4_no_oficio,
-									$c4_fecha_inicio, 
-									$c4_pais,
-									$otros_estados_c4,
-									$c4_edo,
-									$c4_mun,
-									$c4_mun_edo,
-									$c4_dirigido,
-									$c4_dg,
-									$nom_archo,
-									$nombre_creador,
-									$id
-								)
-							)
-							)
-		{
+		if ($sql->execute(
+			array(
+				$c4_folio,
+				$c4_numero,
+				$c4_no_oficio,
+				$c4_fecha_inicio,
+				$c4_pais,
+				$otros_estados_c4,
+				$c4_edo,
+				$c4_mun,
+				$c4_mun_edo,
+				$c4_dirigido,
+				$c4_dg,
+				$nom_archo,
+				$nombre_creador,
+				$id
+			)
+		)) {
 			return 'editado';
 		} else
 			return 'error';
 	}
-	
+
 	//historico
 	//Registrar Caso Expediente
-	public function fn_registrar_caso_c4($nom_archivo_c4, $datos_exp_c4,$id_c4_anio)
+	
+	public function fn_registrar_caso_c4($nom_archivo_c4, $datos_exp_c4, $id_c4_anio)
 	{
 		try {
 			//  print_r($datos_exp_c4);
@@ -329,7 +335,6 @@ class CasosC4 extends Conexion
 			} else {
 				$conn->rollback();
 				$estatus = 'Error al registrar Expediente';
-				
 			}
 			$c4_exp_folio_desc_caso = 'C4/DG/' . $id . '/' . date('Y');
 			$id_caso = $id;
@@ -350,14 +355,12 @@ class CasosC4 extends Conexion
 
 			$sql2->execute();
 			if ($conn->lastInsertId() > 0) {
-				
 			} else {
 				$conn->rollback();
 				$estatus = 'Error al registrar datos del caso';
-				
 			}
-			
-			
+
+
 			if (isset($_SESSION['probable_res']) and !empty($_SESSION['probable_res'])) {
 
 				$c4_exp_folio_resp = 'C4/DG/' . $id . '/' . date('Y');
@@ -380,20 +383,18 @@ class CasosC4 extends Conexion
 					$sql4->bindParam(6, $nombre_creador, PDO::PARAM_STR, 30);
 					$sql4->execute();
 					if ($conn->lastInsertId() > 0) {
-					
 					} else {
 						$conn->rollback();
 						$estatus = 'Error al registrar Probable Responsable';
 						break;
 					}
-
 				}
 			}
 			if (isset($_SESSION['victima_c4']) and !empty($_SESSION['victima_c4'])) {
 
 				$c4_exp_folio_victima = 'C4/DG/' . $id . '/' . date('Y');
 				$id_caso_reportado_victima = $id;
-		
+
 
 				foreach ($_SESSION['victima_c4'] as $row) {
 
@@ -427,7 +428,6 @@ class CasosC4 extends Conexion
 					$sql5->bindParam(12, $id_caso_reportado_victima, PDO::PARAM_STR, 50);
 					$sql5->execute();
 					if ($conn->lastInsertId() > 0) {
-					
 					} else {
 						$conn->rollback();
 						$estatus = 'Error al registrar victima';
@@ -447,7 +447,6 @@ class CasosC4 extends Conexion
 					$sql6->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
 					$sql6->execute();
 					if ($conn->lastInsertId() > 0) {
-						
 					} else {
 						$conn->rollback();
 						$estatus = 'Error al registrar Delito';
@@ -466,7 +465,6 @@ class CasosC4 extends Conexion
 					$sql7->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
 					$sql7->execute();
 					if ($conn->lastInsertId() > 0) {
-						
 					} else {
 						$conn->rollback();
 						$estatus = 'Error al registrar Derecho';
@@ -476,7 +474,7 @@ class CasosC4 extends Conexion
 			}
 			if ($last_id = $conn->lastInsertId() > 0) {
 				$conn->commit();
-				$estatus = 'ok expediente registrado';
+				$estatus = 'ok';
 			} else {
 				$conn->rollback();
 				$estatus = 'Error al registrar victima';
@@ -487,9 +485,22 @@ class CasosC4 extends Conexion
 
 		return $estatus;
 	}
-	public function editar_caso_c4($id,  $c4_folio, $c4_numero, $c4_no_oficio, $c4_fecha_inicio, 
-	$c4_pais,$otros_estados_c4, $c4_edo, $c4_mun, $c4_mun_edo, $c4_dirigido, $c4_dg,$nom_archo,$nombre_creador)
-	{
+	public function editar_caso_c4(
+		$id,
+		$c4_folio,
+		$c4_numero,
+		$c4_no_oficio,
+		$c4_fecha_inicio,
+		$c4_pais,
+		$otros_estados_c4,
+		$c4_edo,
+		$c4_mun,
+		$c4_mun_edo,
+		$c4_dirigido,
+		$c4_dg,
+		$nom_archo,
+		$nombre_creador
+	) {
 		$sql = $this->dbh->prepare("UPDATE 	tbl_c4_expedientes 
 									SET		
 										 	c4_folio=?,
@@ -506,9 +517,11 @@ class CasosC4 extends Conexion
 											c4_ruta_sol_oficio=?,
 											c4_update_by=?
 									WHERE	id = ?");
-		if ($sql->execute(array( $c4_folio, $c4_numero, $c4_no_oficio, $c4_fecha_inicio, $c4_pais, 
-		$otros_estados_c4,$c4_edo, $c4_mun, $c4_mun_edo, $c4_dirigido,
-		 $c4_dg,$nom_archo,$nombre_creador, $id))) {
+		if ($sql->execute(array(
+			$c4_folio, $c4_numero, $c4_no_oficio, $c4_fecha_inicio, $c4_pais,
+			$otros_estados_c4, $c4_edo, $c4_mun, $c4_mun_edo, $c4_dirigido,
+			$c4_dg, $nom_archo, $nombre_creador, $id
+		))) {
 			return 'editado';
 		} else
 			return 'error';
@@ -544,7 +557,69 @@ class CasosC4 extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
-	
+	public function lista_casos_c4_inactivo()
+	{
+
+		$sql = $this->dbh->prepare("SELECT 	id,
+											id_c4_anio,	
+											c4_folio,
+											c4_numero,
+											c4_no_oficio,
+											c4_exp_folio,
+											c4_ruta_sol_oficio,
+											c4_mun,
+											c4_edo,
+											c4_mun_edo,
+											c4_fecha_inicio,
+											municipio,
+											estado,
+											date_format(c4_fecha_inicio,'%d-%m-%Y') as c4_fecha_inicio,
+											c4_pais,
+											c4_otros_estados
+									FROM	((tbl_c4_expedientes 
+								LEFT JOIN    cat_municipios
+									ON		tbl_c4_expedientes.c4_mun=cat_municipios.id_municipio)
+								LEFT JOIN	cat_estados
+									ON		tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
+									WHERE	activo=?
+								");
+
+		$sql->execute(array(0));
+		$row = $sql->fetchAll();
+		return $row;
+	}
+	public function lista_c4_inactivas()
+	{
+
+		$sql = $this->dbh->prepare("SELECT 	id,
+											id_c4_anio,	
+											c4_folio,
+											c4_numero,
+											c4_no_oficio,
+											c4_exp_folio,
+											c4_ruta_sol_oficio,
+											c4_mun,
+											c4_edo,
+											c4_mun_edo,
+											c4_fecha_inicio,
+											municipio,
+											estado,
+											date_format(c4_fecha_inicio,'%d-%m-%Y') as c4_fecha_inicio,
+											c4_pais,
+											c4_otros_estados
+									FROM	((tbl_c4_expedientes 
+								LEFT JOIN    cat_municipios
+									ON		tbl_c4_expedientes.c4_mun=cat_municipios.id_municipio)
+								LEFT JOIN	cat_estados
+									ON		tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
+									WHERE	activo=?
+								");
+
+		$sql->execute(array(0));
+		$row = $sql->fetchAll();
+		return $row;
+	}
+
 
 	public function obtener_caso_c4($id)
 	{
@@ -594,13 +669,13 @@ class CasosC4 extends Conexion
 	}
 
 
-	public function eliminar_caso_c4($id,$des_elimina_c4)
+	public function eliminar_caso_c4($id, $des_elimina_c4)
 	{
 		$sql = $this->dbh->prepare("UPDATE 		tbl_c4_expedientes
 											SET	activo=?,
 												des_eliminar=?
 										WHERE	id = ?");
-		if ($sql->execute(array(0,$des_elimina_c4,$id))) {
+		if ($sql->execute(array(0, $des_elimina_c4, $id))) {
 			return 'ok';
 		} else
 			return 'error';
@@ -819,22 +894,23 @@ class CasosC4 extends Conexion
 									SET 	c4_delito=?,
 											c4_update_by=?
 									WHERE	id_c4_delito_victima= ?");
-		if ($sql->execute(array( 	$delito,
-									$nombre_creador,
-									$id_del_victima
-								))) {
+		if ($sql->execute(array(
+			$delito,
+			$nombre_creador,
+			$id_del_victima
+		))) {
 			return 'editado';
 		} else
 			return 'error';
-
 	}
 	public function editar_derecho_victima_c4($id_der_victima_c4, $derecho_c4, $nombre_creador)
 	{
 		$sql = $this->dbh->prepare(
-		"UPDATE 	tbl_c4_der_vul_victima
+			"UPDATE 	tbl_c4_der_vul_victima
 									SET 	c4_der_vul_victima=?,
 											c4_update_by=?
-									WHERE	id_c4_derecho= ?");
+									WHERE	id_c4_derecho= ?"
+		);
 		if ($sql->execute(array(
 			$derecho_c4,
 			$nombre_creador,
@@ -842,10 +918,7 @@ class CasosC4 extends Conexion
 		))) {
 			return 'editado';
 		} else
-		return 'error';
-
-
-
+			return 'error';
 	}
 	//insertar Probable Responsable
 	public function insertar_prob_respo_c4($nombre_creador)
@@ -1013,7 +1086,7 @@ class CasosC4 extends Conexion
 		return $row;
 	}
 
-	
+
 
 	//catalogos
 	public function fn_lista_municipios()

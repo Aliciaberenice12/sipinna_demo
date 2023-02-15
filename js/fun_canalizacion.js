@@ -1,7 +1,7 @@
 var cargando =
     '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
 $(document).ready(function () {
-   
+
 
     $("#can_municipio").hide();
     $("#listado_victimas").hide();
@@ -10,7 +10,8 @@ $(document).ready(function () {
     $("#can_mun").hide();
     $("#can_mun_edo").hide();
     $("#div_municipio").hide();
-
+    $("#canalizaciones_inactivas").hide();
+    $("#canalizaciones_activas").show();
     $("#can_pais").change(function () {
 
         if ($(this).val() == "México") {
@@ -57,9 +58,54 @@ $(document).ready(function () {
         }
 
     });
+    $("#can_pais").change(function () {
+
+        if ($(this).val() == "México") {
+            $("#div_estado").show(),
+                $("#div_otros_estados").hide(),
+                $("#can_otros_estados").val(""),
+                $("#div_municipio").hide(),
+                $("#can_estado_label").show(400),
+                $("#can_estado").show()
+
+        }
+        else {
+            $("#div_estado").hide(),
+                $("#div_otros_estados").show(400),
+                $("#can_otros_estados").show(),
+                $("#can_estado").val("0"),
+                $("#can_estado").hide(),
+                $("#can_municipio").val("0"),
+                $("#can_municipio").hide(),
+                $("#can_mun_edo").val(""),
+                $("#can_mun_edo").hide(),
+                $("#can_mun").hide(),
+                $("#can_estado_label").hide(400),
+                $("#div_mun_c4").hide()
+
+        }
+    });
+    $("#can_estado").change(function () {
+        if ($(this).val() == "30") {
+            $("#div_municipio").show(),
+                $("#can_municipio").show(200),
+                $("#can_mun").show(200),
+                $("#can_mun_edo").val(""),
+                $("#can_mun_edo").hide(200)
+        }
 
 
+        else {
+            $("#can_mun").show(200)
+            $("#can_mun_edo").show(200),
+                $("#div_municipio").show(),
+                $("#can_municipio").hide(),
+                $("#can_municipio").val("0")
+        }
+
+    });
     $("#actualizar_canalizaciones").click();
+    // fn_listar_canalizaciones_inactivas();
 
     $(document).on('click', '#agregar_victima', function () {
         $('#agregarVictimaModal').modal('show');
@@ -257,7 +303,8 @@ function mod_canalizacion(origen, id, folio_exp) {
         fn_listar_victimas(folio_exp);
         fn_listar_reportantes(folio_exp);
     }
-    else if (origen == 3) {
+    else if (origen == 3) //Agregar Avance
+    {
         $.post("../controllers/fun_canalizacion.php", { func: 'fn_agregar_avance', id: id }, function (res) {
             $('#id_gt').val(id);
             $('#nom_gt').val(res.nom_grupo);
@@ -266,52 +313,52 @@ function mod_canalizacion(origen, id, folio_exp) {
             $('#avancesCanalizacion').modal('show');
         });
     }
-    else if (origen == 4) {
-        $('#tit_mod_mostrar').html('Mostar Canalización');
-        $('#mostrar_canalizacion').modal('show');
-        $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_canalizacion', id: id, folio_exp: folio_exp }, function (res) {
-            $('#id_canalizacion').val(id);
-            $('#can_folio').val(res.can_folio);
-            $('#can_pais').val(res.can_pais);
-            $('#can_numero').val(res.can_numero);
-            $('#can_num_oficio').val(res.can_numero_oficio);
-            $('#can_fecha').val(res.can_fecha);
-            $('#can_estado').val(res.can_estado);
-            $('#can_municipio').val(res.can_municipio);
-            $('#can_mun_edo').val(res.can_mun_edo);
-            $('#can_via_rec').val(res.can_via_rec);
-            $('#can_folio_expediente').val(res.can_folio_expediente);
-        });
-        $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_casos_reportados', id: id, folio_exp: folio_exp }, function (res) {
-            $('#can_des_suncita_rep').val(res.can_des_caso);
-            $('#can_ges_reporte').val(res.can_gest_caso);
-            $('#can_estatus_caso').val(res.can_estatus_caso);
-            $('#ins_con_hechos').val(res.ins_con_hechos);
+    // else if (origen == 4) {
+    //     $('#tit_mod_mostrar').html('Mostar Canalización');
+    //     $('#mostrar_canalizacion').modal('show');
+    //     $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_canalizacion', id: id, folio_exp: folio_exp }, function (res) {
+    //         $('#id_canalizacion').val(id);
+    //         $('#can_folio').val(res.can_folio);
+    //         $('#can_pais').val(res.can_pais);
+    //         $('#can_numero').val(res.can_numero);
+    //         $('#can_num_oficio').val(res.can_numero_oficio);
+    //         $('#can_fecha').val(res.can_fecha);
+    //         $('#can_estado').val(res.can_estado);
+    //         $('#can_municipio').val(res.can_municipio);
+    //         $('#can_mun_edo').val(res.can_mun_edo);
+    //         $('#can_via_rec').val(res.can_via_rec);
+    //         $('#can_folio_expediente').val(res.can_folio_expediente);
+    //     });
+    //     $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_casos_reportados', id: id, folio_exp: folio_exp }, function (res) {
+    //         $('#can_des_suncita_rep').val(res.can_des_caso);
+    //         $('#can_ges_reporte').val(res.can_gest_caso);
+    //         $('#can_estatus_caso').val(res.can_estatus_caso);
+    //         $('#ins_con_hechos').val(res.ins_con_hechos);
 
-        });
-        $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_datos_reportantes', folio_exp: folio_exp }, function (res) {
-            $('#can_inst_rep').val(res.can_inst_reportante);
-            $('#can_nom_rep').val(res.can_nom_reportante);
-        });
-        $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_datos_solicitantes', folio_exp: folio_exp }, function (res) {
-            $('#can_inst_sol').val(res.can_inst_solicitante);
-            $('#can_nom_sol').val(res.can_nom_solicitante);
-        });
-        $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_datos_victimas', folio_exp: folio_exp }, function (res) {
-            $('#can_edad_vic').val(res.can_edad_vic);
-            $('#can_nom_vic').val(res.can_nom_vic);
-            $('#can_delito').val(res.can_delito);
-            $('#can_der_vul_vic').val(res.can_der_vul_vic);
-            $('#can_per_tercera_edad').val(res.can_per_tercera_edad);
-            $('#can_per_violencia').val(res.can_per_violencia);
-            $('#can_per_discapacidad').val(res.can_per_discapacidad);
-            $('#can_per_indigena').val(res.can_per_indigena);
-            $('#can_per_transgenero').val(res.can_per_transgenero);
-            $('#can_sexo_victima').val(res.can_sexo_victima);
+    //     });
+    //     $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_datos_reportantes', folio_exp: folio_exp }, function (res) {
+    //         $('#can_inst_rep').val(res.can_inst_reportante);
+    //         $('#can_nom_rep').val(res.can_nom_reportante);
+    //     });
+    //     $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_datos_solicitantes', folio_exp: folio_exp }, function (res) {
+    //         $('#can_inst_sol').val(res.can_inst_solicitante);
+    //         $('#can_nom_sol').val(res.can_nom_solicitante);
+    //     });
+    //     $.post("../controllers/fun_canalizacion.php", { func: 'fn_obtener_datos_victimas', folio_exp: folio_exp }, function (res) {
+    //         $('#can_edad_vic').val(res.can_edad_vic);
+    //         $('#can_nom_vic').val(res.can_nom_vic);
+    //         $('#can_delito').val(res.can_delito);
+    //         $('#can_der_vul_vic').val(res.can_der_vul_vic);
+    //         $('#can_per_tercera_edad').val(res.can_per_tercera_edad);
+    //         $('#can_per_violencia').val(res.can_per_violencia);
+    //         $('#can_per_discapacidad').val(res.can_per_discapacidad);
+    //         $('#can_per_indigena').val(res.can_per_indigena);
+    //         $('#can_per_transgenero').val(res.can_per_transgenero);
+    //         $('#can_sexo_victima').val(res.can_sexo_victima);
 
 
-        });
-    }
+    //     });
+    // }
     else if (origen == 7) {//Agregar Reportante
         $('#tit_mod_reportante').html('Agregar reportante');
         $('#modal_canalizacion').modal('hide');
@@ -376,14 +423,16 @@ function mod_canalizacion(origen, id, folio_exp) {
 
 }
 
-function onlyNumberKey(evt) {
+function onlyNumberKey(evt) //Solo Permite Numeros
+{
     // Only ASCII character in that range allowed
     var ASCIICode = (evt.which) ? evt.which : evt.keyCode
     if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
         return false;
     return true;
 }
-function check(e) {
+function check(e)//Solo permite letras sin caracteres especiales 
+{
     tecla = (document.all) ? e.keyCode : e.which;
 
     //Tecla de retroceso para borrar, siempre la permite
@@ -727,7 +776,33 @@ function fn_listar_canalizaciones() {
         });
     });
 }
+function fn_listar_canalizaciones_inactivas() {
+    $("#ver_lista_canalizaciones_inactivas").html(cargando);
+    $.post("../controllers/fun_canalizacion.php", { func: 'fn_listar_can_inactivas' }, function (data) {
+        $('#ver_lista_canalizaciones_inactivas').html(data);
+        $('#tbl_can_inactivas').DataTable({
+            language: { "url": "../lib/datatables/Spanish.json" },
+            order: [[0, "asc"]],
+            searching: true,
+        });
+    });
+}
+function tgl() {
+    var t = document.getElementById("myBtn");
+    if (t.value == "Inactivos") {
 
+        t.value = "Activos";
+        fn_listar_canalizaciones();
+        $("#canalizaciones_inactivas").hide();
+        $("#canalizaciones_activas").show();
+    }
+    else if (t.value == "Activos") {
+        t.value = "Inactivos";
+        fn_listar_canalizaciones_inactivas();
+        $("#canalizaciones_inactivas").show();
+        $("#canalizaciones_activas").hide();
+    }
+}
 function fn_eliminar_canalizacion(id, can_no_oficio) {
     swal.fire({
         title: '¿Estás seguro?',
@@ -760,8 +835,8 @@ function fn_eliminar_canalizacion(id, can_no_oficio) {
 
                 if (res.estatus == 'ok') {
                     Swal.fire({ icon: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
-                    var tabla = $('#tbl_can').DataTable();
-                    tabla.row($('#l_can' + id)).remove().draw();
+                    var tabla = $('#tbl_can_inactiva').DataTable();
+                    tabla.row($('#l_can_inactiva' + id)).remove().draw();
                     fn_listar_canalizaciones();
 
                 }

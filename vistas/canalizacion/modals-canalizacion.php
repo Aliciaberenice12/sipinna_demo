@@ -245,7 +245,7 @@
                                         <div class="col-md-4">
                                             <label for="can_nom_vic">Nombre Victima:</label>
                                             <input type="text" class="form-control" placeholder="Nombre Victima" id="can_nom_vic" name="can_nom_vic" maxlength="50" onkeypress="return check(event)">
-                                            <small id="help_nom_vic" class="form-text text-muted">*Solo Aaepta letras</small>
+                                            <small id="help_nom_vic" class="form-text text-muted">*Solo Acepta letras</small>
 
                                         </div>
                                         <!-- <div class="col-md-6">

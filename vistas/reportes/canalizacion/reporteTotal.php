@@ -170,10 +170,11 @@ $queryMun = "	SELECT 			can_fecha,count(*) as Numero
 				FROM			tbl_can_expediente
 				WHERE 			can_fecha 
 				BETWEEN			?
-				AND 			?		
+				AND 			?	
+				AND 		activo = ?	
 ";
 $stmtMun = $conexion->dbh->prepare($queryMun);
-$stmtMun->execute(array($desde,$hasta));
+$stmtMun->execute(array($desde,$hasta,1));
 
 
 
@@ -215,11 +216,12 @@ $queryEdad = "SELECT 			can_edad_vic AS Edad ,COUNT(*) AS Numero
 								WHERE 			can_fecha 
 								BETWEEN			?
 								AND 			?
+								AND 		activo = ?
 								GROUP BY 		can_edad_vic
 								ORDER BY 		can_edad_vic ASC
 				";
 $stmtEdad = $conexion->dbh->prepare($queryEdad);
-$stmtEdad->execute(array($desde,$hasta));
+$stmtEdad->execute(array($desde,$hasta,1));
 
 $queryTotal = "SELECT 		sum(Case When 	can_edad_vic <=18 then 1 ELSE 0 END) AS Total
 				FROM 		(tbl_can_victimas 
@@ -228,9 +230,10 @@ $queryTotal = "SELECT 		sum(Case When 	can_edad_vic <=18 then 1 ELSE 0 END) AS T
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtEdad->rowCount() > 0) {
 	while ($edades = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
@@ -274,11 +277,12 @@ $queryEdad = "SELECT 			can_edad_vic AS Edad ,COUNT(*) AS Numero
 								WHERE 			can_fecha 
 								BETWEEN			?
 								AND 			?
+								AND 		activo = ?
 								GROUP BY 		can_edad_vic
 								ORDER BY 		can_edad_vic ASC
 				";
 $stmtEdad = $conexion->dbh->prepare($queryEdad);
-$stmtEdad->execute(array($desde,$hasta));
+$stmtEdad->execute(array($desde,$hasta,1));
 
 $queryTotal = "SELECT 		sum(Case When 	can_edad_vic >=19 then 1 ELSE 0 END) AS Total
 				FROM 		(tbl_can_victimas 
@@ -287,9 +291,10 @@ $queryTotal = "SELECT 		sum(Case When 	can_edad_vic >=19 then 1 ELSE 0 END) AS T
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtEdad->rowCount() > 0) {
 	while ($edades = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
@@ -337,11 +342,12 @@ $queryPerVul = "SELECT 			sum(Case When 	can_per_tercera_edad then 1 ELSE 0 END)
 				ON				tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente)
 				WHERE 			can_fecha 
 				BETWEEN			?
-				AND 			?		
+				AND 			?	
+				AND 		activo = ?	
 
 ";
 $stmtPerVul = $conexion->dbh->prepare($queryPerVul);
-$stmtPerVul->execute(array($desde,$hasta));
+$stmtPerVul->execute(array($desde,$hasta,1));
 
 $queryTotal = "	SELECT persona_tercera,persona_violencia,persona_discapacidad,persona_indigena,persona_transgenero,
 						(persona_tercera+persona_violencia+persona_discapacidad+persona_indigena+persona_transgenero) AS Total
@@ -357,10 +363,11 @@ $queryTotal = "	SELECT persona_tercera,persona_violencia,persona_discapacidad,pe
 				WHERE 		can_fecha 
 				BETWEEN 		?
 				AND 			?
+				AND 		activo = ?
 				) AS tabla_Z	
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtPerVul->rowCount() > 0) {
 	while ($perVul = $stmtPerVul->fetch(PDO::FETCH_ASSOC)) {
@@ -415,10 +422,11 @@ $queryGenero = "SELECT 		can_sexo_victima As Genero,
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		?
+				AND 		activo = ?
 				GROUP BY 	can_sexo_victima";
 //Se prepara la sentecia para hacer la busqueda en el servidor
 $stmtGenero = $conexion->dbh->prepare($queryGenero);
-$stmtGenero->execute(array($desde,$hasta));
+$stmtGenero->execute(array($desde,$hasta,1));
 
 $queryTotal = "SELECT 		COUNT(*) AS Total 
 				FROM 		(tbl_can_victimas 
@@ -427,9 +435,10 @@ $queryTotal = "SELECT 		COUNT(*) AS Total
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 
@@ -467,20 +476,23 @@ $pdf->Ln();
 
 $queryMes = "	SELECT 		can_fecha,MONTH(can_fecha)Mes , COUNT(*) AS Numero
 			FROM 		tbl_can_expediente
-			WHERE		can_fecha BETWEEN ? AND ?
+			WHERE		can_fecha BETWEEN ? 
+			AND 		?
+			AND 		activo = ?
 			GROUP BY 	Mes
 			ORDER BY	Mes ASC;
 			";
 $stmtMes = $conexion->dbh->prepare($queryMes);
-$stmtMes->execute(array($desde,$hasta));
+$stmtMes->execute(array($desde,$hasta,1));
 $queryTotal = "SELECT 		COUNT(*) AS Total 
 				FROM 		tbl_can_expediente 
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 
@@ -563,6 +575,7 @@ if ($stmtMes->rowCount() > 0) {
 
 //2159 mm x 2794 mm
 
+
 // Datos por Municipio
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
@@ -593,8 +606,10 @@ $queryMun = "	SELECT 		can_pais,estado,municipio, can_municipio,COUNT(*) AS Nume
 $stmtMun = $conexion->dbh->prepare($queryMun);
 $stmtMun->execute(array($desde,$hasta));
 
-$queryTotal = "SELECT COUNT(*) AS Total FROM (tbl_can_expediente 
-LEFT JOIN cat_municipios ON tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
+$queryTotal = "SELECT COUNT(CASE WHEN can_municipio != '0' THEN 1 ELSE NULL END) AS Total
+FROM (tbl_can_expediente 
+LEFT JOIN cat_municipios 
+ON tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
 WHERE can_fecha 
 BETWEEN ? AND ? ";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
@@ -603,15 +618,28 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 if ($stmtMun->rowCount() > 0) {
 	while ($municipio = $stmtMun->fetch(PDO::FETCH_ASSOC)) {
-        $pdf->Row(array(utf8_decode($municipio["municipio"]), utf8_decode($municipio["Numero"])));
+		if($municipio["can_municipio"] == '0')
+		{
+
+		}
+		else{
+			$pdf->Row(array(utf8_decode($municipio["municipio"]), utf8_decode($municipio["Numero"])));
+
+		}
 	}
 	
 	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
 	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
 	$pdf->Ln();
-	$pdf->Ln();
 } else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+	if($municipio["can_municipio"] == '0')
+		{
+
+		}
+		else{
+			$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+
+		}
 	$pdf->Ln();
 }
 

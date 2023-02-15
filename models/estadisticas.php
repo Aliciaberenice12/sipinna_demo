@@ -63,9 +63,10 @@ class Estadisticas extends Conexion
 									LEFT JOIN	tbl_can_expediente
 										ON		tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente)
 										WHERE	can_fecha BETWEEN  ? AND ?
+										AND		activo = ?
 									GROUP BY 	can_sexo_victima	
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -100,8 +101,9 @@ class Estadisticas extends Conexion
 										WHERE 		can_fecha 
 										BETWEEN 	? 
 										AND 		? 
+										AND			activo = ?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -217,10 +219,11 @@ class Estadisticas extends Conexion
 										WHERE 			can_fecha 
 										BETWEEN			?
 										AND 			?
+										AND				activo = ?
 										GROUP BY 		can_edad_vic
 										ORDER BY 		can_edad_vic ASC
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -236,9 +239,10 @@ class Estadisticas extends Conexion
 										ON 			tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente) 
 										WHERE 		can_fecha 
 										BETWEEN 	? 
-										AND 		? 
+										AND 		?
+										AND			activo = ? 
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -255,8 +259,9 @@ class Estadisticas extends Conexion
 										WHERE 		can_fecha 
 										BETWEEN 	? 
 										AND 		? 
+										AND 		activo = ?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -276,9 +281,10 @@ class Estadisticas extends Conexion
 										ON				tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente)
 										WHERE 			can_fecha 
 										BETWEEN			?
-										AND 			?										
+										AND 			?
+										AND				activo = ?										
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -302,9 +308,10 @@ class Estadisticas extends Conexion
 													WHERE 		can_fecha 
 													BETWEEN 		?
 													AND 			?
+													AND 			activo = ?
 													) AS tabla_Z	
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -336,10 +343,11 @@ class Estadisticas extends Conexion
 			$sql = $this->dbh->prepare(" 	SELECT 		can_fecha,MONTH(can_fecha)Mes , COUNT(*) AS Numero
 											FROM 		tbl_can_expediente
 											WHERE		can_fecha BETWEEN ? AND ?
+											AND			activo=?
 											GROUP BY 	Mes
 											ORDER BY	Mes ASC;
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -354,8 +362,9 @@ class Estadisticas extends Conexion
 										WHERE 		can_fecha 
 										BETWEEN 	? 
 										AND 		? 
+										AND			activo = ?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -515,10 +524,11 @@ class Estadisticas extends Conexion
 										ON 			tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
 										WHERE 		c4_fecha_inicio
 										BETWEEN 	? AND ?
+										AND 		activo = ?
 										GROUP BY 	municipio
 										ORDER BY	municipio
 										");
-		if ($sql->execute(array($fecha_in,$fecha_fin))) {
+		if ($sql->execute(array($fecha_in,$fecha_fin,1))) {
 			return 'consul_mun_c4';
 			
 		} else
@@ -536,10 +546,12 @@ class Estadisticas extends Conexion
 											ON 			tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
 											WHERE 		c4_fecha_inicio
 											BETWEEN 	? AND ?
+											AND 		activo = ?
+
 											GROUP BY 	municipio
 											ORDER BY	municipio
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 		 
@@ -557,8 +569,9 @@ class Estadisticas extends Conexion
 										WHERE 		c4_fecha_inicio 
 										BETWEEN 	? 
 										AND 		? 
+										AND 		activo = ?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -575,10 +588,13 @@ class Estadisticas extends Conexion
 										FROM 	(tbl_c4_victimas
 									LEFT JOIN	tbl_c4_expedientes
 										ON		tbl_c4_victimas.c4_exp_folio_victima=tbl_c4_expedientes.c4_exp_folio)
-										WHERE	c4_fecha_inicio BETWEEN  ? AND ?
+										WHERE	c4_fecha_inicio 
+										BETWEEN ?
+										AND 	?
+										AND		activo = ?	
 									GROUP BY 	c4_sexo_victima	
 										");
-			if ($sql->execute(array($fecha_in,$fecha_fin))) {
+			if ($sql->execute(array($fecha_in,$fecha_fin,1))) {
 				return 'consul_genero_c4';
 				
 			} else
@@ -593,10 +609,13 @@ class Estadisticas extends Conexion
 											FROM 	(tbl_c4_victimas
 										LEFT JOIN	tbl_c4_expedientes
 											ON		tbl_c4_victimas.c4_exp_folio_victima=tbl_c4_expedientes.c4_exp_folio)
-											WHERE	c4_fecha_inicio BETWEEN  ? AND ?
+											WHERE	c4_fecha_inicio 
+											BETWEEN ? 
+											AND 	?
+											AND 	activo = ?
 										GROUP BY 	c4_sexo_victima	
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 		 
@@ -614,8 +633,9 @@ class Estadisticas extends Conexion
 										WHERE 		c4_fecha_inicio
 										BETWEEN 	? 
 										AND 		? 
+										AND 		activo = ?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -637,10 +657,11 @@ class Estadisticas extends Conexion
 										WHERE 			c4_fecha_inicio 
 										BETWEEN			?
 										AND 			?
+										AND 			activo = ?
 										GROUP BY 		Edad
 										ORDER BY 		Edad ASC
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -657,10 +678,37 @@ class Estadisticas extends Conexion
 										WHERE 		c4_fecha_inicio 
 										BETWEEN 	? 
 										AND 		? 
+										AND 		activo = ?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
+
+	}
+	public function lista_consulta_edades_mayores_c4($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+		
+			$sql = $this->dbh->prepare("SELECT 			c4_edad_victima AS Edad 
+														,COUNT(*) AS Numero,
+														c4_per_tercera_edad,
+														c4_per_violencia,
+														c4_per_discapacidad,
+														c4_per_indigena,
+														c4_per_transgenero
+										FROM 			(tbl_c4_victimas
+										LEFT JOIN		tbl_c4_expedientes
+										ON				tbl_c4_victimas.c4_exp_folio_victima=tbl_c4_expedientes.c4_exp_folio)
+										WHERE 			c4_fecha_inicio 
+										BETWEEN			?
+										AND 			?
+										AND 			activo = ?
+										
+										");
+			$sql->execute(array($fecha_in,$fecha_fin,1));
+			$row = $sql->fetchAll();
+			return $row;
 
 	}
 	public function obtener_total_edades_mayores_c4($fecha_in,$fecha_fin)
@@ -675,8 +723,9 @@ class Estadisticas extends Conexion
 										WHERE 		c4_fecha_inicio 
 										BETWEEN 	? 
 										AND 		? 
+										AND 		activo = ? 
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -686,13 +735,16 @@ class Estadisticas extends Conexion
 		//  print_r($dato);
 		//  die();
 		
-			$sql = $this->dbh->prepare("SELECT can_fecha,MONTH(can_fecha)Mes , COUNT(*) AS Numero
+			$sql = $this->dbh->prepare("SELECT 	can_fecha,MONTH(can_fecha)Mes , COUNT(*) AS Numero
 										FROM 	tbl_can_expediente
-										WHERE can_fecha BETWEEN ? AND ?
+										WHERE 	can_fecha 
+										BETWEEN ? 
+										AND 	?
+										AND 	?
 										GROUP BY 	Mes
 										ORDER BY	Mes
 										");
-		if ($sql->execute(array($fecha_in,$fecha_fin))) {
+		if ($sql->execute(array($fecha_in,$fecha_fin,1))) {
 			return 'consul_mes_c4';
 			
 		} else
@@ -707,10 +759,11 @@ class Estadisticas extends Conexion
 			$sql = $this->dbh->prepare(" 	SELECT 		c4_fecha_inicio,MONTH(c4_fecha_inicio)Mes , COUNT(*) AS Numero
 											FROM 		tbl_c4_expedientes
 											WHERE		c4_fecha_inicio BETWEEN ? AND ?
+											AND 		activo = ?
 											GROUP BY 	Mes
 											ORDER BY	Mes ASC;
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -725,8 +778,10 @@ class Estadisticas extends Conexion
 										WHERE 		c4_fecha_inicio 
 										BETWEEN 	? 
 										AND 		? 
+										AND			activo = ?
+										
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -745,9 +800,10 @@ class Estadisticas extends Conexion
 										LEFT JOIN  	cat_tipos_delitos
 										ON 			tbl_c4_delitos_victimas.c4_delito=cat_tipos_delitos.id_delito)
 										WHERE 		c4_fecha_inicio BETWEEN ? AND ?
+										AND 		activo = ?
 										GROUP BY 	delito
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			
 			return $row;
@@ -768,8 +824,9 @@ class Estadisticas extends Conexion
 										WHERE 		c4_fecha_inicio 
 										BETWEEN 	? 
 										AND 		? 
+										AND			activo = ?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -789,9 +846,10 @@ class Estadisticas extends Conexion
 										ON				tbl_c4_victimas.c4_exp_folio_victima=tbl_c4_expedientes.c4_exp_folio)
 										WHERE 			c4_fecha_inicio 
 										BETWEEN			?
-										AND 			?										
+										AND 			?
+										AND 			activo = ?										
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -815,9 +873,10 @@ class Estadisticas extends Conexion
 													WHERE 		c4_fecha_inicio 
 													BETWEEN 		?
 													AND 			?
+													AND 		activo = ?
 													) AS tabla_Z	
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -831,9 +890,10 @@ class Estadisticas extends Conexion
 										FROM			tbl_can_expediente
 										WHERE 			can_fecha 
 										BETWEEN			?
-										AND 			?										
+										AND 			?	
+										AND				activo = ?									
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -847,9 +907,10 @@ class Estadisticas extends Conexion
 										FROM			tbl_c4_expedientes
 										WHERE 			c4_fecha_inicio
 										BETWEEN			?
-										AND 			?										
+										AND 			?	
+										AND 			activo =?									
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 

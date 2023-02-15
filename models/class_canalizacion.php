@@ -44,6 +44,41 @@ class Canalizacion extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
+	public function lista_can_inactivas()
+	{
+
+		$sql = $this->dbh->prepare("
+									SELECT	
+											id,
+											id_canalizacion,
+											can_numero,
+											can_numero_oficio,
+											date_format(can_fecha,'%d-%m-%Y') as can_fecha,
+											activo,
+											can_otros_estados,
+											can_estado,
+											can_municipio,
+											can_mun_edo,
+											can_via_rec,
+											can_folio_expediente,
+											anio,estatus_expediente,
+											can_folio,
+											tbl_can_expediente.can_estado,
+											tbl_can_expediente.can_municipio,
+											cat_estados.estado,
+											cat_municipios.municipio
+									FROM 	((tbl_can_expediente
+							LEFT 	JOIN 	cat_estados 
+									ON 		tbl_can_expediente.can_estado = cat_estados.id_estado )
+							LEFT 	JOIN 	cat_municipios
+									ON 		tbl_can_expediente.can_municipio = cat_municipios.id_municipio)
+									WHERE 	activo = ?
+									");
+
+		$sql->execute(array(0));
+		$row = $sql->fetchAll();
+		return $row;
+	}
 
 	//Generar
 	public function gen_folio_can($tabla, $id)
@@ -673,8 +708,6 @@ class Canalizacion extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
-
-
 	public function editar_reportante($id, $can_inst_rep, $can_nom_rep, $nombre_creador)
 	{
 		$sql = $this->dbh->prepare("UPDATE 	tbl_can_reportante
@@ -721,9 +754,6 @@ class Canalizacion extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
-
-
-
 	public function editar_victima_can($id, $can_edad_vic, $can_nom_vic, $can_per_tercera_edad, $can_per_violencia, $can_per_discapacidad, $can_per_indigena, $can_per_transgenero, $can_sexo_victima, $nombre_creador)
 	{
 		$conn = $this->dbh;

@@ -170,10 +170,11 @@ $queryMun = "	SELECT 			c4_fecha_inicio,count(*) as Numero
 				FROM			tbl_c4_expedientes
 				WHERE 			c4_fecha_inicio 
 				BETWEEN			?
-				AND 			?		
+				AND 			?
+				AND				activo = ?		
 ";
 $stmtMun = $conexion->dbh->prepare($queryMun);
-$stmtMun->execute(array($desde,$hasta));
+$stmtMun->execute(array($desde,$hasta,1));
 
 
 
@@ -214,11 +215,12 @@ $queryEdad = "	SELECT 			c4_edad_victima AS Edad ,COUNT(*) AS Numero
 				WHERE 			c4_fecha_inicio 
 				BETWEEN			?
 				AND 			?
+				AND 			activo = ?
 				GROUP BY 		c4_edad_victima
 				ORDER BY 		c4_edad_victima ASC
 				";
 $stmtEdad = $conexion->dbh->prepare($queryEdad);
-$stmtEdad->execute(array($desde,$hasta));
+$stmtEdad->execute(array($desde,$hasta,1));
 
 $queryTotal = "	SELECT 		sum(Case When c4_edad_victima <=18 then 1 ELSE 0 END) AS Total
 				FROM 		(tbl_c4_victimas 
@@ -227,9 +229,10 @@ $queryTotal = "	SELECT 		sum(Case When c4_edad_victima <=18 then 1 ELSE 0 END) A
 				WHERE 		c4_fecha_inicio 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo =?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtEdad->rowCount() > 0) {
 	while ($edades = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
@@ -272,11 +275,12 @@ $queryEdad = "	SELECT 			c4_edad_victima AS Edad ,COUNT(*) AS Numero
 				WHERE 			c4_fecha_inicio 
 				BETWEEN			?
 				AND 			?
+				AND 			activo =?
 				GROUP BY 		c4_edad_victima
 				ORDER BY 		c4_edad_victima ASC
 				";
 $stmtEdad = $conexion->dbh->prepare($queryEdad);
-$stmtEdad->execute(array($desde,$hasta));
+$stmtEdad->execute(array($desde,$hasta,1));
 
 $queryTotal = "	SELECT 		sum(Case When c4_edad_victima >=19 then 1 ELSE 0 END) AS Total
 				FROM 		(tbl_c4_victimas 
@@ -284,10 +288,11 @@ $queryTotal = "	SELECT 		sum(Case When c4_edad_victima >=19 then 1 ELSE 0 END) A
 				ON 			tbl_c4_victimas.c4_exp_folio_victima=tbl_c4_expedientes.c4_exp_folio) 
 				WHERE 		c4_fecha_inicio 
 				BETWEEN 	? 
-AND 		? 
+				AND 		?
+				AND 		activo =? 
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtEdad->rowCount() > 0) {
 	while ($edades = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
@@ -336,10 +341,10 @@ $queryPerVul = "SELECT 			sum(Case When 	c4_per_tercera_edad then 1 ELSE 0 END) 
 				WHERE 			c4_fecha_inicio 
 				BETWEEN			?
 				AND 			?				
-
-";
+				AND 			activo = ?
+				";
 $stmtPerVul = $conexion->dbh->prepare($queryPerVul);
-$stmtPerVul->execute(array($desde,$hasta));
+$stmtPerVul->execute(array($desde,$hasta,1));
 
 $queryTotal = "	SELECT persona_tercera,persona_violencia,persona_discapacidad,persona_indigena,persona_transgenero,
 				(persona_tercera+persona_violencia+persona_discapacidad+persona_indigena+persona_transgenero) AS Total
@@ -355,10 +360,11 @@ $queryTotal = "	SELECT persona_tercera,persona_violencia,persona_discapacidad,pe
 					WHERE 		c4_fecha_inicio 
 					BETWEEN 		?
 					AND 			?
+					AND 			activo =?
 					) AS tabla_Z	
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 if ($stmtPerVul->rowCount() > 0) {
 	while ($perVul = $stmtPerVul->fetch(PDO::FETCH_ASSOC)) {
@@ -410,13 +416,16 @@ $queryGenero = "SELECT 		c4_sexo_victima As Genero,
 				FROM 		(tbl_c4_victimas
 				LEFT JOIN	tbl_c4_expedientes
 				ON			tbl_c4_victimas.c4_exp_folio_victima=tbl_c4_expedientes.c4_exp_folio)
-				WHERE		c4_fecha_inicio BETWEEN  ? AND ?
+				WHERE		c4_fecha_inicio 
+				BETWEEN  	? 
+				AND 		?
+				AND 		activo =?
 				GROUP BY 	c4_sexo_victima	
 
 			";
 //Se prepara la sentecia para hacer la busqueda en el servidor
 $stmtGenero = $conexion->dbh->prepare($queryGenero);
-$stmtGenero->execute(array($desde,$hasta));
+$stmtGenero->execute(array($desde,$hasta,1));
 
 $queryTotal = "	SELECT 		COUNT(*) AS Total 
 				FROM 		(tbl_c4_victimas 
@@ -425,9 +434,10 @@ $queryTotal = "	SELECT 		COUNT(*) AS Total
 				WHERE 		c4_fecha_inicio
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo =?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 
@@ -465,20 +475,24 @@ $pdf->Ln();
 
 $queryMes = "	SELECT 		c4_fecha_inicio,MONTH(c4_fecha_inicio)Mes , COUNT(*) AS Numero
 				FROM 		tbl_c4_expedientes
-				WHERE		c4_fecha_inicio BETWEEN ? AND ?
+				WHERE		c4_fecha_inicio 
+				BETWEEN 	? 
+				AND 		?
+				AND 		activo =?
 				GROUP BY 	Mes
 				ORDER BY	Mes ASC;
 			";
 $stmtMes = $conexion->dbh->prepare($queryMes);
-$stmtMes->execute(array($desde,$hasta));
+$stmtMes->execute(array($desde,$hasta,1));
 $queryTotal = "	SELECT 		COUNT(*) AS Total 
 				FROM 		tbl_c4_expedientes 
 				WHERE 		c4_fecha_inicio 
 				BETWEEN 	? 
 				AND 		? 
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 
@@ -524,11 +538,14 @@ $queryDelito = 	"	SELECT 		c4_delito,delito,
 					ON			tbl_c4_delitos_victimas.c4_exp_folio_delito=tbl_c4_expedientes.c4_exp_folio)
 					LEFT JOIN  	cat_tipos_delitos
 					ON 			tbl_c4_delitos_victimas.c4_delito=cat_tipos_delitos.id_delito)
-					WHERE 		c4_fecha_inicio BETWEEN ? AND ?
+					WHERE 		c4_fecha_inicio 
+					BETWEEN 	? 
+					AND 		?
+					AND			activo = ?
 					GROUP BY 	delito
 				";
 $stmtDelito = $conexion->dbh->prepare($queryDelito);
-$stmtDelito->execute(array($desde,$hasta));
+$stmtDelito->execute(array($desde,$hasta,1));
 
 
 
@@ -540,10 +557,11 @@ $queryTotal = "	SELECT 		COUNT(*) AS Total
 				ON 			tbl_c4_delitos_victimas.c4_delito=cat_tipos_delitos.id_delito)
 				WHERE 		c4_fecha_inicio 
 				BETWEEN 	? 
-AND 		? 
+				AND 		? 
+				AND 		activo =?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 if ($stmtDelito->rowCount() > 0) {
@@ -558,44 +576,6 @@ if ($stmtDelito->rowCount() > 0) {
 	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
 	$pdf->Ln();
 }
-
-//2159 mm x 2794 mm
-
-// // Datos por Municipio
-// $pdf->Ln();
-// $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
-// $pdf->SetTextColor(255);
-// $pdf->SetFont('Arial', 'B', 8);
-// $pdf->Cell(204, 5,  'Tabla de casos por Municipio', 1, 0, 'C', true);
-// $pdf->Ln();//Salto de Linea
-// $pdf->SetFont('Arial', 'B', 8);
-// $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
-// $pdf->SetTextColor(255);//Color del texto
-// $pdf->Cell(102, 5, utf8_decode('Municipio'), 1, 0, 'C', true);
-// $pdf->Cell(102, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
-// $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
-// $pdf->SetFillColor(255);
-// $pdf->SetTextColor(0);
-// $pdf->SetAligns(array('C','C'));
-// $pdf->Ln();
-
-// $queryMun = "";
-// $stmtMun = $conexion->dbh->prepare($queryMun);
-// $stmtMun->execute();
-
-// if ($stmtMun->rowCount() > 0) {
-// 	while ($municipio = $stmtMun->fetch(PDO::FETCH_ASSOC)) {
-//         $pdf->Row(array(utf8_decode($municipio[""]), utf8_decode($municipio[""])));
-// 	}
-	
-// 	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-// 	$pdf->Cell(102, 5,  $stmtMun->rowCount().' Municipios', 1, 0, 'C', true);
-// 	$pdf->Ln();
-// } else {
-// 	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-// 	$pdf->Ln();
-// }
-
 
 /// con true se indica que el archivo esta codificado en UTF-8
 $pdf->Output('Informe Sipina ' . date('d/m/Y').'.pdf', 'I', true); 
