@@ -103,7 +103,7 @@ class PDF extends FPDF{
 		$this->SetLeftMargin(5);
 		$this->SetY(20);
 		$this->SetFillColor(239, 239, 239);
-		$this->MultiCell(0, 5, (utf8_decode("Secretaría Ejecutiva del SIPINNA Estatal \r\n*Denuncias 089 recibidas en el C4 (Sin municipios)* \nSecretaría de Seguridad Pública\nNúm. de denuncias: $mes_desde de $anio_desde a $mes_hasta de $anio_hasta")), 0, 'C');
+		$this->MultiCell(0, 5, (utf8_decode("Secretaría Ejecutiva del SIPINNA Estatal \r\n*Denuncias 089 recibidas en el C4  \nSecretaría de Seguridad Pública\nNúm. de denuncias: $mes_desde de $anio_desde a $mes_hasta de $anio_hasta")), 0, 'C');
 		//$this->Text(175, 30, 'Fecha: ' . date('d/m/Y'));
 		$this->Ln();
 		/*$this->SetY(45);
@@ -129,6 +129,7 @@ class PDF extends FPDF{
 		$this->Image('../../../images/logo_corto.png', 0, $this->SetY(-20), 75, 20);
 	}
 }
+
 $Meses = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio','Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
 $mes_ex=explode("-",$_GET['desde']);
 $mes_desde=$Meses[$mes_ex['1']-1];
@@ -147,19 +148,20 @@ $pdf->SetY(42);//POsicion en Y de la hoja
 //Preparas la sentencia para mandar a traer los datos que se mostrararan en el PDF asi como la union de 2 tabalas
 //$sqlQuery = "SELECT usr.nombre, usr.apellidos, usr.email, usr.usuario, usr.departamento, usr.rol_id, r.rol FROM usuarios AS usr INNER JOIN roles AS r ON r.idRol = usr.rol_id  where id_usuario>0";
 
+
 // Datos por Municipio
 $pdf->SetX(50);
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(104, 5,  utf8_decode("Número de denuncias recibidas del mes de  $mes_desde de $anio_desde a $mes_hasta de $anio_hasta"), 1, 0, 'C', true);
+$pdf->Cell(115, 5,  utf8_decode("Número de denuncias recibidas del mes de  $mes_desde de $anio_desde a $mes_hasta de $anio_hasta"), 1, 0, 'C', true);
 $pdf->Ln();//Salto de Linea
 $pdf->SetX(50);
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
 $pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(104, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
-$pdf->SetWidths(array(104)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
+$pdf->Cell(115, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
+$pdf->SetWidths(array(115)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
 $pdf->SetFillColor(255);
 $pdf->SetAligns(array('C'));
 $pdf->SetTextColor(0);
@@ -171,7 +173,7 @@ $queryMun = "	SELECT 			c4_fecha_inicio,count(*) as Numero
 				WHERE 			c4_fecha_inicio 
 				BETWEEN			?
 				AND 			?
-				AND				activo = ?		
+				AND 			activo =?		
 ";
 $stmtMun = $conexion->dbh->prepare($queryMun);
 $stmtMun->execute(array($desde,$hasta,1));
@@ -215,7 +217,7 @@ $queryEdad = "	SELECT 			c4_edad_victima AS Edad ,COUNT(*) AS Numero
 				WHERE 			c4_fecha_inicio 
 				BETWEEN			?
 				AND 			?
-				AND 			activo = ?
+				AND 			activo =?
 				GROUP BY 		c4_edad_victima
 				ORDER BY 		c4_edad_victima ASC
 				";
@@ -229,7 +231,7 @@ $queryTotal = "	SELECT 		sum(Case When c4_edad_victima <=18 then 1 ELSE 0 END) A
 				WHERE 		c4_fecha_inicio 
 				BETWEEN 	? 
 				AND 		? 
-				AND 		activo =?
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
 $stmtTotal->execute(array($desde,$hasta,1));
@@ -288,8 +290,8 @@ $queryTotal = "	SELECT 		sum(Case When c4_edad_victima >=19 then 1 ELSE 0 END) A
 				ON 			tbl_c4_victimas.c4_exp_folio_victima=tbl_c4_expedientes.c4_exp_folio) 
 				WHERE 		c4_fecha_inicio 
 				BETWEEN 	? 
-				AND 		?
-				AND 		activo =? 
+				AND 		? 
+				AND 		activo =?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
 $stmtTotal->execute(array($desde,$hasta,1));
@@ -340,9 +342,10 @@ $queryPerVul = "SELECT 			sum(Case When 	c4_per_tercera_edad then 1 ELSE 0 END) 
 				ON				tbl_c4_victimas.c4_exp_folio_victima=tbl_c4_expedientes.c4_exp_folio)
 				WHERE 			c4_fecha_inicio 
 				BETWEEN			?
-				AND 			?				
-				AND 			activo = ?
-				";
+				AND 			?	
+				AND 			activo =?			
+
+";
 $stmtPerVul = $conexion->dbh->prepare($queryPerVul);
 $stmtPerVul->execute(array($desde,$hasta,1));
 
@@ -434,7 +437,7 @@ $queryTotal = "	SELECT 		COUNT(*) AS Total
 				WHERE 		c4_fecha_inicio
 				BETWEEN 	? 
 				AND 		? 
-				AND 		activo =?
+				AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
 $stmtTotal->execute(array($desde,$hasta,1));
@@ -489,7 +492,7 @@ $queryTotal = "	SELECT 		COUNT(*) AS Total
 				WHERE 		c4_fecha_inicio 
 				BETWEEN 	? 
 				AND 		? 
-				AND 		activo = ?
+				AND 		activo =?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
 $stmtTotal->execute(array($desde,$hasta,1));
@@ -541,7 +544,7 @@ $queryDelito = 	"	SELECT 		c4_delito,delito,
 					WHERE 		c4_fecha_inicio 
 					BETWEEN 	? 
 					AND 		?
-					AND			activo = ?
+					AND 		activo=?
 					GROUP BY 	delito
 				";
 $stmtDelito = $conexion->dbh->prepare($queryDelito);
@@ -576,6 +579,10 @@ if ($stmtDelito->rowCount() > 0) {
 	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
 	$pdf->Ln();
 }
+
+//2159 mm x 2794 mm
+
+
 
 /// con true se indica que el archivo esta codificado en UTF-8
 $pdf->Output('Informe Sipina ' . date('d/m/Y').'.pdf', 'I', true); 

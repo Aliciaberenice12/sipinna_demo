@@ -17,7 +17,7 @@
                                 <small id="helpCamposObligatorios" class="form-text text-muted">*Campos Obligatorios</small>
 
                             </div>
-                          
+
                             <div class="col-md-6">
                                 <label for="estatus">
                                     <strong>Estatus del caso* </strong>
@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="col-md-6">
 
-                                    <label for="can_ruta_sol_oficio">Archivo Solicitud de Canalización *</label>
+                                    <label for="can_ruta_sol_oficio">Archivo Solicitud de Canalización </label>
                                     <input type="file" class="form-control" id="can_ruta_sol_oficio" name="can_ruta_sol_oficio" accept="application/pdf">
                                     <input type="hidden" name="can_ruta_sol_oficio_edit" id="can_ruta_sol_oficio_edit" value="0">
                                     <span class="archivo_subido_local" id="imagen_subida_can"></span>
@@ -147,6 +147,7 @@
                                     <input id="can_mun_edo" name="can_mun_edo" class="form-control" maxlength="30">
                                     </input>
                                 </div>
+                                
                                 <input type="hidden" name="id_caso_reportado" id="id_caso_reportado" value="0">
 
                                 <div class="col-md-12">
@@ -233,11 +234,11 @@
                                         <div class="col-md-2">
                                             <label for="can_edad_vic">Edad(Años):</label>
                                             <select name="can_edad_vic" id="can_edad_vic" class="form-select">
-                                                <option value="0" >Menos de 1 año</option> 
+                                                <option value="0">Menos de 1 año</option>
                                                 <?php
-                                                    for ($i = 1; $i <= 100; $i++) {
-                                                        echo "<option value=" . $i . ">" . $i . " Años</option>";
-                                                    }
+                                                for ($i = 1; $i <= 100; $i++) {
+                                                    echo "<option value=" . $i . ">" . $i . " Años</option>";
+                                                }
                                                 ?>
                                             </select>
                                         </div>
@@ -248,16 +249,6 @@
                                             <small id="help_nom_vic" class="form-text text-muted">*Solo Acepta letras</small>
 
                                         </div>
-                                        <!-- <div class="col-md-6">
-                                            <label for="can_delito">Tipo de Delito:</label>
-                                            <select name="can_delito[]" size="5" id="can_delito" class="form-select" multiple>
-                                            </select>
-                                            <small id="can_delito" class="form-text text-muted">Seleccione min. 1 max. 4</small>
-
-
-                                        </div> -->
-
-                                        
                                         <div class="col-md-6">
                                             <label for="can_der_vul_vic">Derechos Vulnerados o restringidos:</label>
                                             <select name="can_der_vul_vic[]" id="can_der_vul_vic" class="form-select">
@@ -508,79 +499,63 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
-                <div class="container-fluid">
-                    <div class="row">
+                <div class="card" id="avance">
+                    <div class="card-header">
                         <div class="col-md-12">
                             <h5 align="center"><strong>Avances del caso, indicando fecha y actividades específicas.</strong></h5>
-                            <br>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="col-md-6">
-
-                            </div>
-                            <div class="col-md-6">
-                                <button type="button" id="agregar_avance" class="btn btn-success" aria-label="limpiar_modal" onclick="fn_modal_avance(2);">
-                                    <i class="bi bi-plus"></i>
-                                    <span>Agregar</span>
-                                </button>
-                            </div>
-                            <p></p>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 id="crear_nuevo_avance">
-                                    <strong>Agregar Nuevo avance</strong>
-
-                                </h5>
-                                <h5 id="editar_avance">
-                                    <strong>Editar </strong>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row col-md-12" id="avance" name="avance">
-                                    <div class="col-md-12">
-                                        <input type="hidden" class="form-control" name="id_can_avance" id="id_can_avance" value="0" disabled>
-                                        <input type="hidden" class="form-control" name="folio_can" id="folio_can" value="0">
-
-                                    </div>
-
-
-                                    <div class="col-md-4">
-                                        <label>Fecha:</label>
-                                        <input type="date" class="form-control" id="can_fecha_avance" name="can_fecha_avance"></input>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Actividades específicas:</label>
-                                        <textarea name="textarea" id="can_desc_avance" name="can_desc_avance" class="form-control" rows="2" maxlength="500" > </textarea>
-
-                                    </div>
-                                    <div class="col-md-2">
-                                        <br>
-                                        <button type="button" class="btn btn-success" onclick="fun_agregar_avance();">Agregar </button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div class="card" id="listado_avances">
-                            <div class="card-body">
-                                <div id="nombre_listado">
-                                </div>
-                                <h5 align="certer">Listado de Avances Registrados</h5>
-                                <div id="ver_lista_avances"></div>
-
-                            </div>
-
                         </div>
 
                     </div>
-                </div>
+                    <div class="card-body">
+                        <div class="row col-md-12">
+                            <div class="col-md-6" align="left">
+                                <h5 align="center" id="crear_nuevo_avance"><strong>Agregar Nuevo avance</strong></h5>
+                                <h5 align="center" id="editar_avance"><strong>Editar Avance</strong></h5>
+                            </div>
+                          
+                            <div class="col-md-6" align="right">
+                                <button type="button" id="agregar_avance" class="btn btn-success" aria-label="limpiar_modal" onclick="fn_modal_avance(2);">
+                                    <i class="bi bi-plus"></i>
+                                    Agregar Nuevo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row col-md-12" id="avance" name="avance">
+                            <div class="col-md-12">
+                                <input type="hidden" class="form-control" name="id_can_avance" id="id_can_avance" value="0" disabled>
+                                <input type="hidden" class="form-control" name="folio_can" id="folio_can" value="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Fecha:</label>
+                                <input type="date" class="form-control" id="can_fecha_avance" name="can_fecha_avance"></input>
+                            </div>
 
+                            <div class="col-md-8">
+                                <label>Actividades específicas:</label>
+                                <textarea name="textarea" id="can_desc_avance" name="can_desc_avance" class="form-control" rows="2" maxlength="500"> </textarea>
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success" onclick="fun_agregar_avance();">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" id="listado_avance">
+                    <div class="card-header">
+                        <div class="col-md-12" align="certer">
+                            <h5 ><strong>Listado de Avances Registrados</strong></h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        
+                         <div id="ver_lista_avances"></div>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>

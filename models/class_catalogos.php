@@ -12,7 +12,10 @@ class Catalogos extends Conexion
     }
     public function lista_delitos()    {
 
-        $sql = $this->dbh->prepare("select id_delito,delito from cat_tipos_delitos");
+        $sql = $this->dbh->prepare("SELECT 		id_delito,delito 
+									FROM 		cat_tipos_delitos
+									ORDER BY 	id_delito
+									 ");
         $sql->execute(array());
         $row = $sql->fetchAll();
         return $row;

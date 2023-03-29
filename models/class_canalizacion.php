@@ -79,6 +79,25 @@ class Canalizacion extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
+	//Bitacora 
+	public function bitacora_canalizacion($mensaje, $numafec)
+	{
+		if (isset($_SESSION["nombre"]))
+			$usuario = $_SESSION["nombre"];
+		else
+			$usuario = 'Sin sesión activa en ese momento';
+
+		$ip = $_SERVER["REMOTE_ADDR"];
+		
+		$sql = $this->dbh->prepare("INSERT INTO tbl_bitacora_can
+												(usuario,
+												fecha,
+												hora,
+												accion,
+												num,
+												ip) VALUES(?,?,?,?,?,?)");
+		$sql->execute(array($usuario, date('Y-m-d'), date('H:i:s'), $mensaje, $numafec, $ip));
+	}
 
 	//Generar
 	public function gen_folio_can($tabla, $id)
@@ -285,26 +304,7 @@ class Canalizacion extends Conexion
 					}
 
 					$last_id = $conn->lastInsertId();
-					// $sql6   = $conn->prepare("INSERT INTO 	tbl_can_delitos_victimas
-					// 										(can_exp_folio_delito,
-					// 										can_delito,
-					// 										can_numero_delitos,
-					// 										can_id_victima,
-					// 										can_created_by)
-					// 								VALUES	(?,?,?,?,?)");
-					// $sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
-					// $sql6->bindParam(2, $row["can_delito"], PDO::PARAM_STR, 11);
-					// $sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
-					// $sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
-					// $sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
-					// $sql6->execute();
-					// if ($last_2 = $conn->lastInsertId() > 0) {
-					// } else {
-					// 	$conn->rollback();
-					// 	$estatus = 'Error al registrar Delito';
-					// 	break;
-					// }
-
+					
 					$sql7= $conn->prepare("INSERT INTO 			tbl_can_der_vul_victima
 																(can_exp_folio_derecho,
 																can_der_vul_vic,
@@ -326,6 +326,7 @@ class Canalizacion extends Conexion
 			}
 
 			if ($last_id = $conn->lastInsertId() > 0) {
+				$this->bitacora_canalizacion('Expediente registrado ' . $can_folio_expediente, $conn->lastInsertId());
 				$conn->commit();
 				$estatus = 'ok';
 			} else {
@@ -493,27 +494,7 @@ class Canalizacion extends Conexion
 					}
 
 					$last_id = $conn->lastInsertId();
-					
-					
-					// $sql6   = $conn->prepare("INSERT INTO 	tbl_can_delitos_victimas
-					// 										(can_exp_folio_delito,
-					// 										can_delito,
-					// 										can_numero_delitos,
-					// 										can_id_victima,
-					// 										can_created_by)
-					// 								VALUES	(?,?,?,?,?)");
-					// $sql6->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
-					// $sql6->bindParam(2, $row["can_delito"], PDO::PARAM_STR, 11);
-					// $sql6->bindParam(3, $row["can_num_del"], PDO::PARAM_INT, 11);
-					// $sql6->bindParam(4, $last_id, PDO::PARAM_INT, 11);
-					// $sql6->bindParam(5, $nombre_creador, PDO::PARAM_STR, 30);
-					// $sql6->execute();
-					// if ($last_2 = $conn->lastInsertId() > 0) {
-					// } else {
-					// 	$conn->rollback();
-					// 	$estatus = 'Error_Delito';
-					// 	break;
-					// }
+		
 
 					$sql7= $conn->prepare("INSERT INTO 			tbl_can_der_vul_victima
 																(can_exp_folio_derecho,
@@ -536,6 +517,8 @@ class Canalizacion extends Conexion
 			}
 
 			if ($last_id = $conn->lastInsertId() > 0) {
+				$this->bitacora_canalizacion('Expediente  registrado ' . $can_folio_expediente, $conn->lastInsertId());
+				
 				$conn->commit();
 				$estatus = 'ok';
 			} else {
@@ -550,8 +533,7 @@ class Canalizacion extends Conexion
 		return $estatus;
 	}
 	
-	public function editar_canalizacion($can_via_rec, $can_numero, $can_folio, $can_numero_oficio,$can_pais,
-	$can_otros_estados,$can_estado, $can_municipio, $can_mun_edo,$can_fecha,$estatus_exp,$nom_arc,$nombre_creador,$id)
+	public function editar_canalizacion($can_via_rec, $can_numero, $can_folio, $can_numero_oficio,$can_pais,$can_otros_estados,$can_estado, $can_municipio, $can_mun_edo,$can_fecha,$estatus_exp,$nom_arc,$nombre_creador,$id)
 	{
 		$sql = $this->dbh->prepare("UPDATE 	tbl_can_expediente
 							 		SET		can_via_rec=?,
@@ -573,6 +555,8 @@ class Canalizacion extends Conexion
 			$can_via_rec, $can_numero, $can_folio, $can_numero_oficio,$can_pais,
 			$can_otros_estados,$can_estado, $can_municipio, $can_mun_edo,$can_fecha,$estatus_exp,$nom_arc,$nombre_creador,$id
 		))) {
+			$this->bitacora_canalizacion('Expediente editado ' . $id, $id);
+
 			return 'editado';
 		} else
 			return 'error';
@@ -617,6 +601,7 @@ class Canalizacion extends Conexion
 											descripcion_elimina=?
 									WHERE 	id = ?");
 		if ($sql->execute(array(0, $desc_elimina, $id))) {
+			$this->bitacora_canalizacion('Expediente deshabilitado ' . $id, $id);
 
 			return 'ok';
 		} else
@@ -625,17 +610,22 @@ class Canalizacion extends Conexion
 	//Registrar Caso
 	public function obtener_caso_reportado($folio_exp)
 	{
-		$sql = $this->dbh->prepare(
-			"select id_caso_reportado,can_des_caso,can_gest_caso,exp_id_caso_reportado,estatus_caso,ins_con_hechos
-			 from tbl_can_casos_reportados where exp_id_caso_reportado = ?"
-		);
+		$sql = $this->dbh->prepare("SELECT 	id_caso_reportado,
+											can_des_caso,
+											can_gest_caso,
+											exp_id_caso_reportado,
+											estatus_caso,
+											ins_con_hechos
+			 						FROM  	tbl_can_casos_reportados 
+									WHERE	exp_id_caso_reportado = ?
+									");
 
 		$sql->execute(array($folio_exp));
 		$row = $sql->fetchAll();
 		return $row;
 	}
 
-	public function editar_caso_reportado($id, $can_des_suncita_rep, $can_ges_reporte, $ins_con_hechos, $nombre_creador)
+	public function editar_caso_reportado($id,$can_des_suncita_rep, $can_ges_reporte, $ins_con_hechos, $nombre_creador)
 	{
 		try {
 			$sql = $this->dbh->prepare("UPDATE	tbl_can_casos_reportados 
@@ -716,6 +706,7 @@ class Canalizacion extends Conexion
 											 can_update_by=?
 									WHERE	id_reportante= ?");
 		if ($sql->execute(array($can_inst_rep, $can_nom_rep, $nombre_creador, $id))) {
+			$this->bitacora_canalizacion('Dato de reportante editado ' . $id, $id);
 			return 'ok';
 		} else
 			return 'error';
@@ -742,8 +733,7 @@ class Canalizacion extends Conexion
 	}
 	public function obtener_dato_reportante($id)
 	{
-		$sql = $this->dbh->prepare(
-			"SELECT 		id_reportante,
+		$sql = $this->dbh->prepare("SELECT 		id_reportante,
 												can_inst_reportante,
 												can_nom_reportante
 									FROM 		tbl_can_reportante 
@@ -784,6 +774,7 @@ class Canalizacion extends Conexion
 				$id
 			))) {
 				$conn->commit();
+				$this->bitacora_canalizacion('Victima editada ' . $id, $id);
 				return 'ok';
 			} else
 				return 'error';
@@ -794,35 +785,7 @@ class Canalizacion extends Conexion
 
 		return $estatus;
 	}
-	public function editar_delito_victima_can($id_del_victima, $delito,$num_del, $nombre_creador)
-	{
-		$conn = $this->dbh;
-		$conn->beginTransaction();
-		$estatus2 = '';
-		try {
-			
-			$sql = $conn->prepare("UPDATE 	tbl_can_delitos_victimas
-									SET 	can_delito=?,
-											can_numero_delitos=?,
-											can_update_by=?
-									WHERE	id_del_victima= ?");
-			if ($sql->execute(array(
-				$delito,
-				$num_del,	
-				$nombre_creador,
-				$id_del_victima
-			))) {
-				$conn->commit();
-				return 'ok';
-			} else
-				return 'error';
-		} catch (PDOException $e) {
 
-			$estatus = $e;
-		}
-
-		return $estatus;
-	}
 	public function editar_derecho_victima_can($id_der_victima, $derecho, $nombre_creador)
 	{
 		$conn = $this->dbh;
@@ -839,6 +802,7 @@ class Canalizacion extends Conexion
 				$id_der_victima
 			))) {
 				$conn->commit();
+				$this->bitacora_canalizacion('Derecho de victima editada ' . $id_der_victima, $id_der_victima);
 				return 'ok';
 			} else
 				return 'error';
@@ -882,8 +846,7 @@ class Canalizacion extends Conexion
 	}
 	public function lista_victimas($folio_exp)
 	{
-		$sql = $this->dbh->prepare("
-										SELECT	id_can_victima,
+		$sql = $this->dbh->prepare("SELECT		id_can_victima,
 												can_edad_vic,
 												can_nom_vic,
 												can_per_tercera_edad,
@@ -910,6 +873,7 @@ class Canalizacion extends Conexion
 	{
 
 		try {
+			
 			$sql   = $this->dbh->prepare("INSERT INTO 	tbl_can_avances
 														(
 														can_fecha_avance,
@@ -926,6 +890,7 @@ class Canalizacion extends Conexion
 
 
 			if ($sql->execute()) {
+
 				$estatus = 'ok';
 			} else
 				$estatus = 'error_registro';
@@ -981,6 +946,8 @@ class Canalizacion extends Conexion
 											can_update_by=?
 									WHERE 	id_can_avance= ?");
 		if ($sql->execute(array($can_fecha_avance, $can_desc_avance,$folio_can,$nombre_creador,$id))) {
+			$this->bitacora_canalizacion('Derecho editada ' . $id, $id);
+
 			return 'editado';
 		} else
 			return 'error';
@@ -990,28 +957,28 @@ class Canalizacion extends Conexion
 	//catalogos
 	public function fn_lista_municipios()
 	{
-		$sql = $this->dbh->prepare("select id_municipio, municipio FROM cat_municipios GROUP BY id_municipio");
+		$sql = $this->dbh->prepare("SELECT id_municipio, municipio FROM cat_municipios GROUP BY id_municipio ORDER BY municipio");
 		$sql->execute();
 		$row = $sql->fetchAll();
 		return $row;
 	}
 	public function fn_lista_estados()
 	{
-		$sql = $this->dbh->prepare("select id_estado, estado FROM cat_estados GROUP BY id_estado");
+		$sql = $this->dbh->prepare("SELECT id_estado, estado FROM cat_estados GROUP BY id_estado");
 		$sql->execute();
 		$row = $sql->fetchAll();
 		return $row;
 	}
-	public function fn_lista_delitos()
-	{
-		$sql = $this->dbh->prepare("select id_delito, delito FROM cat_tipos_delitos GROUP BY id_delito");
-		$sql->execute();
-		$row = $sql->fetchAll();
-		return $row;
-	}
+	// public function fn_lista_delitos()
+	// {
+	// 	$sql = $this->dbh->prepare("select id_delito, delito FROM cat_tipos_delitos GROUP BY id_delito");
+	// 	$sql->execute();
+	// 	$row = $sql->fetchAll();
+	// 	return $row;
+	// }
 	public function fn_lista_derechos()
 	{
-		$sql = $this->dbh->prepare("select id_derecho, derecho FROM cat_derechos_vulnerados GROUP BY id_derecho");
+		$sql = $this->dbh->prepare("SELECT id_derecho, derecho FROM cat_derechos_vulnerados GROUP BY id_derecho ORDER BY derecho");
 		$sql->execute();
 		$row = $sql->fetchAll();
 		return $row;

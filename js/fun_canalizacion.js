@@ -119,19 +119,20 @@ $(document).ready(function () {
         const longitudAct = target.value.length;
         contador.innerHTML = `${longitudAct}/${longitudMax}`;
     });
-
+   
 });
 
 //Canalizacion
 function mod_canalizacion(origen, id, folio_exp) {
     fn_carga_municipios('can_municipio');
     fn_carga_estados('can_estado');
-    fn_carga_delitos('can_delito');
+    // fn_carga_delitos('can_delito');
     fn_carga_derechos('can_der_vul_vic');
 
 
     if (origen == 1)//Agregar
     {
+        $('#imagen_subida_can').hide();
         $('#tit_mod_can').html('Crear Canalización');
         carrito_reportante(3, 0);
         carrito_victima(3, 0);
@@ -144,7 +145,7 @@ function mod_canalizacion(origen, id, folio_exp) {
         $('#id_canalizacion').val(0);
         $('#id_solicitante').val(0);
         $('#id_reportante').val(0);
-        $('#can_numero').val("");
+        $('#can_numero').val("");        
         $('#can_num_oficio').val("");
         $('#can_fecha').val("");
         $('#can_estado').val("");
@@ -629,6 +630,9 @@ function fun_agregarCanalizacion() {
             fn_listar_canalizaciones();
 
         }
+        else if (result.estatus === "arch_pesado") {
+            Swal.fire({ icon: 'error', title: 'Archivo pdf Muy pesado Expediente no guardado.', showConfirmButton: false, timer: 2000 });
+        }
         else {
             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
 
@@ -907,7 +911,7 @@ function fn_modal_avance(origen, folio_exp, id_avance) {
             $('#folio_can').val(folio_exp);
             $('#can_fecha_avance').val(res.can_fecha_avance);
             $('#can_desc_avance').val(res.can_desc_avance);
-            $('#avancesCanalizacion').modal('show');
+         
             $("#crear_nuevo_avance").hide();
             $("#editar_avance").show();
         });
@@ -1004,7 +1008,8 @@ function fn_listar_avances(folio_exp) {
         });
     });
 }
-function fn_eliminar_avance(id, can_desc_avance) {
+function fn_eliminar_avance(id, can_desc_avance,folio_exp) {
+    folio_can = $.trim($('#folio_can').val());
     swal.fire({
         title: '¿Estás seguro?',
         text: can_desc_avance + ' será eliminado',
@@ -1016,7 +1021,7 @@ function fn_eliminar_avance(id, can_desc_avance) {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.value) {
-            datos = { func: 'fn_eliminar_avance', id: id, can_desc_avance: can_desc_avance };
+            datos = { func: 'fn_eliminar_avance', id: id, can_desc_avance: can_desc_avance,folio_can:folio_can };
 
             $.ajax({
                 url: "../controllers/fun_canalizacion.php",
@@ -1028,7 +1033,7 @@ function fn_eliminar_avance(id, can_desc_avance) {
                     Swal.fire({ icon: 'success', title: 'Eliminado correctamente', showConfirmButton: false, timer: 1500 });
                     var tabla = $('#tbl_avance').DataTable();
                     tabla.row($('#l_avance' + id)).remove().draw();
-                    fn_listar_avances();
+                    fn_listar_avances(folio_can);
                     fn_modal_avance(2)
 
                 }
@@ -1054,13 +1059,13 @@ function fn_carga_estados(combo) {
         $('#' + combo).html(data);
     });
 }
-function fn_carga_delitos(combo) {
-    $.post("../controllers/fun_canalizacion.php", { func: 'fn_carga_delitos' }, function (data) {
-        $('#' + combo).html(data);
-        $('#can_delito_edit').html(data);
+// function fn_carga_delitos(combo) {
+//     $.post("../controllers/fun_canalizacion.php", { func: 'fn_carga_delitos' }, function (data) {
+//         $('#' + combo).html(data);
+//         $('#can_delito_edit').html(data);
 
-    });
-}
+//     });
+// }
 function fn_carga_derechos(combo) {
     $.post("../controllers/fun_canalizacion.php", { func: 'fn_carga_derechos' }, function (data) {
         $('#' + combo).html(data);
@@ -1115,13 +1120,6 @@ function carrito_victima(evento, id) {
             $('#can_nom_vic').focus();
             return false;
         }
-        // can_delito = $.trim($('#can_delito').val());
-        // if (can_delito == '') {
-        //     toastr.options.timeOut = 2500;
-        //     toastr.warning('Seleccionar Delito!');
-        //     $('#can_delito').focus();
-        //     return false;
-        // }
 
         can_der_vul_vic = $.trim($('#can_der_vul_vic').val());
         if (can_der_vul_vic == '') {

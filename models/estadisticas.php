@@ -29,7 +29,7 @@ class Estadisticas extends Conexion
 		$sql->execute(array());
 		$row = $sql->fetchAll();
 		return $row;
-	}
+	} 
 	public function con_ran_fec_sex($fecha_in,$fecha_fin)
 	{
 		//  print_r($dato);
@@ -384,10 +384,11 @@ class Estadisticas extends Conexion
 											ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
 											WHERE 		can_fecha 
 											BETWEEN 	? AND ?
+											AND 		activo=?
 											GROUP BY 	can_municipio	
 											ORDER BY	can_municipio
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -403,10 +404,11 @@ class Estadisticas extends Conexion
 										ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
 										WHERE 		can_fecha 
 										BETWEEN 	? AND ?
+										AND			activo = ?
 										GROUP BY 	municipio
 										ORDER BY	municipio
 										");
-		if ($sql->execute(array($fecha_in,$fecha_fin))) {
+		if ($sql->execute(array($fecha_in,$fecha_fin,1))) {
 			return 'consul_mun';
 			
 		} else
@@ -424,9 +426,10 @@ class Estadisticas extends Conexion
 										ON 			tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
 										WHERE 		can_fecha 
 										BETWEEN 	? 
-										AND 		? 
+										AND 		?
+										AND 		activo = ? 
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -438,16 +441,17 @@ class Estadisticas extends Conexion
 		//  print_r($dato);
 		//  die();
 		
-			$sql = $this->dbh->prepare(" 	SELECT 		can_pais,can_estado,estado,can_mun_edo,COUNT(*) AS Numero
+			$sql = $this->dbh->prepare(" 	SELECT 		can_pais,can_estado,estado,can_mun_edo,COUNT(*) AS Numero			
 											FROM 		(tbl_can_expediente
 											LEFT JOIN 	cat_estados
 											ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
 											WHERE 		can_fecha 
 											BETWEEN 	? AND ?
+											AND			activo =?
 											GROUP BY 	can_estado
 											ORDER BY	can_estado
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -457,14 +461,15 @@ class Estadisticas extends Conexion
 		//  print_r($dato);
 		//  die();
 		
-			$sql = $this->dbh->prepare("SELECT 		COUNT(Case When can_mun_edo !='0' then 1 ELSE 0 END) AS Total,
-													can_estado
+			$sql = $this->dbh->prepare("SELECT 		SUM(can_mun_edo !='') AS Total ,
+													can_mun_edo
 										FROM 		tbl_can_expediente 
 										WHERE 		can_fecha 
 										BETWEEN 	? 
 										AND 		? 
+										AND 		activo=?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 
@@ -484,10 +489,11 @@ class Estadisticas extends Conexion
 											ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
 											WHERE 		can_fecha 
 											BETWEEN 	? AND ?
+											AND 		activo= ?
 											GROUP BY 	can_pais	
 											ORDER BY	can_pais
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row = $sql->fetchAll();
 			return $row;
 
@@ -496,15 +502,16 @@ class Estadisticas extends Conexion
 	{
 		//  print_r($dato);
 		//  die();
-			$sql = $this->dbh->prepare("SELECT 		can_pais as pais 
+			$sql = $this->dbh->prepare("SELECT 		can_pais as pais, SUM(can_pais != 'Mexico') AS total 
 										FROM 		(tbl_can_expediente 
 										LEFT JOIN 	cat_municipios 
 										ON 			tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
 										WHERE 		can_fecha 
 										BETWEEN 	? 
 										AND 		? 
+										AND 		activo =?
 										");
-			$sql->execute(array($fecha_in,$fecha_fin));
+			$sql->execute(array($fecha_in,$fecha_fin,1));
 			$row2 = $sql->fetchAll();
 			return $row2;
 			print_r($row2);
@@ -535,34 +542,12 @@ class Estadisticas extends Conexion
 			return 'error';	
 
 	}
-	public function lista_consulta_mun_c4($fecha_in,$fecha_fin)
-	{
-	
-				$sql = $this->dbh->prepare("SELECT 		municipio,c4_pais,c4_edo,c4_mun,c4_mun_edo,COUNT(*) AS Numero
-											FROM 		((tbl_c4_expedientes
-											LEFT JOIN 	cat_municipios
-											ON 			tbl_c4_expedientes.c4_mun= cat_municipios.id_municipio)
-											LEFT JOIN 	cat_estados
-											ON 			tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
-											WHERE 		c4_fecha_inicio
-											BETWEEN 	? AND ?
-											AND 		activo = ?
-
-											GROUP BY 	municipio
-											ORDER BY	municipio
-										");
-			$sql->execute(array($fecha_in,$fecha_fin,1));
-			$row = $sql->fetchAll();
-			return $row;
-		 
-
-	}
 	public function obtener_total_mun_c4($fecha_in,$fecha_fin)
 	{
 		//  print_r($dato);
 		//  die();
 		
-			$sql = $this->dbh->prepare("SELECT 		sum(Case When c4_mun then 1 ELSE 0 END) AS Total 
+			$sql = $this->dbh->prepare("SELECT 		sum(Case When c4_mun != '' then 1 ELSE 0 END) AS Total 
 										FROM 		(tbl_c4_expedientes 
 										LEFT JOIN 	cat_municipios 
 										ON 			tbl_c4_expedientes.c4_mun=cat_municipios.id_municipio) 
@@ -575,6 +560,105 @@ class Estadisticas extends Conexion
 			$row2 = $sql->fetchAll();
 			return $row2;
 
+	}
+	public function lista_consulta_mun_c4($fecha_in,$fecha_fin)
+	{
+	
+				$sql = $this->dbh->prepare("SELECT 		municipio,c4_mun,count(*) as Numero
+											FROM 		(tbl_c4_expedientes
+											LEFT JOIN 	cat_municipios
+											ON 			tbl_c4_expedientes.c4_mun= cat_municipios.id_municipio)
+											WHERE 		c4_fecha_inicio
+											BETWEEN 	? AND ?
+											AND 		activo = ?
+											GROUP BY 	c4_mun
+
+										");
+			$sql->execute(array($fecha_in,$fecha_fin,1));
+			$row = $sql->fetchAll();
+			return $row;
+		 
+
+	}
+	//Consulta por Estado
+	public function lista_consulta_edo_c4($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+		
+			$sql = $this->dbh->prepare(" 	SELECT 		c4_edo,estado,COUNT(*) AS Numeros			
+											FROM 		(tbl_c4_expedientes
+											LEFT JOIN 	cat_estados
+											ON 			tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
+											WHERE 		c4_fecha_inicio 
+											BETWEEN 	? AND ?
+											AND			activo =?
+											GROUP BY 	c4_edo
+											ORDER BY	c4_edo
+										");
+			$sql->execute(array($fecha_in,$fecha_fin,1));
+			$row = $sql->fetchAll();
+			return $row;
+
+	}
+	
+	public function obtener_total_edo_c4($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die()
+			$sql = $this->dbh->prepare("SELECT 		sum(Case When c4_mun_edo != ''  then 1 ELSE 0 END) AS Total ,
+													c4_edo
+										FROM 		(tbl_c4_expedientes
+										LEFT JOIN 	cat_estados
+										ON			tbl_c4_expedientes.c4_edo = cat_estados.id_estado) 
+										WHERE 		c4_fecha_inicio 
+										BETWEEN 	? 
+										AND 		? 
+										AND 		activo =?
+										
+										");
+			$sql->execute(array($fecha_in,$fecha_fin,1));
+			$row2 = $sql->fetchAll();
+			return $row2;
+			print_r($row2);
+	}
+	//Consulta por Pais
+	public function lista_consulta_pais_c4($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+		
+			$sql = $this->dbh->prepare(" 	SELECT 		c4_pais,COUNT(*) AS Numero			
+											FROM 		tbl_c4_expedientes
+											WHERE 		c4_fecha_inicio 
+											BETWEEN 	? AND ?
+											AND			activo =?
+											group by 	c4_pais
+											
+										");
+			$sql->execute(array($fecha_in,$fecha_fin,1));
+			$row = $sql->fetchAll();
+			return $row;
+
+	}
+	
+	
+	public function obtener_total_pais_c4($fecha_in,$fecha_fin)
+	{
+		//  print_r($dato);
+		//  die();
+			$sql = $this->dbh->prepare("SELECT 		c4_pais,
+													SUM(c4_pais != 'México') AS total 
+										FROM 		tbl_c4_expedientes 
+										WHERE 		c4_fecha_inicio 
+										BETWEEN 	? 
+										AND 		? 
+										AND 		activo =?
+										");
+			$sql->execute(array($fecha_in,$fecha_fin,1));
+			$row2 = $sql->fetchAll();
+			return $row2;
+			print_r($row2);
 	}
 
 	// Consulta por genero 
@@ -791,7 +875,7 @@ class Estadisticas extends Conexion
 		//  print_r($dato);
 		//  die();
 		
-			$sql = $this->dbh->prepare("SELECT 		c4_delito,delito,
+		$sql = $this->dbh->prepare("SELECT 		c4_delito,delito,
 													count(*) as Numero
 													
 										FROM 		((tbl_c4_delitos_victimas

@@ -146,7 +146,7 @@ if (isset($_REQUEST['func'])) {
 				$estatus = $v->editar_victima_c4(
 					$_REQUEST["c4_edad_victima_edit"],
 					$_REQUEST["c4_nom_victima_edit"],
-					$_REQUEST["c4_num_delitos_edit"],
+					
 					$_REQUEST["c4_per_tercera_edad_edit"],
 					$_REQUEST["c4_per_violencia_edit"],
 					$_REQUEST["c4_per_discapacidad_edit"],
@@ -158,7 +158,7 @@ if (isset($_REQUEST['func'])) {
 				);
 
 
-				$estatus2 = $v->editar_delito_victima_c4($_REQUEST["id_c4_del_victima_edit"], $_REQUEST["c4_delito_edit"], $_SESSION["nombre"]);
+				// $estatus2 = $v->editar_delito_victima_c4($_REQUEST["id_c4_del_victima_edit"], $_REQUEST["c4_delito_edit"], $_SESSION["nombre"]);
 				$estatus3 = $v->editar_derecho_victima_c4($_REQUEST["id_c4_der_victima_edit"], $_REQUEST["c4_der_vul_vic_edit"], $_SESSION["nombre"]);
 			}
 			header('Content-Type: application/json');
@@ -247,8 +247,9 @@ if (isset($_REQUEST['func'])) {
 										</td>
 										<td class="col-md-2">
 											<div align="left">
-											' . $aux2 . '.<br>
-											<strong>N° Delitos: </strong><u>' . $row["c4_num_delitos"] . ' </u>
+											
+											■' . $row["Delitos"] . '<br>
+											<strong>N° Delitos: </strong><u>' . $row["total"] . ' </u>
 											</div>
 										</td>
 										
@@ -276,7 +277,7 @@ if (isset($_REQUEST['func'])) {
 										</td>
 										
 										<td class="col-md-2">								
-											<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Victima" onclick="mod_caso_c4(6,' . $row["id_victima"] . ');">
+											<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Victima" onclick="mod_c4_victima(2,' . $row["id_victima"] . ');">
 												<i class="bi bi-pencil-square"></i>
 												<span></span>
 											</button>
@@ -293,8 +294,82 @@ if (isset($_REQUEST['func'])) {
 			}
 			echo $html;
 			break;
+		case 'fn_listar_delitos_c4':
+				$arr_res = $v->fn_lista_delitos_c4($_POST["id_victima"]);
+		
+			$size    = sizeof($arr_res);
+
+			if (empty($arr_res)) {
+
+				$html =
+					'
+				<center>
+					<h5>¡ No hay datos de Delitos guardados !</h5>
+				</center>';
+			} else {
+				$html = '  
+				<div class="row">
+					<div class="col-12">
+					
+						<table id="lista_bd_delitos_c4" class="table">
+							<thead class="tbl-estadisticas">
+							<tr align="center">
+								<strong>
+								
+								<th>
+									Delito
+								</th>
+								
+								
+			
+								<th>
+									Acciones
+								</th>
+								</strong>
+								
+							</tr>
+							</thead>
+							<tbody>';
+				foreach ($arr_res as $row) {
+					$session  = 3;
+				
+					$html .= '
+								<tr class="text-11" align="center" id="ldel_victima_c4' . $row["id_c4_delito_victima"] . '">
+									<div class="row">
+										<td>
+											'.$row['delito'].'
+										</td>
+										<td class="col-md-2">								
+											<button type="button" class="btn btn-sm btn-danger" aria-label="Eliminar Delito" onclick="eliminar_delito(' . $row["id_c4_delito_victima"] . ',\'' . $row["c4_exp_folio_delito"] . '\');">
+												<i class="bi bi-trash"></i>
+												<span></span>
+											</button>
+										</td>   
+												
+									</div>
+								</tr>';
+				}
+				$html .= '
+							</tbody>
+						</table>
+					</div>
+				</div>';
+			}
+			echo $html;
+			break;
+		case 'fn_eliminar_del_victima_c4':
+			if (isset($_SESSION["nombre"]) and $_SESSION["nombre"] != '')
+			$estatus = $v->eliminar_del_vic_c4($_POST["id_c4_delito_victima"]);
+			else
+			$estatus = 'no_sesion';
+
+			header('Content-Type: application/json');
+			$datos = array('estatus' => $estatus);
+			echo json_encode($datos, JSON_FORCE_OBJECT);
+			break;
+		
 		case 'fn_obtener_datos_victimas_c4':
-			$arr_res = $v->obtener_dato_victima_c4($_REQUEST["id"]);
+			$arr_res = $v->obtener_dato_victima_c4($_REQUEST["id_victima"]);
 			foreach ($arr_res as $row) {
 				header('Content-Type: application/json');
 				$datos = array(
@@ -307,9 +382,9 @@ if (isset($_REQUEST['func'])) {
 					'c4_per_indigena' => $row["c4_per_indigena"],
 					'c4_per_transgenero' => $row["c4_per_transgenero"],
 					'c4_sexo_victima' => $row["c4_sexo_victima"],
-					'id_c4_delito_victima' => $row["id_c4_delito_victima"],
+					// 'id_c4_delito_victima' => $row["id_c4_delito_victima"],
 					'c4_exp_folio_victima' => $row["c4_exp_folio_victima"],
-					'c4_delito' => $row["c4_delito"],
+					// 'c4_delito' => $row["c4_delito"],
 					'id_c4_derecho' => $row["id_c4_derecho"],
 					'c4_der_vul_victima' => $row["c4_der_vul_victima"],
 				);
@@ -441,6 +516,23 @@ if (isset($_REQUEST['func'])) {
 			$datos = array('estatus' => $estatus);
 			echo json_encode($datos, JSON_FORCE_OBJECT);
 			break;
+		case 'fn_guardar_del_vic_c4':
+			if ($_REQUEST["id"] == '0') {
+				if (isset($_SESSION['nombre']) and !empty($_SESSION['nombre'])) {
+					$delitos_victima = $_POST;
+					
+					$estatus = $v->insertar_del_vic_c4($delitos_victima);
+				} else {
+					$estatus = 'no insertado Probables responsables';
+				}
+			} else {
+				// $estatus = $v->editar_pro_res_c4($_REQUEST["c4_edad_responsable_edit"], $_REQUEST["c4_nom_responsable_edit"], $_REQUEST["c4_parentesco_edit"], $_SESSION["nombre"], $_REQUEST["id"]);
+			}
+			header('Content-Type: application/json');
+			$datos = array('estatus' => $estatus);
+			echo json_encode($datos, JSON_FORCE_OBJECT);
+			break;
+			
 		case 'fn_lista_pro_res_c4':
 			$arr_res = $v->lista_pro_res_c4($_POST["fol_c4"]);
 
@@ -825,7 +917,7 @@ if (isset($_REQUEST['func'])) {
 				foreach ($arr_res as $row) {
 
 					$html .= '
-								<tr class="text-11" align="left" id="lcan' . $row["id"] . '">
+								<tr class="text-11" align="left" id="lc4' . $row["id"] . '">
 									<div class="row">
 										<td>	
 											' . $row["c4_fecha_inicio"] . '
@@ -855,7 +947,7 @@ if (isset($_REQUEST['func'])) {
 										</td>
 										<td>
 										
-											' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '
+											' . ($row["municipio"] == "0" ? "" : $row["municipio"]) . '
 
 											' . $row["c4_mun_edo"] . '
 
@@ -1055,6 +1147,7 @@ if (isset($_REQUEST['func'])) {
 			echo $html;
 			break;
 		case 'fn_carga_delitos':
+			$html = '<option value="0" disabled selected>Seleccionar</option>';
 			$arr_res = $v->fn_lista_delitos();
 			foreach ($arr_res as $row) {
 				$html .= '<option value="' . $row["id_delito"] . '">' . $row["delito"] . '</option>';

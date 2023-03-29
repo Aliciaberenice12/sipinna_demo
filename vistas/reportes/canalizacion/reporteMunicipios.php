@@ -154,20 +154,21 @@ $pdf->SetTextColor(0);
 $pdf->Ln();
 $pdf->SetX(50);
 
-$queryMun = "	SELECT 			can_fecha, COUNT(CASE WHEN can_municipio != '0' THEN 1 ELSE NULL END)  as Numero
+$queryCaso = "	SELECT 			can_fecha,count(*) as Numero
 				FROM			tbl_can_expediente
 				WHERE 			can_fecha 
 				BETWEEN			?
-				AND 			?		
+				AND 			?	
+				AND				activo = ?				
 ";
-$stmtMun = $conexion->dbh->prepare($queryMun);
-$stmtMun->execute(array($desde,$hasta));
+$stmtCaso = $conexion->dbh->prepare($queryCaso);
+$stmtCaso->execute(array($desde,$hasta,1));
 
 
 
-if ($stmtMun->rowCount() > 0) {
-	while ($municipio = $stmtMun->fetch(PDO::FETCH_ASSOC)) {
-        $pdf->Row(array(utf8_decode($municipio["Numero"])));
+if ($stmtCaso->rowCount() > 0) {
+	while ($caso = $stmtCaso->fetch(PDO::FETCH_ASSOC)) {
+        $pdf->Row(array(utf8_decode($caso["Numero"])));
 	}
 	
 	
@@ -195,27 +196,32 @@ $pdf->SetAligns(array('C','C'));
 $pdf->SetTextColor(0);
 $pdf->Ln();
 
-$queryMun = "	SELECT 		can_pais,estado,municipio, can_municipio,COUNT(*) AS Numero
-				FROM 		((tbl_can_expediente
-				LEFT JOIN 	cat_municipios
-				ON 			tbl_can_expediente.can_municipio= cat_municipios.id_municipio)
-				LEFT JOIN 	cat_estados
-				ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
-				WHERE 		can_fecha 
-				BETWEEN 	? AND ?
-				GROUP BY 	municipio
-				ORDER BY	municipio";
+$queryMun = "SELECT 	can_pais,can_estado,can_otros_estados,estado,can_mun_edo,can_municipio,municipio,COUNT(*) AS Numero
+			FROM 		((tbl_can_expediente
+			LEFT JOIN 	cat_municipios
+			on			tbl_can_expediente.can_municipio=cat_municipios.id_municipio)
+			LEFT JOIN 	cat_estados
+			ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
+			WHERE 		can_fecha 
+			BETWEEN 	? AND ?
+			AND 		activo=?
+			GROUP BY 	can_municipio	
+			ORDER BY	can_municipio	
+			";
 $stmtMun = $conexion->dbh->prepare($queryMun);
-$stmtMun->execute(array($desde,$hasta));
+$stmtMun->execute(array($desde,$hasta,1));
 
-$queryTotal = "SELECT COUNT(CASE WHEN can_municipio != '0' THEN 1 ELSE NULL END) AS Total
-FROM (tbl_can_expediente 
-LEFT JOIN cat_municipios 
-ON tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
-WHERE can_fecha 
-BETWEEN ? AND ? ";
+$queryTotal = 	"SELECT 	sum(Case When can_municipio then 1 ELSE 0 END) AS Total 
+				FROM 		(tbl_can_expediente 
+				LEFT JOIN 	cat_municipios 
+				ON 			tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
+				WHERE 		can_fecha 
+				BETWEEN 	? 
+				AND 		?
+				AND 		activo = ? 
+				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta));
+$stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
 if ($stmtMun->rowCount() > 0) {
@@ -244,5 +250,132 @@ if ($stmtMun->rowCount() > 0) {
 		}
 	$pdf->Ln();
 }
+
+// Datos por Estado
+$pdf->Ln();
+$pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
+$pdf->SetTextColor(255);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(204, 5,  'Tabla de casos por Estado diferente de veracruz', 1, 0, 'C', true);
+$pdf->Ln();//Salto de Linea
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
+$pdf->SetTextColor(255);//Color del texto
+$pdf->Cell(102, 5, utf8_decode('Estado'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
+$pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
+$pdf->SetFillColor(255);
+$pdf->SetTextColor(0);
+$pdf->SetAligns(array('C','C'));
+$pdf->Ln();
+
+$queryEdo = "	SELECT 		can_pais,can_estado,estado,can_mun_edo,COUNT(*) AS Numero			
+				FROM 		(tbl_can_expediente
+				LEFT JOIN 	cat_estados
+				ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
+				WHERE 		can_fecha 
+				BETWEEN 	? AND ?
+				AND			activo =?
+				GROUP BY 	can_estado
+ORDER BY	can_estado
+			";
+$stmtEdo = $conexion->dbh->prepare($queryEdo);
+$stmtEdo->execute(array($desde,$hasta,1));
+$queryTotalEdo = "SELECT 		SUM(can_mun_edo !='') AS Total ,can_mun_edo
+				FROM 		tbl_can_expediente 
+				WHERE 		can_fecha 
+				BETWEEN 	? 
+				AND 		? 
+				AND 		activo=?
+				";
+$stmtTotalEdo = $conexion->dbh->prepare($queryTotalEdo);
+$stmtTotalEdo->execute(array($desde,$hasta,1));
+$total = $stmtTotalEdo->fetch(PDO::FETCH_ASSOC);
+
+
+if ($stmtEdo->rowCount() > 0) {
+	while ($estado_dif = $stmtEdo->fetch(PDO::FETCH_ASSOC)) {
+		if($estado_dif["can_estado"] != '30' & $estado_dif["can_estado"] != '0'){
+			$pdf->Row(array(utf8_decode($estado_dif["estado"]), utf8_decode($estado_dif["Numero"])));
+		}
+		else{
+			
+		}
+	}
+	
+	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
+	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
+	$pdf->Ln();
+	$pdf->Ln();
+} else {
+	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+	$pdf->Ln();
+}
+
+// Datos por Pais
+$pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
+$pdf->SetTextColor(255);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(204, 5,  'Tabla de casos por Pais diferente de México', 1, 0, 'C', true);
+$pdf->Ln();//Salto de Linea
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
+$pdf->SetTextColor(255);//Color del texto
+$pdf->Cell(102, 5, utf8_decode('Pais'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
+$pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
+$pdf->SetFillColor(255);
+$pdf->SetTextColor(0);
+$pdf->SetAligns(array('C','C'));
+$pdf->Ln();
+
+$queryPais = "	SELECT 		can_pais,can_estado,can_otros_estados,estado,can_mun_edo,can_municipio,municipio,COUNT(*) AS Numero
+				FROM 		((tbl_can_expediente
+				LEFT JOIN 	cat_municipios
+				on			tbl_can_expediente.can_municipio=cat_municipios.id_municipio)
+				LEFT JOIN 	cat_estados
+				ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
+				WHERE 		can_fecha 
+				BETWEEN 	? AND ?
+				AND 		activo= ?
+				GROUP BY 	can_pais	
+				ORDER BY	can_pais
+			";
+$stmtPais = $conexion->dbh->prepare($queryPais);
+$stmtPais->execute(array($desde,$hasta,1));
+$queryTotalPais = "	SELECT 		can_pais as pais, SUM(can_pais != 'Mexico') AS Total 
+					FROM 		(tbl_can_expediente 
+					LEFT JOIN 	cat_municipios 
+					ON 			tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
+					WHERE 		can_fecha 
+					BETWEEN 	? 
+					AND 		? 
+					AND 		activo =?
+				";
+$stmtTotalPais = $conexion->dbh->prepare($queryTotalPais);
+$stmtTotalPais->execute(array($desde,$hasta,1));
+$total = $stmtTotalPais->fetch(PDO::FETCH_ASSOC);
+
+
+if ($stmtPais->rowCount() > 0) {
+	while ($estado_dif = $stmtPais->fetch(PDO::FETCH_ASSOC)) {
+		if($estado_dif['can_pais'] != 'México'){
+			$pdf->Row(array(utf8_decode($estado_dif["can_pais"]), utf8_decode($estado_dif["Numero"])));
+		}
+		else{
+			
+		}
+	}
+	
+	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
+	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
+	$pdf->Ln();
+	$pdf->Ln();
+} else {
+	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+	$pdf->Ln();
+}
+
+
 
 $pdf->Output('Informe Sipina ' . date('d/m/Y').'.pdf', 'I', true); 

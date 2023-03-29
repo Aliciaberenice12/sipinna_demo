@@ -21,6 +21,7 @@ if ($_REQUEST["accion"] == 'fn_listar_delitos') {
 		<table id="tbl_del" class="table table-hover table-striped table-sm table-responsive-sm">
 	    <thead class="tbl-estadisticas">
 	      <tr align="center">
+		  	<th style="display:none"></th>
 	        <th width="100%" align="center">
 				<div class="row" >
 					<div class="col-md-4">Id</div>
@@ -37,6 +38,7 @@ if ($_REQUEST["accion"] == 'fn_listar_delitos') {
 		foreach ($arr_res as $row) {
 			$html .= '
 	        <tr class="text-11" id="l_delitos' . $row["id_delito"] . '">
+				<td style="display:none">'.$row["id_delito"].'</td>
 				<td align="center">
 					<div class="row">
 						<div class="col-md-4">
@@ -123,6 +125,7 @@ if ($_REQUEST["accion"] == 'fn_listar_parentescos') {
 		<table id="tbl_parentescos" class="table table-hover table-striped table-sm table-responsive-sm">
 	    <thead class="tbl-estadisticas">
 	      <tr align="center">
+		  	<th style="display:none"></th>
 	        <th width="100%" align="center">
 				<div class="row" >
 					<div class="col-md-4">Id</div>
@@ -139,6 +142,7 @@ if ($_REQUEST["accion"] == 'fn_listar_parentescos') {
 		foreach ($arr_res as $row) {
 			$html .= '
 	        <tr class="text-11" id="l_par' . $row["id_parentesco"] . '">
+				<td style="display:none">' . $row["id_parentesco"] . '</td>
 				<td align="center">
 					<div class="row">
 						<div class="col-md-4">
@@ -214,6 +218,7 @@ if ($_REQUEST["accion"] == 'fn_listar_municipios') {
 		<table id="tbl_mun" class="table table-hover table-striped table-sm table-responsive-sm">
 	    <thead class="tbl-estadisticas">
 	      <tr align="center">
+		  <th style="display:none"></th>
 	        <th width="100%" align="center">
 				<div class="row" >
 					<div class="col-md-4">Id</div>
@@ -230,6 +235,7 @@ if ($_REQUEST["accion"] == 'fn_listar_municipios') {
 		foreach ($arr_res as $row) {
 			$html .= '
 	        <tr class="text-11" id="l_umn' . $row["id_municipio"] . '">
+				<td style="display:none">' . $row["id_municipio"] . '</td>
 				<td align="center">
 					<div class="row">
 						<div class="col-md-4">
@@ -310,6 +316,7 @@ if (empty($arr_res)) {
 	<table id="tbl_der" class="table table-hover table-striped table-sm table-responsive-sm">
 	<thead class="tbl-estadisticas">
 	  <tr align="center">
+	  <th style="display:none"></th>
 		<th width="100%" align="center">
 			<div class="row" >
 				<div class="col-md-4">Id</div>
@@ -325,7 +332,8 @@ if (empty($arr_res)) {
 	<tbody>';
 	foreach ($arr_res as $row) {
 		$html .= '
-		<tr class="text-11" id="l_der' . $row["id_derecho"] . '">
+		<tr class="text-11" id="l_der'. $row["id_derecho"] . '">
+			<td style="display:none"> '. $row["id_derecho"] . '</td>
 			<td align="center">
 				<div class="row">
 					<div class="col-md-4">

@@ -212,6 +212,8 @@ class CasosC4 extends Conexion
 				}
 			}
 			if ($last_id = $conn->lastInsertId() > 0) {
+				$this->bitacora_caso_c4('Expediente  registrado ' . $c4_folio_expediente, $conn->lastInsertId());
+
 				$conn->commit();
 				$estatus = 'ok';
 			} else {
@@ -224,22 +226,8 @@ class CasosC4 extends Conexion
 
 		return $estatus;
 	}
-	public function editar_caso_c4_c_img(
-		$c4_folio,
-		$c4_numero,
-		$c4_no_oficio,
-		$c4_fecha_inicio,
-		$c4_pais,
-		$otros_estados_c4,
-		$c4_edo,
-		$c4_mun,
-		$c4_mun_edo,
-		$c4_dirigido,
-		$c4_dg,
-		$nom_archo,
-		$nombre_creador,
-		$id
-	) {
+	public function editar_caso_c4_c_img($c4_folio,$c4_numero,$c4_no_oficio,$c4_fecha_inicio,$c4_pais,$otros_estados_c4,$c4_edo,$c4_mun,$c4_mun_edo,$c4_dirigido,$c4_dg,$nom_archo,$nombre_creador,$id)
+	{
 		$sql = $this->dbh->prepare("UPDATE 	tbl_c4_expedientes 
 									SET		
 										 	c4_folio=?,
@@ -274,14 +262,36 @@ class CasosC4 extends Conexion
 				$id
 			)
 		)) {
+			$this->bitacora_caso_c4('Expediente  Editado ' . $id,$id);
+
 			return 'editado';
 		} else
 			return 'error';
 	}
+	//Bitacora 
+	public function bitacora_caso_c4($mensaje, $numafec)
+	{
+		if (isset($_SESSION["nombre"]))
+			$usuario = $_SESSION["nombre"];
+		else
+			$usuario = 'Sin sesión activa en ese momento';
+
+		$ip = $_SERVER["REMOTE_ADDR"];
+		
+		$sql = $this->dbh->prepare("INSERT INTO tbl_bitacora_c4
+												(usuario,
+												fecha,
+												hora,
+												accion,
+												num,
+												ip) VALUES(?,?,?,?,?,?)");
+		$sql->execute(array($usuario, date('Y-m-d'), date('H:i:s'), $mensaje, $numafec, $ip));
+	}
+
 
 	//historico
 	//Registrar Caso Expediente
-	
+
 	public function fn_registrar_caso_c4($nom_archivo_c4, $datos_exp_c4, $id_c4_anio)
 	{
 		try {
@@ -434,18 +444,24 @@ class CasosC4 extends Conexion
 						break;
 					}
 					$last_id = $conn->lastInsertId();
-					$sql6   = $conn->prepare("INSERT INTO 	tbl_c4_delitos_victimas
-															(
-															c4_exp_folio_delito,
-															c4_delito,
-															c4_id_victima,
-															c4_created_by)
-													VALUES	(?,?,?,?)");
-					$sql6->bindParam(1, $c4_exp_folio_victima, PDO::PARAM_STR, 30);
-					$sql6->bindParam(2, $row["c4_delitos"], PDO::PARAM_STR, 11);
-					$sql6->bindParam(3, $last_id, PDO::PARAM_INT, 11);
-					$sql6->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
-					$sql6->execute();
+
+					$delito = explode(",", $row["c4_delitos"]);
+					foreach ($delito as $del) {
+						$sql6   = $conn->prepare("INSERT INTO 	tbl_c4_delitos_victimas
+						(
+						c4_exp_folio_delito,
+						c4_delito,
+						c4_id_victima,
+						c4_created_by)
+						VALUES	(?,?,?,?)");
+						$sql6->bindParam(1, $c4_exp_folio_victima, PDO::PARAM_STR, 30);
+						$sql6->bindParam(2, $del, PDO::PARAM_STR, 11);
+						$sql6->bindParam(3, $last_id, PDO::PARAM_INT, 11);
+						$sql6->bindParam(4, $nombre_creador, PDO::PARAM_STR, 30);
+						$sql6->execute();
+					}
+					
+
 					if ($conn->lastInsertId() > 0) {
 					} else {
 						$conn->rollback();
@@ -473,7 +489,10 @@ class CasosC4 extends Conexion
 				}
 			}
 			if ($last_id = $conn->lastInsertId() > 0) {
+				$this->bitacora_caso_c4('Expediente  registrado ' . $c4_exp_folio_resp, $conn->lastInsertId());
+
 				$conn->commit();
+
 				$estatus = 'ok';
 			} else {
 				$conn->rollback();
@@ -485,22 +504,8 @@ class CasosC4 extends Conexion
 
 		return $estatus;
 	}
-	public function editar_caso_c4(
-		$id,
-		$c4_folio,
-		$c4_numero,
-		$c4_no_oficio,
-		$c4_fecha_inicio,
-		$c4_pais,
-		$otros_estados_c4,
-		$c4_edo,
-		$c4_mun,
-		$c4_mun_edo,
-		$c4_dirigido,
-		$c4_dg,
-		$nom_archo,
-		$nombre_creador
-	) {
+	public function editar_caso_c4($id,$c4_folio,$c4_numero,$c4_no_oficio,$c4_fecha_inicio,$c4_pais,$otros_estados_c4,$c4_edo,$c4_mun,$c4_mun_edo,$c4_dirigido,$c4_dg,$nom_archo,$nombre_creador)
+	{
 		$sql = $this->dbh->prepare("UPDATE 	tbl_c4_expedientes 
 									SET		
 										 	c4_folio=?,
@@ -522,6 +527,8 @@ class CasosC4 extends Conexion
 			$otros_estados_c4, $c4_edo, $c4_mun, $c4_mun_edo, $c4_dirigido,
 			$c4_dg, $nom_archo, $nombre_creador, $id
 		))) {
+			$this->bitacora_caso_c4('Expediente  Edtado ' . $id,$id);
+
 			return 'editado';
 		} else
 			return 'error';
@@ -697,7 +704,6 @@ class CasosC4 extends Conexion
 													c4_edad_victima,
 													c4_edad_ms_victima,
 													c4_nom_victima,
-													c4_num_delitos,
 													c4_per_tercera_edad,
 													c4_per_violencia,
 													c4_per_discapacidad,
@@ -708,20 +714,19 @@ class CasosC4 extends Conexion
 													c4_created_by,
 													c4_id_desc_caso
 													)
-											values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+											values (?,?,?,?,?,?,?,?,?,?,?,?)");
 				$sql->bindParam(1, $row["c4_edad_vic"], PDO::PARAM_STR, 30);
 				$sql->bindParam(2, $row["c4_edad_ms_vic"], PDO::PARAM_STR, 30);
 				$sql->bindParam(3, $row["c4_nom_vic"], PDO::PARAM_STR, 50);
-				$sql->bindParam(4, $row["c4_num_delitos"], PDO::PARAM_STR, 2);
-				$sql->bindParam(5, $row["c4_per_tercera_edad"], PDO::PARAM_INT, 2);
-				$sql->bindParam(6, $row["c4_per_violencia"], PDO::PARAM_INT, 2);
-				$sql->bindParam(7, $row["c4_per_discapacidad"], PDO::PARAM_INT, 2);
-				$sql->bindParam(8, $row["c4_per_indigena"], PDO::PARAM_INT, 2);
-				$sql->bindParam(9, $row["c4_per_transgenero"], PDO::PARAM_INT, 2);
-				$sql->bindParam(10, $row["c4_sexo_victima"], PDO::PARAM_STR, 11);
-				$sql->bindParam(11, $c4_exp_folio_victima, PDO::PARAM_STR, 50);
-				$sql->bindParam(12, $nombre_creador, PDO::PARAM_STR, 50);
-				$sql->bindParam(13, $id_caso_reportado_victima, PDO::PARAM_STR, 50);
+				$sql->bindParam(4, $row["c4_per_tercera_edad"], PDO::PARAM_INT, 2);
+				$sql->bindParam(5, $row["c4_per_violencia"], PDO::PARAM_INT, 2);
+				$sql->bindParam(6, $row["c4_per_discapacidad"], PDO::PARAM_INT, 2);
+				$sql->bindParam(7, $row["c4_per_indigena"], PDO::PARAM_INT, 2);
+				$sql->bindParam(8, $row["c4_per_transgenero"], PDO::PARAM_INT, 2);
+				$sql->bindParam(9, $row["c4_sexo_victima"], PDO::PARAM_STR, 11);
+				$sql->bindParam(10, $c4_exp_folio_victima, PDO::PARAM_STR, 50);
+				$sql->bindParam(11, $nombre_creador, PDO::PARAM_STR, 50);
+				$sql->bindParam(12, $id_caso_reportado_victima, PDO::PARAM_STR, 50);
 				$sql->execute();
 				if ($last = $conn->lastInsertId() > 0) {
 				} else {
@@ -783,11 +788,9 @@ class CasosC4 extends Conexion
 	}
 	public function fn_lista_victimas_c4($fol_c4)
 	{
-		$sql = $this->dbh->prepare("
-										SELECT	id_victima,
+		$sql = $this->dbh->prepare("SELECT		id_victima,
 												c4_edad_victima,
-												
-												c4_nom_victima,
+												c4_nom_victima,id_c4_delito_victima,
 												c4_num_delitos,
 												c4_exp_folio_victima,
 												c4_sexo_victima,
@@ -801,22 +804,52 @@ class CasosC4 extends Conexion
 												c4_der_vul_victima,
 												tbl_c4_victimas.c4_id_desc_caso,
 												tbl_c4_delitos_victimas.c4_id_victima,
-												tbl_c4_der_vul_victima.c4_id_victima
-										FROM 	((tbl_c4_victimas
-									INNER JOIN 	tbl_c4_delitos_victimas 
+												tbl_c4_der_vul_victima.c4_id_victima,
+												GROUP_CONCAT(delito) Delitos,
+												COUNT(delito) total
+										FROM 	(((tbl_c4_victimas
+								INNER JOIN 		tbl_c4_delitos_victimas 
 										ON 		tbl_c4_victimas.id_victima = tbl_c4_delitos_victimas.c4_id_victima)
+								INNER JOIN		cat_tipos_delitos
+								ON				tbl_c4_delitos_victimas.c4_delito = cat_tipos_delitos.id_delito)
 									INNER JOIN	tbl_c4_der_vul_victima
 										ON		tbl_c4_victimas.id_victima = tbl_c4_der_vul_victima.c4_id_victima)
 										WHERE	c4_exp_folio_victima = ?
+									GROUP BY 	id_victima
 									");
 		$sql->execute(array($fol_c4));
 		$row = $sql->fetchAll();
 		return $row;
 	}
+	public function fn_lista_delitos_c4($id)
+	{
+		
+		$sql = $this->dbh->prepare("	SELECT		id_c4_delito_victima,c4_id_victima,c4_delito,delito,c4_exp_folio_delito
+										FROM 		((tbl_c4_delitos_victimas
+										INNER JOIN	tbl_c4_victimas
+										ON			tbl_c4_delitos_victimas.c4_id_victima=tbl_c4_victimas.id_victima)
+										INNER JOIN 	cat_tipos_delitos
+										ON 			tbl_c4_delitos_victimas.c4_delito = cat_tipos_delitos.id_delito)
+										WHERE       c4_id_victima=?
+									");
+		$sql->execute(array($id));
+		$row = $sql->fetchAll();
+		return $row;
+	}
+	public function eliminar_del_vic_c4($id)
+	{
+		$sql = $this->dbh->prepare("delete from tbl_c4_delitos_victimas where id_c4_delito_victima = ?");
+		if ($sql->execute(array($id))) {
+			
+			return 'ok';
+		} else
+			return 'error';
+	}
+
 	public function obtener_dato_victima_c4($id)
 	{
 		$sql = $this->dbh->prepare(
-			"SELECT 	id_victima,
+									"SELECT 	id_victima,
 												c4_edad_victima,					
 												c4_nom_victima,
 												c4_num_delitos,
@@ -826,17 +859,16 @@ class CasosC4 extends Conexion
 												c4_per_indigena,
 												c4_per_transgenero,
 												c4_sexo_victima,
-												id_c4_delito_victima,
+												
 												c4_exp_folio_victima,
-												c4_delito,
+											
 												id_c4_derecho,
 												c4_der_vul_victima,
 												tbl_c4_victimas.id_victima,
-												tbl_c4_delitos_victimas.c4_id_victima,
+												
 												tbl_c4_der_vul_victima.c4_id_victima
-									FROM 		((tbl_c4_victimas 
-									INNER JOIN	tbl_c4_delitos_victimas
-									ON			tbl_c4_victimas.id_victima=tbl_c4_delitos_victimas.c4_id_victima)
+									FROM 		(tbl_c4_victimas 
+									
 									INNER JOIN 	tbl_c4_der_vul_victima
 									ON			tbl_c4_victimas.id_victima=tbl_c4_der_vul_victima.c4_id_victima)
 									WHERE 		id_victima = ?"
@@ -846,7 +878,7 @@ class CasosC4 extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
-	public function editar_victima_c4($edad, $nom, $num_del, $per_ter, $per_vio, $per_dis, $per_ind, $per_tran, $c4_sex, $nombre_creador, 	$id)
+	public function editar_victima_c4($edad, $nom,$per_ter, $per_vio, $per_dis, $per_ind, $per_tran, $c4_sex, $nombre_creador, 	$id)
 	{
 		$conn = $this->dbh;
 		$conn->beginTransaction();
@@ -855,7 +887,7 @@ class CasosC4 extends Conexion
 			$sql = $conn->prepare("UPDATE 	tbl_c4_victimas
 									SET 	c4_edad_victima=?,
 											c4_nom_victima=?,
-											c4_num_delitos=?,
+
 											c4_per_tercera_edad=?,
 											c4_per_violencia=?,
 											c4_per_discapacidad=?,
@@ -867,7 +899,7 @@ class CasosC4 extends Conexion
 			if ($sql->execute(array(
 				$edad,
 				$nom,
-				$num_del,
+				
 				$per_ter,
 				$per_vio,
 				$per_dis,
@@ -878,6 +910,8 @@ class CasosC4 extends Conexion
 				$id
 			))) {
 				$conn->commit();
+				$this->bitacora_caso_c4('Victima Editado ' . $id,$id);
+
 				return 'ok';
 			} else
 				return 'error';
@@ -903,6 +937,36 @@ class CasosC4 extends Conexion
 		} else
 			return 'error';
 	}
+	//insertar Probable Responsable
+	public function insertar_del_vic_c4($datos_del)
+	{
+		try {
+				
+	
+				$nombre_creador=$_SESSION['nombre'];
+				$sql   = $this->dbh->prepare("INSERT INTO 	tbl_c4_delitos_victimas
+														 	(c4_delito,
+														 	c4_exp_folio_delito,
+														 	c4_id_victima,
+														 	c4_created_by)
+												VALUES 		(?,?,?,?)");
+				$sql->bindParam(1, $datos_del["c4_delito_edit"], PDO::PARAM_STR, 30);
+				$sql->bindParam(2, $datos_del["can_exp_folio_victima_edit"], PDO::PARAM_STR);
+				$sql->bindParam(3, $datos_del["id_c4_victima_edit"], PDO::PARAM_STR);
+				$sql->bindParam(4, $nombre_creador, PDO::PARAM_STR);
+				
+				if ($sql->execute()) {
+				
+					$estatus = 'ok';
+				} else
+					$estatus = 'error_registro';
+		
+		} catch (Exception $e) {
+			$estatus = $e;
+		}
+
+		return $estatus;
+	}
 	public function editar_derecho_victima_c4($id_der_victima_c4, $derecho_c4, $nombre_creador)
 	{
 		$sql = $this->dbh->prepare(
@@ -916,6 +980,8 @@ class CasosC4 extends Conexion
 			$nombre_creador,
 			$id_der_victima_c4
 		))) {
+			$this->bitacora_caso_c4('Derecho de victima Editado ' . $id_der_victima_c4,$id_der_victima_c4);
+
 			return 'editado';
 		} else
 			return 'error';
@@ -1001,6 +1067,8 @@ class CasosC4 extends Conexion
 												c4_update_by=?
 									WHERE	 	id_pro_responsable= ?");
 		if ($sql->execute(array($c4_edad_responsable_edit, $c4_nom_responsable_edit, $c4_parentesco_edit, $nombre_creador, $id))) {
+			$this->bitacora_caso_c4('Expediente  Edtado ' . $id,$id);
+
 			return 'ok';
 		} else
 			return 'error';
@@ -1059,6 +1127,8 @@ class CasosC4 extends Conexion
 			$sql->bindParam(5, $id);
 
 			if ($sql->execute()) {
+				$this->bitacora_caso_c4('Descrpción de Caso Edtado ' . $id,$id);
+
 				$estatus = 'ok';
 			} else
 				$estatus = 'error al actualizar Descripcion de caso';

@@ -20,7 +20,7 @@
         <!--CSS-->
         <script type='text/javascript' src='../lib/jquery.min.js'></script>
         <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
-
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
         <?php include("../layout/sipinna.php"); ?>
 
         <div class="div-al row col-md-12">

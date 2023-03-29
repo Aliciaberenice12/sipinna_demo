@@ -575,6 +575,8 @@ if ($stmtDelito->rowCount() > 0) {
 	$pdf->Cell(102, 5,  'Total de personas vulneradas: ', 1, 0, 'C', true);
 	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
 	$pdf->Ln();
+	$pdf->Ln();
+
 } else {
 	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
 	$pdf->Ln();
@@ -582,8 +584,8 @@ if ($stmtDelito->rowCount() > 0) {
 
 //2159 mm x 2794 mm
 
+
 // Datos por Municipio
-$pdf->Ln();
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
@@ -596,44 +598,177 @@ $pdf->Cell(102, 5, utf8_decode('Municipio'), 1, 0, 'C', true);
 $pdf->Cell(102, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
 $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
 $pdf->SetFillColor(255);
-$pdf->SetTextColor(0);
 $pdf->SetAligns(array('C','C'));
+$pdf->SetTextColor(0);
 $pdf->Ln();
 
-$queryMun = "	SELECT 		municipio,c4_pais,c4_edo,c4_mun,c4_mun_edo,COUNT(*) AS Numero
-				FROM 		((tbl_c4_expedientes
+$queryMun = "	SELECT 		municipio,c4_mun,count(*) as Numero
+				FROM 		(tbl_c4_expedientes
 				LEFT JOIN 	cat_municipios
 				ON 			tbl_c4_expedientes.c4_mun= cat_municipios.id_municipio)
-				LEFT JOIN 	cat_estados
-				ON 			tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
 				WHERE 		c4_fecha_inicio
 				BETWEEN 	? AND ?
-				AND 		activo =?
-				GROUP BY 	municipio
-				ORDER BY	municipio
-
+				AND 		activo = ?
+				GROUP BY 	c4_mun
 			";
 $stmtMun = $conexion->dbh->prepare($queryMun);
 $stmtMun->execute(array($desde,$hasta,1));
-$queryTotal = "	SELECT 		sum(Case When c4_mun then 1 ELSE 0 END) AS Total 
-				FROM 		(tbl_c4_expedientes 
-				LEFT JOIN 	cat_municipios 
-				ON 			tbl_c4_expedientes.c4_mun=cat_municipios.id_municipio) 
-				WHERE 		c4_fecha_inicio 
-				BETWEEN 	? 
-				AND 		? 
-				AND 		activo =?
+
+$queryTotal = 	"	SELECT 		sum(Case When c4_mun != '' then 1 ELSE 0 END) AS Total 
+					FROM 		(tbl_c4_expedientes 
+					LEFT JOIN 	cat_municipios 
+					ON 			tbl_c4_expedientes.c4_mun=cat_municipios.id_municipio) 
+					WHERE 		c4_fecha_inicio 
+					BETWEEN 	? 
+					AND 		? 
+					AND 		activo = ?
 				";
 $stmtTotal = $conexion->dbh->prepare($queryTotal);
 $stmtTotal->execute(array($desde,$hasta,1));
 $total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
+
 if ($stmtMun->rowCount() > 0) {
 	while ($municipio = $stmtMun->fetch(PDO::FETCH_ASSOC)) {
-        $pdf->Row(array(utf8_decode($municipio["municipio"]), utf8_decode($municipio["Numero"])));
+		if($municipio["c4_mun"] == '')
+		{
+
+		}
+		else{
+			$pdf->Row(array(utf8_decode($municipio["municipio"]), utf8_decode($municipio["Numero"])));
+
+		}
 	}
 	
 	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'].' Municipios', 1, 0, 'C', true);
+	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
+	$pdf->Ln();
+} else {
+	if($municipio["c4_mun"] == '')
+		{
+
+		}
+		else{
+			$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+
+		}
+	$pdf->Ln();
+}
+
+// Datos por Estado
+$pdf->Ln();
+$pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
+$pdf->SetTextColor(255);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(204, 5,  'Tabla de casos por Estado diferente de veracruz', 1, 0, 'C', true);
+$pdf->Ln();//Salto de Linea
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
+$pdf->SetTextColor(255);//Color del texto
+$pdf->Cell(102, 5, utf8_decode('Estado'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
+$pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
+$pdf->SetFillColor(255);
+$pdf->SetTextColor(0);
+$pdf->SetAligns(array('C','C'));
+$pdf->Ln();
+
+$queryEdo = "	SELECT 		c4_edo,estado,COUNT(*) AS Numeros			
+				FROM 		(tbl_c4_expedientes
+				LEFT JOIN 	cat_estados
+				ON 			tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
+				WHERE 		c4_fecha_inicio 
+				BETWEEN 	? AND ?
+				AND			activo =?
+				GROUP BY 	c4_edo
+				ORDER BY	c4_edo
+			";
+$stmtEdo = $conexion->dbh->prepare($queryEdo);
+$stmtEdo->execute(array($desde,$hasta,1));
+$queryTotalEdo = "	SELECT 		sum(Case When c4_mun_edo != ''  then 1 ELSE 0 END) AS Total ,
+					c4_edo
+					FROM 		(tbl_c4_expedientes
+					LEFT JOIN 	cat_estados
+					ON			tbl_c4_expedientes.c4_edo = cat_estados.id_estado) 
+					WHERE 		c4_fecha_inicio 
+					BETWEEN 	? 
+					AND 		? 
+					AND 		activo =?
+				";
+$stmtTotalEdo = $conexion->dbh->prepare($queryTotalEdo);
+$stmtTotalEdo->execute(array($desde,$hasta,1));
+$total = $stmtTotalEdo->fetch(PDO::FETCH_ASSOC);
+
+
+if ($stmtEdo->rowCount() > 0) {
+	while ($estado_dif = $stmtEdo->fetch(PDO::FETCH_ASSOC)) {
+		if($estado_dif["c4_edo"] != '30' & $estado_dif["c4_edo"] != ''){
+			$pdf->Row(array(utf8_decode($estado_dif["estado"]), utf8_decode($estado_dif["Numeros"])));
+		}
+		else{
+			
+		}
+	}
+	
+	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
+	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
+	$pdf->Ln();
+	$pdf->Ln();
+} else {
+	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
+	$pdf->Ln();
+}
+
+// Datos por Pais
+$pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
+$pdf->SetTextColor(255);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(204, 5,  utf8_decode('Tabla de casos por Pais diferente de México'), 1, 0, 'C', true);
+$pdf->Ln();//Salto de Linea
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
+$pdf->SetTextColor(255);//Color del texto
+$pdf->Cell(102, 5, utf8_decode('Pais'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
+$pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
+$pdf->SetFillColor(255);
+$pdf->SetTextColor(0);
+$pdf->SetAligns(array('C','C'));
+$pdf->Ln();
+
+$queryPais = "	SELECT 		c4_pais,COUNT(*) AS Numero			
+				FROM 		tbl_c4_expedientes
+				WHERE 		c4_fecha_inicio 
+				BETWEEN 	? AND ?
+				AND			activo =?
+				group by 	c4_pais
+			";
+$stmtPais = $conexion->dbh->prepare($queryPais);
+$stmtPais->execute(array($desde,$hasta,1));
+$queryTotalPais = "	SELECT 		c4_pais,SUM(c4_pais != 'México') AS total 
+					FROM 		tbl_c4_expedientes 
+					WHERE 		c4_fecha_inicio 
+					BETWEEN 	? 
+					AND 		? 
+					AND 		activo =?
+				";
+$stmtTotalPais = $conexion->dbh->prepare($queryTotalPais);
+$stmtTotalPais->execute(array($desde,$hasta,1));
+$total = $stmtTotalPais->fetch(PDO::FETCH_ASSOC);
+
+
+if ($stmtPais->rowCount() > 0) {
+	while ($estado_dif = $stmtPais->fetch(PDO::FETCH_ASSOC)) {
+		if($estado_dif['c4_pais'] != 'México'){
+			$pdf->Row(array(utf8_decode($estado_dif["c4_pais"]), utf8_decode($estado_dif["Numero"])));
+		}
+		else{
+			
+		}
+	}
+	
+	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
+	$pdf->Cell(102, 5,  $total['total'], 1, 0, 'C', true);
+	$pdf->Ln();
 	$pdf->Ln();
 } else {
 	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);

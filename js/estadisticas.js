@@ -1,7 +1,6 @@
 var cargando =
     '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
 
-
 $(document).ready(function () {
 
     $("#div_reportes_canalizacion").hide();
@@ -19,10 +18,10 @@ $(document).ready(function () {
                     $("#div_consulta_mes_num_casos_can").hide(),
                     $("#div_cunsulta_genero_can").hide(),
                     $("#div_consulta_edad_can").hide(),
-                   
-                    $("#div_consulta_casos_por_municipio_can").show(),
-                    $("#div_consulta_casos_por_edo_mun_can").show()
-
+                    $("#div_consulta_casos_por_estado_dif_can").show(),                    
+                    $("#div_consulta_casos_por_pais_dif_can").show(),
+                    $("#div_consulta_casos_por_municipio_can").show()
+     
                     
                     
                 }
@@ -33,9 +32,11 @@ $(document).ready(function () {
                     $("#div_consulta_mes_num_casos_can").show(),
                     $("#div_cunsulta_genero_can").show(),
                     $("#div_consulta_edad_can").show(),
-                  
                     $("#div_consulta_casos_por_municipio_can").hide(),
-                    $("#div_consulta_casos_por_edo_mun_can").hide()
+                    $("#div_consulta_casos_por_edo_mun_can").hide(),
+                    $("#div_consulta_casos_por_estado_dif_can").hide(),                    
+                    $("#div_consulta_casos_por_pais_dif_can").hide()
+                  
 
 
                 }
@@ -46,12 +47,10 @@ $(document).ready(function () {
                     $("#div_consulta_mes_num_casos_can").show(),
                     $("#div_cunsulta_genero_can").show(),
                     $("#div_consulta_edad_can").show(),
-                  
                     $("#div_consulta_casos_por_municipio_can").show(),
-                    $("#div_consulta_casos_por_edo_mun_can").show()
-
-
-                    
+                    $("#div_consulta_casos_por_edo_mun_can").show(),
+                    $("#div_consulta_casos_por_estado_dif_can").show(),                    
+                    $("#div_consulta_casos_por_pais_dif_can").show()
                 }
             });
         }
@@ -61,30 +60,40 @@ $(document).ready(function () {
                     $("#div_reportes_casos_c4").show(),
                     $("#div_reportes_canalizacion").hide(),
                     $("#div_consulta_mes_num_casos_c4").hide(),
-                    $("#div_cunsulta_genero_c4").hide(),
+                    $("#div_consulta_genero_c4").hide(),
                     $("#div_consulta_edad_c4").hide(),
                     $("#div_consulta_num_delitos_casos_c4").hide(),
-                    $("#div_consulta_casos_por_municipio_c4").show()
+                    $("#div_consulta_casos_por_municipio_c4").show(),
+                    $("#div_consulta_casos_por_estado_c4").show(),
+                    $("#div_consulta_casos_por_pais_c4").show()
+
+                
 
                 }
                 else if($(this).val() == "2"){
                     $("#div_reportes_casos_c4").show(),
                     $("#div_reportes_canalizacion").hide(),
                     $("#div_consulta_mes_num_casos_c4").show(),
-                    $("#div_cunsulta_genero_c4").show(),
+                    $("#div_consulta_genero_c4").show(),
                     $("#div_consulta_edad_c4").show(),
                     $("#div_consulta_num_delitos_casos_c4").show(),
-                    $("#div_consulta_casos_por_municipio_c4").hide()
+                    $("#div_consulta_casos_por_municipio_c4").hide(),
+                    $("#div_consulta_casos_por_municipio_c4").hide(),
+                    $("#div_consulta_casos_por_estado_c4").hide(),
+                    $("#div_consulta_casos_por_pais_c4").hide()
 
                 }
                 else if($(this).val() == "3"){
                     $("#div_reportes_casos_c4").show(),
                     $("#div_reportes_canalizacion").hide(),
                     $("#div_consulta_mes_num_casos_c4").show(),
-                    $("#div_cunsulta_genero_c4").show(),
+                    $("#div_consulta_genero_c4").show(),
                     $("#div_consulta_edad_c4").show(),
                     $("#div_consulta_num_delitos_casos_c4").show(),
-                    $("#div_consulta_casos_por_municipio_c4").show()
+                    $("#div_consulta_casos_por_municipio_c4").show(),
+                    $("#div_consulta_casos_por_municipio_c4").show(),
+                    $("#div_consulta_casos_por_estado_c4").show(),
+                    $("#div_consulta_casos_por_pais_c4").show()
 
                 }
             });
@@ -103,7 +112,6 @@ function limpiarModal(){
     $('#desde_fecha').val(""),
     $('#hasta_fecha').val("")
 }
-
 
 function consulta() {
     hoy = $('#hoy').val();
@@ -168,16 +176,17 @@ function consulta() {
             fn_listar_municipio_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
             fn_listar_numero_casos(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
             fn_listar_edo_mun_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha), 
-            fn_listar_pais_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha) 
-           
+            fn_listar_pais_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
+            // limpiarModal()
         }
-        else if (res.estatus === "consul_delito") {
+        else if (res.estatus === "consul_edades") {
             fn_listar_mes_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
             fn_listar_numero_casos(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
             fn_listar_gen_can(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_edad_can(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_edad_mayores_can(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_per_vul_can(id_reporte,desde_fecha,hasta_fecha)
+            // limpiarModal()
            
        
         }
@@ -189,13 +198,18 @@ function consulta() {
             fn_listar_edad_can(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_edad_mayores_can(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_per_vul_can(id_reporte,desde_fecha,hasta_fecha),
-            fn_listar_delitos_can(id_reporte,desde_fecha,hasta_fecha),
-            limpiarModal()
+            fn_listar_edo_mun_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha), 
+            fn_listar_pais_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
+            // limpiarModal()
         }
         else if (res.estatus === "consul_mun_c4") {
             fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
             fn_listar_municipio_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-            limpiarModal()
+            fn_listar_estado_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_pais_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
+            
+
+            // limpiarModal()
         }
         else if (res.estatus === "consul_genero_c4") {
             fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
@@ -204,8 +218,9 @@ function consulta() {
             fn_listar_edad_c4(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_edad_mayores_c4(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_per_vul_c4(id_reporte,desde_fecha,hasta_fecha),
-            fn_listar_delitos_c4(id_reporte,desde_fecha,hasta_fecha),
-            limpiarModal()
+            fn_listar_delitos_c4(id_reporte,desde_fecha,hasta_fecha)
+            fn_carga_delitos()
+            // limpiarModal()
         }
         else if (res.estatus === "consul_mes_c4") {
             fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
@@ -215,10 +230,11 @@ function consulta() {
             fn_listar_edad_mayores_c4(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_per_vul_c4(id_reporte,desde_fecha,hasta_fecha),
             fn_listar_delitos_c4(id_reporte,desde_fecha,hasta_fecha),
-            fn_listar_municipio_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-            limpiarModal()
+            fn_carga_delitos(),
+            fn_listar_municipio_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
+            // limpiarModal()
         }
-       
+        
        
     })
 }
@@ -236,6 +252,7 @@ function modal_pdf(gen_reporte,id_reporte,desde,hasta){
         $('#tit_modal_pdf').html('Reporte General de Canalización(sin municipio)');
         $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
         $('#modal_pdf').modal('show');
+        fn_carga_delitos(),
         ref_pdf = '<iframe  src="../vistas/reportes/canalizacion/reporteGeneral.php?desde='+desde+'&hasta='+hasta+'" width="100%" height="600px"></iframe>';
         $("#reporte").html(ref_pdf);
     }
@@ -355,11 +372,7 @@ function fn_listar_edad_can(id_reporte,desde_fecha,hasta_fecha) {
     $("#consulta_edad_can").html(cargando);
     $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edades',id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
         $('#consulta_edad_can').html(data);
-        // $('#tbl_con_sexo').DataTable({
-        //     language: { "url": "../lib/datatables/Spanish.json" },
-        //     order: [[0, "asc"]],
-        //     searching: true,
-        // });
+        
         
     });
 }
@@ -367,32 +380,29 @@ function fn_listar_edad_mayores_can(id_reporte,desde_fecha,hasta_fecha) {
     $("#consulta_edad_mayores_can").html(cargando);
     $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edades_mayores',id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
         $('#consulta_edad_mayores_can').html(data);
-        // $('#tbl_con_sexo').DataTable({
-        //     language: { "url": "../lib/datatables/Spanish.json" },
-        //     order: [[0, "asc"]],
-        //     searching: true,
-        // });
         
     });
 }
 function fn_listar_per_vul_can(id_reporte,desde_fecha,hasta_fecha) {
     $("#consulta_per_vul_can").html(cargando);
     $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_agresion',id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
-        $('#consulta_per_vul_can').html(data);
-       
-        
-    });
-}
-function fn_listar_delitos_can(id_reporte,desde_fecha,hasta_fecha) {
-    $("#consulta_delitos_todos_casos_can").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_delito',id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
-        $('#consulta_delitos_todos_casos_can').html(data);
-       
-        
+        $('#consulta_per_vul_can').html(data);     
     });
 }
 
 ///Casos c4
+function fn_listar_pais_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha) {
+    $("#consulta_casos_por_pais_dif_c4").html(cargando);
+    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_pais_c4',gen_reporte:gen_reporte,id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
+        $('#consulta_casos_por_pais_dif_c4').html(data);        
+    });
+}
+function fn_listar_estado_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha) {
+    $("#consulta_casos_por_edo_dif_c4").html(cargando);
+    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edo_c4',gen_reporte:gen_reporte,id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
+        $('#consulta_casos_por_edo_dif_c4').html(data);        
+    });
+}
 function fn_listar_municipio_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha) {
     $("#consulta_casos_por_municipio_veracruz_c4").html(cargando);
     $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_mun_c4',gen_reporte:gen_reporte,id_reporte:id_reporte,desde_fecha:desde_fecha,hasta_fecha:hasta_fecha }, function (data) {
@@ -444,5 +454,10 @@ function fn_listar_delitos_c4(id_reporte,desde_fecha,hasta_fecha) {
         $('#consulta_delitos_todos_casos_c4').html(data);
        
         
+    });
+}
+function fn_carga_delitos() {
+    $.post("../controllers/estadisticas.php", { func: 'fn_carga_delitos' }, function (data) {
+
     });
 }

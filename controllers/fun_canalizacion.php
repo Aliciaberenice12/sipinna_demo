@@ -240,6 +240,7 @@ if (isset($_REQUEST['func'])) {
 						array_push($der, "■" . $_SESSION['cat_derechos'][$der_vul][0]);
 					}
 					$res_der_vul = implode("<br>", $der);
+					
 					$html .= '
 								<tr class="text-11" align="center" id="lvictimas' . $row["id_can_victima"] . '">
 									<div class="row">
@@ -462,7 +463,7 @@ if (isset($_REQUEST['func'])) {
 			if ($_REQUEST["id"] == '0') {
 				// $estatus = $v->insertar_solicitante($_REQUEST["can_inst_sol"], $_REQUEST["can_nom_sol"],$_SESSION["nombre"]);
 			} else {
-				$estatus = $v->editar_solicitante($_REQUEST["id"], $_REQUEST["can_inst_sol"], $_REQUEST["can_nom_sol"]);
+				$estatus = $v->editar_solicitante($_REQUEST["id"], $_REQUEST["can_inst_sol"], $_REQUEST["can_nom_sol"],$_SESSION["nombre"]);
 			}
 			header('Content-Type: application/json');
 			$datos = array('estatus' => $estatus);
@@ -501,16 +502,7 @@ if (isset($_REQUEST['func'])) {
 			}
 			echo $html;
 			break;
-		// case 'fn_carga_delitos':
-		// 	$html = '<option value="0" disabled>Seleccionar</option>';
-		// 	$arr_res = $v->fn_lista_delitos();
-
-		// 	foreach ($arr_res as $row) {
-		// 		$html .= '<option value="' . $row["id_delito"] . '">' . $row["delito"] . '</option>';
-		// 		$_SESSION['cat_delitos'][$row["id_delito"]] = [$row["delito"]];
-		// 	}
-		// 	echo $html;
-		// 	break;
+		
 		case 'fn_carga_derechos':
 			$html = '<option value="0" disabled selected>Seleccionar</option>';
 			$arr_res = $v->fn_lista_derechos();
@@ -853,7 +845,7 @@ if (isset($_REQUEST['func'])) {
 										</td>
 										<td class="col-md-1">
 											<div >
-											' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '
+											' . ($row["municipio"] == "0" ? "" : $row["municipio"]) . '
 
 											' . $row["can_mun_edo"] . '
 
@@ -873,7 +865,6 @@ if (isset($_REQUEST['func'])) {
 										</td>
 										<td class="col-md-1">								
 											<div>
-											
 												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');">
 													<i class="bi bi-pencil-square"></i>
 													<span></span>
@@ -882,8 +873,6 @@ if (isset($_REQUEST['func'])) {
 													<i class="bi bi-trash"></i>
 													<span></span>
 												</button>
-												
-											
 											</div>
 										</td>   
 										<td class="col-md-1">
@@ -1185,7 +1174,7 @@ if (isset($_REQUEST['func'])) {
 													<i class="bi bi-pencil-square"></i>
 												</button>
 											
-												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_avance(' . $row["id_can_avance"] . ',\'' . $row["can_desc_avance"] . '\');">
+												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_avance(' . $row["id_can_avance"] . ',\'' . $row["can_desc_avance"] . '\',\'' . $row["can_exp_folio_avance"] . '\');">
 													<i class="bi bi-trash"></i>
 												</button>	
 											

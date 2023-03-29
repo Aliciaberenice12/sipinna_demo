@@ -107,15 +107,25 @@ if (isset($_SESSION['nombre'])) {
                         </div>
                         <div id="div_consulta_edad_can">
                             <h5 align="center"><strong>Total de victimas por edades de todos los casos</strong></h5>
-                        
+                            <h5 align="center"><strong>Total de victimas Menores de edad de todos los casos</strong></h5>
                             <div id="consulta_edad_can"></div>
+                            <h5 align="center"><strong>Total de victimas mayores  de edad de todos los casos</strong></h5>
                             <div id="consulta_edad_mayores_can"></div>
+                            <h5 align="center"><strong>Total de casos de personas vulneradas</strong></h5>
                             <div id="consulta_per_vul_can"></div>
                         </div>                  
                        
                         <div id="div_consulta_casos_por_municipio_can">
                             <h5 align="center"><strong>Total de casos en cada municipio(Estado de Veracruz )</strong></h5>
                             <div id="consulta_casos_por_municipio_veracruz_can"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_estado_dif_can">
+                            <h5 align="center"><strong>Total de casos en estados diferentes de veracruz</strong></h5>
+                            <div id="consulta_casos_por_municipio_edo_mun_can"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_pais_dif_can">
+                            <h5 align="center"><strong>Total de casos en pais diferentes de Mexico</strong></h5>
+                            <div id="consulta_casos_por_pais_can"></div>
                         </div>
                        
 
@@ -133,15 +143,20 @@ if (isset($_SESSION['nombre'])) {
                             <div id="consulta_meses_num_casos_c4"></div>
                         </div>
                         
-                        <div id="div_cunsulta_genero_c4">
+                        <div id="div_consulta_genero_c4">
                             <h5 align="center"><strong>Total de victimas por genero todos los casos</strong></h5>
                             <div id="consulta_genero_c4"></div>
                         </div>
                         <div id="div_consulta_edad_c4">
                             <h5 align="center"><strong>Total de todas victimas por edades casos</strong></h5>
-                           
+                            <h5 align="center"><strong>Total de todas victimas Menores de edad casos</strong></h5>
+
                             <div id="consulta_edad_c4"></div>
+                            <h5 align="center"><strong>Total de todas victimas Mayores de edad casos</strong></h5>
+
                             <div id="consulta_edad_mayores_c4"></div>
+                            <h5 align="center"><strong>Total de victimas vulneradas de todos los casos</strong></h5>
+
                             <div id="consulta_suma_datos_per_vul_c4"></div>
                         </div>
                         
@@ -151,14 +166,18 @@ if (isset($_SESSION['nombre'])) {
                             <div id="consulta_delitos_todos_casos_c4"></div>
                         </div>
                         <div id="div_consulta_casos_por_municipio_c4">
-                            
                             <h5 align="center"><strong>Total casos en cada municipio</strong></h5>
                             <div id="consulta_casos_por_municipio_veracruz_c4"></div>
                         </div>
-                        
+                        <div id="div_consulta_casos_por_estado_c4">
+                            <h5 align="center"><strong>Total casos en cada Estado diferente a veracruz</strong></h5>
+                            <div id="consulta_casos_por_edo_dif_c4"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_pais_c4">
+                            <h5 align="center"><strong>Total casos en cada pais diferente a México</strong></h5>
+                            <div id="consulta_casos_por_pais_dif_c4"></div>
+                        </div>
                     </div>
-                  
-
                 </div>
                 <div class="card-footer">
                     <br>

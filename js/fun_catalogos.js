@@ -74,6 +74,7 @@ function fn_listar_delitos() {
         $('#tbl_del').DataTable({
             language: { "url": "../lib/datatables/Spanish.json" },
             order: [[0, "asc"]],
+         
             searching: true,
         });
     });
