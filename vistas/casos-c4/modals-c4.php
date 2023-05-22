@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-secondary">
-                <h5 class="modal-title" id="tit_mod_c4"  style="color:white;"></h5>
+                <h5 class="modal-title" id="tit_mod_c4" style="color:white;"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -35,7 +35,7 @@
                                         <input type="text" class="form-control" placeholder="No.Oficio" id="c4_no_oficio" name="c4_no_oficio" maxlength="50">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="c4_ruta_sol_oficio">Archivo Solicitud de Canalización *</label>
+                                    <label for="c4_ruta_sol_oficio">Archivo Solicitud de Canalización</label>
                                     <input type="file" class="form-control" id="c4_ruta_sol_oficio" name="c4_ruta_sol_oficio" accept="application/pdf">
                                     <input type="hidden" name="c4_ruta_sol_oficio_edit" id="c4_ruta_sol_oficio_edit" value="0">
 
@@ -175,6 +175,54 @@
                             <div id="lista_bd_probable_res"></div>
                         </div>
                         <!--Termina Probable Responsable-->
+                        <!--Delitos victimas-->
+
+                        <div class="card">
+                            <h5><br><strong>Tipo delito:</strong></h5>
+
+                            <div class="row col-md-12" id="agregar_delito_victima">
+                                <br>
+                                <div class="col-md-10">
+                                    <br>
+                                    <input type="hidden" name="id_c4_delito" id="id_c4_delito" value="0">
+                                    <label for="id_c4_del_victima_edit">Tipo de Delito:</label>
+                                    <input type="hidden" name="id_c4_del_victima_edit" id="id_c4_del_victima_edit" value="0">
+
+                                    <select name="c4_delito_edit" id="c4_delito_edit" class="form-select" multiple>
+                                        <option value="0"></option>
+                                    </select>
+                                    <small id="help_c4_del_edit" class="form-text text-muted">Seleccione min. 1 max. 4</small>
+                                </div>
+                                <div class="col-md-2" align="center">
+                                    <br>
+                                    <button type="button" class="btn btn-success" id="agregar_delito" onclick="fun_agregar_delito_c4();">
+                                        <i class="bi bi-plus"></i>
+
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row card-body" id="add_delito">
+                                <div class="col-md-8">
+                                    <label for="c4_delitos">Tipo de Delito:</label>
+                                    <select name="c4_delitos" id="c4_delitos" size="5" class="form-select">
+                                    </select>
+                                    <small id="help_c4_del" class="form-text text-muted">Seleccione min. 1 max. 4</small>
+
+                                </div>
+                              
+                                <div class="col-md-4">
+                                    <br>
+                                    <button class="btn btn-success" type="button" onclick="carrito_delito(1,0);">
+                                        <i class="bi bi-plus-circle"> </i>Agregar
+                                    </button>
+                                </div>
+                                <div id="lista_delitos_res"></div>
+
+                            </div>
+                            <div id="lista_bd_delitos_res"></div>
+                        </div>
+                        <!--Termina Delitos Victimas-->
+                        <!-- victimas -->
                         <div class="card">
                             <h5><br><strong>Datos de presunta(s) victima(s) :</strong></h5>
 
@@ -199,15 +247,9 @@
                                     <label for="c4_nom_vic">Nombre Victima:</label>
                                     <input type="text" class="form-control" placeholder="Nombre Victima" id="c4_nom_vic" name="c4_nom_vic" required>
                                 </div>
+
+
                                 <div class="col-md-4">
-                                    <label for="c4_delitos">Tipo de Delito:</label>
-                                    <select name="c4_delitos" id="c4_delitos" size="5" class="form-select" multiple>
-                                    </select>
-                                    <small id="help_c4_del" class="form-text text-muted">Seleccione min. 1 max. 4</small>
-
-                                </div>
-
-                                <div class="col-md-12">
                                     <label for="c4_der_vul">Derechos Vulnerados o restringidos:</label>
                                     <select name="c4_der_vul" id="c4_der_vul" class="form-select" required>
                                         <option value="0"></option>
@@ -365,16 +407,6 @@
                             <input type="text" class="form-control" placeholder="Nombre Victima" id="c4_nom_victima_edit" name="c4_nom_victima_edit" required>
                         </div>
 
-                        <!-- <div class="col-md-12">
-                            <br>
-                            <label for="id_c4_del_victima_edit">Tipo de Delito:</label>
-                            <input type="hidden" name="id_c4_del_victima_edit" id="id_c4_del_victima_edit" value="0">
-
-                            <select name="c4_delito_edit" id="c4_delito_edit" class="form-select" multiple>
-                                <option value="0"></option>
-                            </select>
-                            <small id="help_c4_del_edit" class="form-text text-muted">Seleccione min. 1 max. 4</small>
-                        </div> -->
                         <div class="col-md-12">
                             <label for="c4_der_vul_vic_edit">Derechos Vulnerados o restringidos:</label><br>
                             <input type="hidden" name="id_c4_der_victima_edit" id="id_c4_der_victima_edit" value="0" row="5">
@@ -434,31 +466,6 @@
                             <label for="n_i_edit">N/I</label>
 
                         </div>
-                       
-                        <div class="row col-md-12" id="agregar_delito_victima">
-                            <br>
-                            <div class="col-md-10">
-                                <br>
-                                <input type="hidden" name="id_c4_delito" id="id_c4_delito" value="0">
-                                <label for="id_c4_del_victima_edit">Tipo de Delito:</label>
-                                <input type="hidden" name="id_c4_del_victima_edit" id="id_c4_del_victima_edit" value="0">
-
-                                <select name="c4_delito_edit" id="c4_delito_edit" class="form-select" multiple>
-                                    <option value="0"></option>
-                                </select>
-                                <small id="help_c4_del_edit" class="form-text text-muted">Seleccione min. 1 max. 4</small>
-                            </div>
-                            <div class="col-md-2" align="center">
-                                <br>
-                                <button type="button" class="btn btn-success" id="agregar_delito" onclick="fun_agregar_delito_c4();">
-                                    <i class="bi bi-plus"></i>
-                                  
-                                </button>
-                            </div>
-
-
-                        </div>
-                        <div id="listado_delitos_victima"> </div>
 
                     </div>
 

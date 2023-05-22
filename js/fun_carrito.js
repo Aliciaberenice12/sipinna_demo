@@ -5,9 +5,7 @@ function carrito_victima_c4(origen, evento, id) {
         {
             can_edad_vic = $.trim($('#can_edad_vic').val());
             can_nom_vic = $.trim($('#can_nom_vic').val());
-            can_delito = $.trim($('#can_delito').val());
-            can_delito = $('#can_delito').val();
-            combo = document.getElementById("can_delito");
+            
             // txt_delito = combo.options[combo.selectedIndex].text;
             // alert(txt_delito+'--'+can_delito);
             // return false;
@@ -51,7 +49,7 @@ function carrito_victima_c4(origen, evento, id) {
         else {
             can_edad_vic = '';
             can_nom_vic = '';
-            can_delito = '';
+           
             can_der_vul_vic = '';
             can_per_tercera_edad = '';
             can_per_violencia = '';
@@ -64,14 +62,13 @@ function carrito_victima_c4(origen, evento, id) {
         }
         $.post("../controllers/fun_canalizacion.php", {
             func: 'carrito_victima', evento: evento, id: id, can_edad_vic: can_edad_vic,
-            can_nom_vic: can_nom_vic, can_delito: can_delito, can_der_vul_vic: can_der_vul_vic, can_per_tercera_edad: can_per_tercera_edad,
+            can_nom_vic: can_nom_vic,can_der_vul_vic: can_der_vul_vic, can_per_tercera_edad: can_per_tercera_edad,
             can_per_violencia: can_per_violencia, can_per_discapacidad: can_per_discapacidad, can_per_indigena: can_per_indigena,
             can_per_transgenero: can_per_transgenero, can_sexo_victima: can_sexo_victima
         }, function (data) {
             $('#lista_dat_vic').html(data);
             $('#can_edad_vic').val('');
             $('#can_nom_vic').val('');
-            $('#can_delito').val('');
             $('#can_der_vul_vic').val('');
             $('#can_per_tercera_edad').prop('checked', false).removeAttr('checked');
             $('#can_per_violencia').prop('checked', false).removeAttr('checked');
@@ -95,16 +92,13 @@ function carrito_victima_c4(origen, evento, id) {
             c4_edad_vic = $.trim($('#c4_edad_vic').val());
 
             c4_nom_vic = $.trim($('#c4_nom_vic').val());
-            c4_delitos = $.trim($('#c4_delitos').val());
-            c4_delitos_c=c4_delitos.split(",");
-            c4_num_delitos=c4_delitos_c.length;
             c4_der_vul = $.trim($('#c4_der_vul').val());
             c4_per_tercera_edad = $.trim($('#c4_per_tercera_edad').val());
             c4_per_violencia = $.trim($('#c4_per_violencia').val());
             c4_per_discapacidad = $.trim($('#c4_per_discapacidad').val());
             c4_per_indigena = $.trim($('#c4_per_indigena').val());
             c4_per_transgenero = $.trim($('#c4_per_transgenero').val());
-            c4_sexo_victima = document.querySelector('input[name="c4_sexo_victima"]:checked').value;
+            // c4_sexo_victima = document.querySelector('input[name="c4_sexo_victima"]:checked').value;
            
             if(c4_edad_vic === ''){
                 toastr.options.timeOut = 2500;
@@ -120,12 +114,7 @@ function carrito_victima_c4(origen, evento, id) {
                 $('#c4_nom_vic').focus();
                 return false;
             }
-            if(c4_delitos === ''){
-                toastr.options.timeOut = 2500;
-                toastr.warning('Debes Seleccionar el Delito!');
-                $('#c4_delitos').focus();
-                return false;
-            }
+            
             if(c4_der_vul === ''){
                 toastr.options.timeOut = 2500;
                 toastr.warning('Debes Seleccionar el Derecho!');
@@ -158,12 +147,35 @@ function carrito_victima_c4(origen, evento, id) {
                 c4_per_transgenero = 1;
             else
                 c4_per_transgenero = '';
+
+                if (!document.querySelector('input[name="c4_sexo_victima"]:checked')) {
+                    toastr.options.timeOut = 2500;
+                    toastr.warning('Seleccionar Sexo!');
+                    $('#c4_masculino').focus();
+        
+                    setTimeout(() => {
+                        $('#c4_masculino').prop('checked', true);
+                        setTimeout(() => {
+                            $('#c4_masculino').prop('checked', false);
+                            $('#c4_femenino').prop('checked', true);
+                            setTimeout(() => {
+                                $('#c4_femenino').prop('checked', false);
+                                $('#c4_n_i').prop('checked', true);
+                                setTimeout(() => {
+                                    $('#c4_n_i').prop('checked', false);
+                                }, 500);
+                            }, 500);
+                        }, 500);
+                    }, 500);
+        
+                    return false;
+                }
+                c4_sexo_victima = document.querySelector('input[name="c4_sexo_victima"]:checked').value;
+        
         }
         else {
             c4_edad_vic = '';
             c4_nom_vic = '';
-            c4_delitos = '';
-            c4_num_delitos = '';
             c4_der_vul = '';
             c4_per_tercera_edad = '';
             c4_per_violencia = '';
@@ -174,7 +186,7 @@ function carrito_victima_c4(origen, evento, id) {
         }
         $.post("../controllers/fun_casos_c4.php", {
             func: 'carrito_victima_c4', evento: evento, id: id, c4_edad_vic: c4_edad_vic,
-            c4_nom_vic: c4_nom_vic, c4_delitos: c4_delitos, c4_num_delitos: c4_num_delitos, c4_der_vul: c4_der_vul,
+            c4_nom_vic: c4_nom_vic,  c4_der_vul: c4_der_vul,
             c4_per_tercera_edad: c4_per_tercera_edad, c4_per_violencia: c4_per_violencia, c4_per_discapacidad: c4_per_discapacidad,
             c4_per_indigena: c4_per_indigena, c4_per_transgenero: c4_per_transgenero, c4_sexo_victima: c4_sexo_victima
         }, function (data) {
@@ -190,9 +202,9 @@ function carrito_victima_c4(origen, evento, id) {
             $('#can_per_discapacidad').prop('checked', false).removeAttr('checked');
             $('#c4_per_indigena').prop('checked', false).removeAttr('checked');
             $('#c4_per_transgenero').prop('checked', false).removeAttr('checked');
-            $('#masculino').prop('checked', false).removeAttr('checked');
-            $('#femenino').prop('checked', false).removeAttr('checked');
-            $('#n_i').prop('checked', false).removeAttr('checked');
+            $('#c4_masculino').prop('checked', false).removeAttr('checked');
+            $('#c4_femenino').prop('checked', false).removeAttr('checked');
+            $('#c4_n_i').prop('checked', false).removeAttr('checked');
 
         });
     }
@@ -244,4 +256,5 @@ function carrito_probable_resp(evento, id) {
 
     });
 }
+
 

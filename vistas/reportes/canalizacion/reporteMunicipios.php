@@ -312,11 +312,11 @@ if ($stmtEdo->rowCount() > 0) {
 	$pdf->Ln();
 }
 
-// Datos por Pais
+// Datos por Pais diferente a México
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5,  'Tabla de casos por Pais diferente de México', 1, 0, 'C', true);
+$pdf->Cell(204, 5,utf8_decode('Tabla de casos por Pais diferente de México')  , 1, 0, 'C', true);
 $pdf->Ln();//Salto de Linea
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados

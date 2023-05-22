@@ -127,19 +127,19 @@ function consulta() {
     }
     else if (id_reporte == '') {
         toastr.options.timeOut = 2500;
-        toastr.warning('Seleccione Reporte a Consultar!');
+        toastr.warning('Seleccione Reporte a consultar!');
         $('#id_reporte').focus();
         return false;
     }
     else if (desde_fecha == '') {
         toastr.options.timeOut = 2500;
-        toastr.warning('¡Seleccione Rango de fecha de inicio!');
+        toastr.warning('¡Seleccione rango de fecha desde la fecha inicio a consultar!');
         $('#desde_fecha').focus();
         return false;
     }
     else if (hasta_fecha == '') {
         toastr.options.timeOut = 2500;
-        toastr.warning('¡Seleccione Rango de fecha de Final!');
+        toastr.warning('¡Seleccione rango de fecha hasta la fecha final a consultar!');
         $('#hasta_fecha').focus();
         return false;
     }
@@ -242,14 +242,14 @@ function consulta() {
 function modal_pdf(gen_reporte,id_reporte,desde,hasta){
  if(gen_reporte =='1'){
     if(id_reporte=='1'){
-        $('#tit_modal_pdf').html('Reporte Municipio Canalización');
+        $('#tit_modal_pdf').html('Reporte de consulta por municipio canalización');
         $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
         $('#modal_pdf').modal('show');
         ref_pdf = '<iframe  src="../vistas/reportes/canalizacion/reporteMunicipios.php?desde='+desde+'&hasta='+hasta+'" width="100%" height="600px"></iframe>';
         $("#reporte").html(ref_pdf);
     }
     else if(id_reporte=='2'){
-        $('#tit_modal_pdf').html('Reporte General de Canalización(sin municipio)');
+        $('#tit_modal_pdf').html('Reporte general de canalización(sin municipio)');
         $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
         $('#modal_pdf').modal('show');
         fn_carga_delitos(),

@@ -16,7 +16,7 @@ if (isset($_SESSION['nombre'])) {
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Sipinna</title>
+    <title>SIPINNA</title>
     <!--CSS-->
     <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
     <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
@@ -46,8 +46,8 @@ if (isset($_SESSION['nombre'])) {
             <div class="card-header">
                 <h4>Generar Reporte</h4>
                 <div class="row">
-                    <div class="col-md-2">
-                        <h6><strong>Generar Reporte de:</strong> </h6>
+                    <div class="col-md-3">
+                        <h6>Tipo de reporte a generar:</h6>
 
                         <select class="form-select" name="gen_reporte" id="gen_reporte">
                             <option value="0" selected disabled>Seleccione</option>
@@ -56,7 +56,7 @@ if (isset($_SESSION['nombre'])) {
                      
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="id_reporte">Reporte a consultar:</label>
                         <select class="form-select" id="id_reporte" name="id_reporte">
                             <option value="0" selected disabled>Seleccione</option>
@@ -66,7 +66,7 @@ if (isset($_SESSION['nombre'])) {
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label for="desde_fecha">Fecha Desde:</label>
+                        <label for="desde_fecha">Fecha desde:</label>
                         <input type="date" class="form-control" placeholder="Start" name="desde_fecha" id="desde_fecha" />
                     </div>
                     <div class="col-md-2">

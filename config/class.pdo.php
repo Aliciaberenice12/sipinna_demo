@@ -21,8 +21,8 @@ class Conexion
 	var $host = "localhost";
 	var $us   = "root";
 	var $pw   = "";
-	//  var $us   = "usr_sipinna";
-	//  var $pw   = "sipinna";
+	// var $us   = "usr_sipinna";
+	// var $pw   = "sipinna";
 	var $key  = '51c3b22!';
 	var $dbh;
 	const KEY = "$2a$07$125Rdvlaptdf98112dsrqpwsaZxde9$";

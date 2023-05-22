@@ -578,7 +578,7 @@ if (isset($_POST['func'])) {
 				<div class="col-md-8"></div>
 				<div class="col-md-4" align="right">
 					<button class="btn btn-secondary" onclick="modal_pdf(\'' . $gen_reporte . '\',\'' . $id_reporte . '\',\'' . $desde . '\',\'' . $hasta . '\')" id="exportarpdf_mun" name="exportarpdf_mun">
-						<i class="bi bi-filetype-pdf"></i>Ver Pdf
+						<i class="bi bi-filetype-pdf"></i>Ver PDF
 					</button>
 					<p></p>
 				</div>
@@ -642,7 +642,7 @@ if (isset($_POST['func'])) {
 				$html =
 					'
 				<center>
-					<h5>¡ No hay datos de consulta por Municipio !</h5>
+					<h5>¡ No hay datos de consulta por municipio!</h5>
 				</center>';
 			} else {
 				$html = '  
@@ -653,7 +653,7 @@ if (isset($_POST['func'])) {
 						</div>
 						<div class="col-md-6" align="right">
 							<button class="btn btn-secondary" onclick="modal_pdf(\'' . $gen_reporte . '\',\'' . $id_reporte . '\',\'' . $desde . '\',\'' . $hasta . '\')" id="exportarpdf_mun" name="exportarpdf_mun">
-								<i class="bi bi-filetype-pdf"></i>Ver Pdf
+								<i class="bi bi-filetype-pdf"></i>Ver PDF
 							</button>
 							<p></p>
 						</div>
@@ -724,7 +724,7 @@ if (isset($_POST['func'])) {
 				$html =
 					'
 				<center>
-					<h5>¡ No hay datos de consulta por Municipio !</h5>
+					<h5>¡ No hay datos de consulta por estado diferente de veracruz!</h5>
 				</center>';
 			} else {
 				$html = '  
@@ -798,7 +798,7 @@ if (isset($_POST['func'])) {
 				$html =
 					'
 				<center>
-					<h5>¡ No hay datos de consulta por Pais Diferente a Mexico !</h5>
+					<h5>¡ No hay datos de consulta por país diferente a méxico !</h5>
 				</center>';
 			} else {
 				$html = '  
@@ -882,7 +882,7 @@ if (isset($_POST['func'])) {
 				$html =
 					'
 				<center>
-					<h5>¡ No hay datos de consulta por Municipio !</h5>
+					<h5>¡ No hay datos de consulta por municipio !</h5>
 				</center>';
 			} else {
 				$html = '  
@@ -895,7 +895,7 @@ if (isset($_POST['func'])) {
 						</div>
 						<div class="col-md-6" align="right">
 							<button class="btn btn-secondary" onclick="modal_pdf(\'' . $gen_reporte . '\',\'' . $id_reporte . '\',\'' . $desde . '\',\'' . $hasta . '\')" id="exportarpdf_mun" name="exportarpdf_mun">
-								<i class="bi bi-filetype-pdf"></i>Ver Pdf
+								<i class="bi bi-filetype-pdf"></i>Ver PDF
 							</button>
 							<p></p>
 						</div>
@@ -969,7 +969,7 @@ if (isset($_POST['func'])) {
 				$html =
 					'
 				<center>
-					<h5>¡ No hay datos de consulta por Estado Diferente a veracruz !</h5>
+					<h5>¡ No hay datos de consulta por estado diferente a veracruz !</h5>
 				</center>';
 			} else {
 				$html = '  
@@ -1047,7 +1047,7 @@ if (isset($_POST['func'])) {
 				$html =
 					'
 				<center>
-					<h5>¡ No hay datos de consulta por Pais Diferente a México !</h5>
+					<h5>¡ No hay datos de consulta por pais diferente a méxico !</h5>
 				</center>';
 			} else {
 				$html = '  
@@ -1340,7 +1340,7 @@ if (isset($_POST['func'])) {
 					</div>
 					<div class="col-md-6" align="right">
 						<button class="btn btn-secondary" onclick="modal_pdf(\'' . $gen_reporte . '\',\'' . $id_reporte . '\',\'' . $desde . '\',\'' . $hasta . '\')" id="exportarpdf_mun" name="exportarpdf_mun">
-							<i class="bi bi-filetype-pdf"></i>Ver Pdf
+							<i class="bi bi-filetype-pdf"></i>Ver PDF
 						</button>
 						<p></p>
 					</div>

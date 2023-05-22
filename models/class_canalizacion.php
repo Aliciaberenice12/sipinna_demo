@@ -189,9 +189,7 @@ class Canalizacion extends Conexion
 
 			//Comienza casos
 
-			$id_expediente = $can_folio_expediente;
-			$id_caso = $anio_folio.'/'.$id;
-
+			$id_caso = $id;
 			$sql2   = $conn->prepare("INSERT INTO 	tbl_can_casos_reportados 
 													(exp_id_caso_reportado,
 													can_des_caso,

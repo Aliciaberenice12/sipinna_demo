@@ -21,6 +21,7 @@ if (isset($_SESSION['nombre'])) {
     <link rel="stylesheet" type="text/css" href="../lib/bootstrap_icons_1_8_0/bootstrap-icons.css">
     <?php include("../layout/sipinna.php"); ?>
     <link rel="stylesheet" type="text/css" href="../lib/toastr/toastr.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css" integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <div class="div-al row">
 
 
@@ -43,7 +44,7 @@ if (isset($_SESSION['nombre'])) {
         <div class="row">
             <div>
                 <div class="row col-md-12">
-                   
+
                     <div class="col-md-4" align="left">
 
                         <button type="button" class="btn btn-success" onclick="mod_caso_c4(1,0);">
@@ -85,6 +86,7 @@ if (isset($_SESSION['nombre'])) {
     <script src="../js/fun_caso_c4.js?x=<?php echo time(); ?>"></script>
     <script src="../js/fun_carrito.js?x=<?php echo time(); ?>"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
 

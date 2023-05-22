@@ -14,7 +14,7 @@
                         <div class="row col-md-12">
                             <div class="col-md-6">
                                 <h4><strong>Rellene los siguientes campos</strong></h4>
-                                <small id="helpCamposObligatorios" class="form-text text-muted">*Campos Obligatorios</small>
+                                <small id="helpCamposObligatorios" class="form-text text-muted">*Campos obligatorios</small>
 
                             </div>
 
@@ -516,7 +516,7 @@
                             <div class="col-md-6" align="right">
                                 <button type="button" id="agregar_avance" class="btn btn-success" aria-label="limpiar_modal" onclick="fn_modal_avance(2);">
                                     <i class="bi bi-plus"></i>
-                                    Agregar Nuevo
+                                    Agregar nuevo
                                 </button>
                             </div>
                         </div>
@@ -547,7 +547,7 @@
                 <div class="card" id="listado_avance">
                     <div class="card-header">
                         <div class="col-md-12" align="certer">
-                            <h5 ><strong>Listado de Avances Registrados</strong></h5>
+                            <h5 ><strong>Listado de avances registrados</strong></h5>
                         </div>
                     </div>
                     <div class="card-body">
