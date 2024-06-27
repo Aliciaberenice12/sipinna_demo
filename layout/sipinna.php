@@ -47,7 +47,7 @@
                 <li>
 
                     <a href="../vistas/canalizacion-index.php">
-                        <button type="button" class="btn btn-nav1">Canalización de Casos de Posibles Afectaciones a los Derechos NNA</button>
+                        <button type="button" class="btn btn-nav text-lg">Canalización de Casos de Posibles Afectaciones a los Derechos NNA</button>
                     </a>
                 </li>
                 <li>

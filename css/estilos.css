@@ -93,6 +93,7 @@ img{
         justify-content: center;
     }
 
+
     @media screen and (max-width: 650px){
         .logos {
             background: none;
@@ -110,13 +111,22 @@ img{
             position: absolute;
         }       
         .form{
-            width: 75vh;
-            height: 75%;
+            width: 40vh;
+            height: 50%;
         }
 
-         h1, #usuario, #contrasena, #boton{
-            width: 100%;
+         #usuario, #contrasena, #boton{
+            width: 250px;
+            height: 45px !important;
         }
-
+        h1{
+            font-size: 35px;
+        }
+     
+        .text-lg{
+            font: .5em !important;
+        }
+     
+        
     }
     

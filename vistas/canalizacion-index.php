@@ -23,16 +23,16 @@
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
         <?php include("../layout/sipinna.php"); ?>
 
-        <div class="div-al row col-md-12">
+        <div class="div-al row col-md-12 mt-2">
 
-            <div class="col-md-8">
-                <h2 class="h2-titulo-canalizacion">Canalización de Casos de Posibles Afectaciones a los Derechos de NNA
+            <div class="col-sm-12 col-md-12 col-lg-8">
+                <h2 class="h2-titulo">Canalización de Casos de Posibles Afectaciones a los Derechos de NNA
                     recibidas en la Secretaría Ejecutiva del SIPINNA Estatal
                 </h2>
             </div>
 
-            <div class="col-md-4">
-                <img src="../images/imagen.png" class="img-log" align="right">
+            <div class="col-md-12 col-lg-4 mt-4">
+                <img src="../images/imagen.png" class="img-fluid" align="right">
             </div>
 
         </div>

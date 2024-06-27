@@ -25,11 +25,11 @@ if (isset($_SESSION['nombre'])) {
     <div class="div-al row">
 
 
-        <div class="col-md-6">
+        <div class="col-sm-12 col-md-12 col-lg-8">
             <h2 class="h2-titulo">Casos turnados por C4</h2>
         </div>
-        <div class="col-md-6">
-            <img src="../images/imagen.png" class="img-log" align="right">
+        <div class="col-sm-12 col-md-12 col-lg-4 mt-4">
+            <img src="../images/imagen.png" class="img-fluid" align="right">
         </div>
 
     </div>
