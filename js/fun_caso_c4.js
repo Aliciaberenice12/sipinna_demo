@@ -269,7 +269,7 @@ function mod_caso_c4(origen, id, fol_c4) {
                     $("#c4_mun").hide()
             }
             $('#otros_estados_c4').val(res.c4_otros_estados);
-            $('#c4_mun').val(res.c4_mun);
+            $('#c4_mun').val(res.c4_mun).trigger('change');
             $('#c4_mun_edo').val(res.c4_mun_edo);
             $('#c4_dirigido').val(res.c4_dirigido);
             $('#c4_dg').val(res.c4_dg);
@@ -1092,6 +1092,10 @@ function fn_datos_delitos() {
 function fn_carga_municipios(combo) {
     $.post("../controllers/fun_casos_c4.php", { func: 'fn_carga_municipios' }, function (data) {
         $('#' + combo).html(data);
+        $('#' + combo).select2({
+            dropdownParent: $('#modal_c4'),
+            theme: 'bootstrap-5'
+        });
     });
 }
 function fn_carga_estados(combo) {
