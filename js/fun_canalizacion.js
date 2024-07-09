@@ -252,7 +252,7 @@ function mod_canalizacion(origen, id, folio_exp) {
             }
 
             $('#can_ruta_sol_oficio_edit').val(res.can_ruta_sol_oficio);
-            $('#can_municipio').val(res.can_municipio);
+            $('#can_municipio').val(res.can_municipio).trigger('change');
             $('#can_mun_edo').val(res.can_mun_edo);
             $('#can_folio_expediente').val(res.can_folio_expediente);
 
@@ -1050,8 +1050,13 @@ function fn_eliminar_avance(id, can_desc_avance,folio_exp) {
 
 //FUNCIONES TRAER DATOS DE CATALOGOS
 function fn_carga_municipios(combo) {
+    console.log(combo);
     $.post("../controllers/fun_canalizacion.php", { func: 'fn_carga_municipios' }, function (data) {
         $('#' + combo).html(data);
+        $('#' + combo).select2({
+            dropdownParent: $('#modal_canalizacion'),
+            theme: 'bootstrap-5'
+        });///Funciona
     });
 }
 function fn_carga_estados(combo) {

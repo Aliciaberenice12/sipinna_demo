@@ -487,7 +487,7 @@ if (isset($_REQUEST['func'])) {
 			break;
 			//Cargar Catálogos
 		case 'fn_carga_municipios':
-			$html = '<option value="0">Seleccionar</option>';
+			$html = '<option value="0">Seleccione...</option>';
 			$arr_res = $v->fn_lista_municipios();
 			foreach ($arr_res as $row) {
 				$html .= '<option value="' . $row["id_municipio"] . '">' . $row["municipio"] . '</option>';
@@ -495,7 +495,7 @@ if (isset($_REQUEST['func'])) {
 			echo $html;
 			break;
 		case 'fn_carga_estados':
-			$html = '<option value="0">Seleccionar</option>';
+			$html = '<option value="0">Seleccione...</option>';
 			$arr_res = $v->fn_lista_estados();
 			foreach ($arr_res as $row) {
 				$html .= '<option value="' . $row["id_estado"] . '">' . $row["estado"] . '</option>';
@@ -504,7 +504,7 @@ if (isset($_REQUEST['func'])) {
 			break;
 		
 		case 'fn_carga_derechos':
-			$html = '<option value="0" disabled selected>Seleccionar</option>';
+			$html = '<option value="0">Seleccione...</option>';
 			$arr_res = $v->fn_lista_derechos();
 			foreach ($arr_res as $row) {
 				$html .= '<option value="' . $row["id_derecho"] . '">' . $row["derecho"] . '</option>';
@@ -514,7 +514,7 @@ if (isset($_REQUEST['func'])) {
 			break;
 
 		case 'fn_carga_parentescos':
-			$html = '<option value="0">Seleccionar</option>';
+			$html = '<option value="0">Seleccione...</option>';
 			$arr_res = $v->fn_lista_parentescos();
 			foreach ($arr_res as $row) {
 				$html .= '<option value="' . $row["id_parentesco"] . '">' . $row["parentesco"] . '</option>';

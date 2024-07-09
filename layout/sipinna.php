@@ -19,7 +19,9 @@
     <link rel="stylesheet" type="text/css" href="../lib/toastr/toastr.min.css">
     <link rel="stylesheet" href="../lib/swetalert/sweetalert2.min.css">
     <link rel="stylesheet" href="../lib/datatables/jquery.dataTables.min.css">
-    
+    <link rel="stylesheet" href="../lib/select2v4.0.x/select2.min.css">
+    <link rel="stylesheet" href="../lib/select2v4.0.x/select2-bootstrap-5-theme.min.css">
+
 
 
 </head>
@@ -112,6 +114,7 @@
     <script src="../lib/datatables/jquery.dataTables.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../lib/bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
+    <script src="../lib/select2v4.0.x/select2.full.min.js"></script>
     <!-- <script src="../js/fun_canalizacion.js?x=<?php echo time(); ?>"></script> -->
 
 
