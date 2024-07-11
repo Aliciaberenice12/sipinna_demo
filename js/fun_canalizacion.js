@@ -559,7 +559,7 @@ function fun_validar_campos() {
         validaPdf().then((resultado) => {
             if (resultado) {
                 // Lógica a ejecutar si el archivo es válido
-                console.log("El archivo PDF es válido.");
+                
                 swal.fire({
                     title: '¿Estás seguro que quieres guardar?',
                     html: 'Los datos serán almacenados',

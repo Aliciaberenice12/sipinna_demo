@@ -890,10 +890,8 @@ if (isset($_REQUEST['func'])) {
 								<td>'.($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '' . $row["can_mun_edo"] . '</td>							
 								<td>'.$row["can_via_rec"] . '</td>
 								<td>'.$row["estatus_expediente"] . '</td>
-								<td><div>
-										<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');"><i class="bi bi-pencil-square"></i></button>
-										<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_canalizacion(' . $row["id"] . ',\'' . $row["can_numero"] . '\');" ' . ($session == 3 ? "" : "hidden") . '><i class="bi bi-trash"></i></button>
-									</div>
+								<td>
+									<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');"><i class="bi bi-pencil-square"></i></button>
 								</td>   
 								<td>
 									<button type="button" class="btn btn-sm btn-secondary " aria-label="Avance Canalizacion" onclick="fn_modal_avance(1,\'' . $row["can_folio_expediente"] . '\',0);"><i class="bi bi-eye"></i></button>

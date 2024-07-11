@@ -1093,10 +1093,7 @@ if (isset($_REQUEST['func'])) {
 									<td>' . $row["c4_pais"] . '</td>
 									<td>' . ($row["estado"] == "Seleccionar" ? "" : $row["estado"]) . '' . $row["c4_otros_estados"] . '</td>
 									<td>' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '' . $row["c4_mun_edo"] . '</td>
-									<td>								
-										<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');"><i class="bi bi-pencil-square"></i></button>
-										<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_caso_c4(' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');"><i class="bi bi-trash"></i></button>
-									</td>   
+									<td><button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');"><i class="bi bi-pencil-square"></i></button></td>   
 								</tr>';
 				}
 				$html .= '

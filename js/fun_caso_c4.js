@@ -219,7 +219,7 @@ function mod_caso_c4(origen, id, fol_c4) {
         $("#add_pro_resp").hide();
         $("#add_victimas").hide();
         $("#add_delito").hide();
-        $("#agregar_delito_victima").show();
+        $("#agregar_delito_victima").hide();
         $("#lista_bd_delitos_res").show();
         $("#lista_bd_dat_rep_c4").show();
         $("#lista_bd_probable_res").show();
