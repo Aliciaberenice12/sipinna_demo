@@ -829,7 +829,7 @@ if (isset($_REQUEST['func'])) {
 						}
 					} else {
 						$datos_exp_c4 = $_POST;
-						$sin_imagen = 'no.png';
+						$sin_imagen = '';
 						$id_c4_anio='0';
 						$estatus = $v->fn_registrar_caso_c4($sin_imagen, $datos_exp_c4,$id_c4_anio);
 					}
@@ -922,7 +922,7 @@ if (isset($_REQUEST['func'])) {
 					}
 					
 					else {
-							$nom_archivo_c4='no.png';
+							$nom_archivo_c4='';
 							$datos_exp_histirico = $_POST;
 							$obt_fecha_folio = $_POST["c4_fecha_inicio"];
 							$anio_fol = explode("-", $obt_fecha_folio);

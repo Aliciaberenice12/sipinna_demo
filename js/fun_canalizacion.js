@@ -52,9 +52,10 @@ $(document).ready(function () {
         else {
             $("#can_mun").show(200)
             $("#can_mun_edo").show(200),
-                $("#div_municipio").show(),
-                $("#can_municipio").hide(),
-                $("#can_municipio").val("0")
+            $("#div_municipio").show(),
+            document.getElementById('can_municipio').style.display = 'none';
+
+            $("#can_municipio").val("0")
         }
 
     });
@@ -134,6 +135,8 @@ function mod_canalizacion(origen, id, folio_exp) {
     {
         $('#imagen_subida_can').hide();
         $('#tit_mod_can').html('Crear Canalización');
+        document.getElementById('can_ruta_sol_oficio').style.display = 'block';
+
         carrito_reportante(3, 0);
         carrito_victima(3, 0);
         $("#carrito_victima_show").show();
@@ -206,11 +209,20 @@ function mod_canalizacion(origen, id, folio_exp) {
             $('#can_folio').val(res.can_folio);
             $('#can_numero').val(res.can_numero);
             $('#can_num_oficio').val(res.can_numero_oficio);
-            $('#c4_ruta_sol_oficio_edit').val(res.c4_ruta_sol_oficio);
+            $('#can_ruta_sol_oficio_edit').val(res.can_ruta_sol_oficio);
+            let archivo= res.can_ruta_sol_oficio;
+            if(archivo != ""){
+                document.getElementById('can_ruta_sol_oficio').style.display = 'none';
+                imagen_can = '<a  href="../images/canalizacion/' + res.can_ruta_sol_oficio + '" target="_blank"><i class="bi bi-file-pdf"></i>Mostar Archivo Subido</a>';
+                $("#imagen_subida_can").html(imagen_can);
+                document.getElementById('imagen_subida_can').style.display = 'block';
 
-            imagen_can = '<a  href="../images/canalizacion/' + res.can_ruta_sol_oficio + '" target="_blank"><i class="bi bi-file-pdf"></i>Mostar Archivo Subido</a>';
-            $("#imagen_subida_can").html(imagen_can);
+            }else{
+                document.getElementById('imagen_subida_can').style.display = 'none';
 
+                document.getElementById('can_ruta_sol_oficio').style.display = 'block';
+            }
+           
             $('#can_fecha').val(res.can_fecha);
             $('#can_pais').val(res.can_pais);
             $('#can_otros_estados').val(res.can_otros_estados);
@@ -251,7 +263,6 @@ function mod_canalizacion(origen, id, folio_exp) {
                     $("#can_mun").show()
             }
 
-            $('#can_ruta_sol_oficio_edit').val(res.can_ruta_sol_oficio);
             $('#can_municipio').val(res.can_municipio).trigger('change');
             $('#can_mun_edo').val(res.can_mun_edo);
             $('#can_folio_expediente').val(res.can_folio_expediente);
@@ -451,22 +462,17 @@ function fun_validar_campos() {
     hoy = $('#hoy').val();
     id = $('#id_canalizacion').val();
     let can_via_rec = document.querySelector('input[name="can_via_rec"]:checked');
-    if (can_via_rec) {
-
-    } else {
-        toastr.warning('¡Debes Seleccionar una via de recepción!');
-        $('input[name="can_via_rec"]').focus();
-        return false;
-
-    }
+    
     let estatus_expediente = document.querySelector('input[name="estatus_expediente"]:checked');
-    if (estatus_expediente) {
-
-    } else {
-        toastr.warning('¡Debes Seleccionar un Estatus de Expediente!');
+    if (!estatus_expediente) {
+        toastr.warning('¡Debes Seleccionar un estatus del caso!');
         $('input[name="estatus_expediente"]').focus();
         return false;
-
+    }
+    if (!can_via_rec) {
+        toastr.warning('¡Debes Seleccionar una vía de recepción!');
+        $('input[name="can_via_rec"]').focus();
+        return false;
     }
     can_num_oficio = $.trim($('#can_num_oficio').val());
     can_numero = $.trim($('#can_numero').val());
@@ -476,19 +482,13 @@ function fun_validar_campos() {
     can_estado = $.trim($('#can_estado').val());
     can_municipio = $.trim($('#can_municipio').val());
     can_mun_edo = $.trim($('#can_mun_edo').val());
-    can_ruta_sol_oficio = $.trim($('#can_ruta_sol_oficio').val());
-
-    file0 = document.getElementById('can_ruta_sol_oficio');
-    file = file0.files[0];
     can_des_suncita_rep = $.trim($('#can_des_suncita_rep').val());
     can_ges_reporte = $.trim($('#can_ges_reporte').val());
     ins_con_hechos = $.trim($('#ins_con_hechos').val());
     can_inst_sol = $.trim($('#can_inst_sol').val());
     can_nom_sol = $.trim($('#can_nom_sol').val());
 
-
-
-
+   
     if (can_numero == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Debes ingresar Número!');
@@ -497,17 +497,24 @@ function fun_validar_campos() {
     }
     else if (can_num_oficio == '') {
         toastr.options.timeOut = 2500;
-        toastr.warning('¡Debes ingresar el numero de oficio!');
+        toastr.warning('¡Debes ingresar el número de oficio!');
         $('#can_num_oficio').focus();
         return false;
     }
-
+    else if (can_folio == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes ingresar el Folio!');
+        $('#can_folio').focus();
+        return false;
+    }
+    
     else if (can_fecha == '') {
         toastr.options.timeOut = 2500;
-        toastr.warning('¡Seleccione una Fecha!');
+        toastr.warning('¡Debes seleccionar una fecha!');
         $('#can_fecha').focus();
         return false;
     }
+   
     else if (can_fecha > hoy) {
         toastr.options.timeOut = 2500;
         toastr.warning('¡La fecha no puede ser mayor al día de hoy!');
@@ -518,6 +525,12 @@ function fun_validar_campos() {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Seleccione un Estado!');
         $('#can_estado').focus();
+        return false;
+    }
+    else if (can_pais == '') {
+        toastr.options.timeOut = 2500;
+        toastr.warning('¡Debes seleccionar un país!');
+        $('#can_pais').focus();
         return false;
     }
     else if (can_des_suncita_rep == '') {
@@ -539,22 +552,91 @@ function fun_validar_campos() {
         $('#can_nom_sol').focus();
         return false;
     }
-    swal.fire({
-        title: '¿Estás seguro que quieres guardar?',
-        html: 'Los datos serán almacenados',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, Guardar!',
-        cancelButtonText: 'Cancelar'
-    })
-        .then((result) => {
+    let fileInput = document.getElementById('can_ruta_sol_oficio');
+    let filePath = fileInput.value; // Obtenemos la ruta del archivo seleccionado
+    if (filePath !== "") {
+        // Si hay un archivo seleccionado, llamamos a la función validaPdf()
+        validaPdf().then((resultado) => {
+            if (resultado) {
+                // Lógica a ejecutar si el archivo es válido
+                console.log("El archivo PDF es válido.");
+                swal.fire({
+                    title: '¿Estás seguro que quieres guardar?',
+                    html: 'Los datos serán almacenados',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, Guardar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                        fun_agregarCanalizacion();
+                    }
+                })
+            }
+        }).catch((error) => {
+            // Manejo del error si la validación falla
+            console.error("Error al validar el archivo PDF:", error);
+            // Puedes mostrar un mensaje de error al usuario o realizar otras acciones
+        });
+    } else {
+        // Si no hay archivo seleccionado, puedes mostrar un mensaje al usuario o realizar otras acciones
+        swal.fire({
+            title: '¿Estás seguro que quieres guardar?',
+            html: 'Los datos serán almacenados',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, Guardar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
             if (result.value) {
                 fun_agregarCanalizacion();
             }
         })
+    }
+
 }
+function validaPdf() {
+    return new Promise((resolve, reject) => {
+        let fileInput = document.getElementById('can_ruta_sol_oficio');
+        let file = fileInput.files[0]; // Obtenemos el archivo seleccionado
+
+        // Verificamos el tamaño del archivo en bytes
+        let maxSizeInBytes = 1 * 1024 * 1024; // 1 MB en bytes
+        let fileSizeInBytes = file.size;
+        if (fileSizeInBytes > maxSizeInBytes) {
+            swal.fire({
+                title: 'Archivo demasiado grande',
+                html: 'El archivo que intentas cargar excede el tamaño máximo permitido de 1 MB.<br><br>Por favor, selecciona un archivo más pequeño.',
+                icon: 'error',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Entendido'
+            });
+            
+            // reject("El archivo excede el tamaño máximo permitido de 1 MB.");
+            return;
+        }
+
+        // Verificamos la extensión del archivo (solo permitimos archivos en formato PDF)
+        let allowedExtensions = /(.pdf)$/i;
+        if (!allowedExtensions.exec(file.name)) {
+            swal.fire({
+                title: 'El archivo no tiene el formato compatible. ',
+                html: 'Solo se permite cargar/subir archivos en formato PDF.',
+                icon: 'error'
+            });
+            // reject("El archivo no tiene el formato compatible. Solo se permite cargar/subir archivos en formato PDF.");
+            return;
+        }
+
+        // Si pasa todas las validaciones, el archivo es válido
+        resolve(true);
+    });
+}
+
 function fun_agregarCanalizacion() {
     hoy = $('#hoy').val();
     id = $('#id_canalizacion').val();
@@ -1051,7 +1133,6 @@ function fn_eliminar_avance(id, can_desc_avance,folio_exp) {
 
 //FUNCIONES TRAER DATOS DE CATALOGOS
 function fn_carga_municipios(combo) {
-    console.log(combo);
     $.post("../controllers/fun_canalizacion.php", { func: 'fn_carga_municipios' }, function (data) {
         $('#' + combo).html(data);
         $('#' + combo).select2({

@@ -556,7 +556,7 @@ if (isset($_REQUEST['func'])) {
 					{
 						
 						$datos_exp_can = $_POST;
-						$sin_imagen='no.png';
+						$sin_imagen='';
 						$estatus = $v->insertar_canalizacion($sin_imagen, $datos_exp_can);
 						
 
@@ -678,7 +678,7 @@ if (isset($_REQUEST['func'])) {
 						$anio_fol = explode("-", $obt_fecha_folio);
 						$anio_folio = $anio_fol['0'];
 						$datos_exp_historico_can = $_POST;
-						$nom_archivo='no.png';
+						$nom_archivo='';
 						$estatus = $v->insertar_canalizacion_historico($nom_archivo, $datos_exp_historico_can, $anio_folio);
 
 					}

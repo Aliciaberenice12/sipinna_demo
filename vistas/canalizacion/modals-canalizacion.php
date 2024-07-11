@@ -15,7 +15,6 @@
                             <div class="col-md-6">
                                 <h4><strong>Rellene los siguientes campos</strong></h4>
                                 <small id="helpCamposObligatorios" class="form-text text-muted">*Campos obligatorios</small>
-
                             </div>
 
                             <div class="col-md-6">
@@ -32,15 +31,13 @@
 
                                     <input type="radio" class="btn-check" name="estatus_expediente" id="concluido" value="Concluido" autocomplete="off">
                                     <label class="btn btn-recepcion" for="concluido">Concluido</label>
-
-
                                 </div>
                             </div>
                         </div>
                         <p></p>
                         <div class="card">
                             <div class="row card-body" id="card_can_exp">
-                                <div class="col-md-6">
+                                <div class="col-md-6 mb-2">
                                     <label for="can_via_rec" id="can_via">Vía de Recepción *</label><br>
                                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                         <input type="radio" class="btn-check" name="can_via_rec" id="can_via_tel" value="Telefonica" autocomplete="off">
@@ -64,7 +61,7 @@
                                     <span class="archivo_subido_local" id="imagen_subida_can"></span>
 
                                 </div>
-                                <br>
+                                
                                 <div class="col-md-3">
                                     <label for="can_numero">Número *</label>
                                     <input type="text" class="form-control" placeholder="Número" id="can_numero" name="can_numero" onkeypress="return onlyNumberKey(event)" maxlength="10">
@@ -77,7 +74,7 @@
 
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="can_folio">Folio </label>
+                                    <label for="can_folio">Folio* </label>
                                     <input type="text" class="form-control" placeholder="Folio" id="can_folio" name="can_folio" maxlength="50">
                                 </div>
                                 <div class="col-md-3">
@@ -156,12 +153,12 @@
                                     <input type="text" class="form-control" id="ins_con_hechos" name="ins_con_hechos" maxlength="70"></input>
 
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 mt-4">
 
                                     <label for="can_des_suncita_rep">Descripción sucinta del caso *</label>
 
                                     <textarea name="can_des_suncita_rep" id="can_des_suncita_rep" class="form-control" rows="3" maxlength="500"></textarea>
-                                    <div id="contador">0/100</div>
+                                    <div id="contador">0/500</div>
                                 </div>
                                 <div class="col-md-6">
 
