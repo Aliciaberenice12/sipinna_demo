@@ -782,114 +782,68 @@ if (isset($_REQUEST['func'])) {
 					<h2>¡ No hay datos Registrados !</h2>
 				</center>';
 			} else {
-				$html = '  
-				<div class="row">
-					<div class="col-md-12">
-						<table id="tbl_can" class="table">
+				$html = ' 
+					<table id="tbl_can" class="table" >
 							<thead class="tbl-estadisticas">
-							<tr align="center">
-							
-								<th>
-									Numero Oficio
-								</th>
-								<th>
-									Fecha
-								</th>
-								<th>
-									Estado
-								</th>
-								<th>
-									Municipio
-								</th>
-								<th>
-									via de Recepción
-								</th>
-								<th>
-									Estatus del caso 
-								</th>
-								<th>
-									Acciones
-								</th>
-								<th>
-									Avance
-								</th>
-								
+							<tr  align="center">
+								<th>Folio</th>
+								<th>Número Oficio</th>
+								<th>Fecha</th>
+								<th>Estado</th>
+								<th>Municipio</th>
+								<th>Vía de Recepción</th>
+								<th>Estatus del caso </th>
+								<th>Acciones</th>
+								<th>Avance</th>
 							</tr>
 							</thead>
 							<tbody>';
 				foreach ($arr_res as $row) {
+					// Convierte la fecha a un objeto DateTime
+					$fecha = new DateTime($row["can_fecha"]);
+					$fechaFormateada = $fecha->format('d-m-Y');
 					$session  = 3;
- 
 					$html .= '
-								<tr class="text-11" align="center" id="l_can' . $row["id"] . '">
-									<div class="row">
-										
-										<td class="col-md-2">
-											<div>
-											' . $row["can_numero_oficio"] . '
-											</div>
-										</td>
-										<td class="col-md-1">
-											<div>
-											' . $row["can_fecha"] . '
-											</div>
-										</td>
-										<td class="col-md-2">
-											<div>
-											
-											' . $row["estado"] . '
-											' . $row["can_otros_estados"] . '
-
-
-											</div>
-										</td>
-										<td class="col-md-1">
-											<div >
-											' . ($row["municipio"] == "0" ? "" : $row["municipio"]) . '
-
-											' . $row["can_mun_edo"] . '
-
-									
-											</div>
-										</td>							
-										<td class="col-md-2">
-											<div>
-												' . $row["can_via_rec"] . '
-											</div>
-										</td>
-										<td class="col-md-2">
-											<div >
-											
-											' . $row["estatus_expediente"] . '
-											</div>
-										</td>
-										<td class="col-md-1">								
-											<div>
-												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');">
-													<i class="bi bi-pencil-square"></i>
-													<span></span>
-												</button>
-												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_canalizacion(' . $row["id"] . ',\'' . $row["can_numero"] . '\');" ' . ($session == 3 ? "" : "hidden") . '>
-													<i class="bi bi-trash"></i>
-													<span></span>
-												</button>
-											</div>
-										</td>   
-										<td class="col-md-1">
-											<button type="button" class="btn btn-sm btn-secondary " aria-label="Avance Canalizacion" onclick="fn_modal_avance(1,\'' . $row["can_folio_expediente"] . '\',0);">
-												<i class="bi bi-eye"></i>
-												<span></span>
-											</button>
-										</td>
-										        
-									</div>
-								</tr>';
+					<tr class="text-11" align="center" id="l_can' . $row["id"] . '">
+						
+						<td>' . $row["can_folio"] . '</td>
+						<td>' . $row["can_numero_oficio"] . '</td>
+						<td>' . $fechaFormateada . '</td>
+						<td>' . $row["estado"] . '
+							' . $row["can_otros_estados"] . '
+						</td>
+						<td>
+							' . ($row["municipio"] == "0" ? "" : $row["municipio"]) . '
+							' . $row["can_mun_edo"] . '
+						
+						</td>							
+						<td>' . $row["can_via_rec"] . '</td>
+						<td>' . $row["estatus_expediente"] . '</td>
+						<td>								
+							<div>
+								<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');">
+									<i class="bi bi-pencil-square"></i>
+									<span></span>
+								</button>
+								<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_canalizacion(' . $row["id"] . ',\'' . $row["can_numero"] . '\');" ' . ($session == 3 ? "" : "hidden") . '>
+									<i class="bi bi-trash"></i>
+									<span></span>
+								</button>
+							</div>
+						</td>   
+						<td>
+							<button type="button" class="btn btn-sm btn-secondary " aria-label="Avance Canalizacion" onclick="fn_modal_avance(1,\'' . $row["can_folio_expediente"] . '\',0);">
+								<i class="bi bi-eye"></i>
+								<span></span>
+							</button>
+						</td>
+					</tr>';
 				}
 				$html .= '
-							</tbody>
-						</table>
-					</div>
-				</div>';
+						</tbody>
+					</table>
+					
+				';
 			}
 			echo $html;
 			break;
@@ -911,105 +865,41 @@ if (isset($_REQUEST['func'])) {
 						<table id="tbl_can_inactivas" class="table">
 							<thead class="tbl-estadisticas">
 							<tr align="center">
-							
-								<th>
-									Numero Oficio
-								</th>
-								<th>
-									Fecha
-								</th>
-								<th>
-									Estado
-								</th>
-								<th>
-									Municipio
-								</th>
-								<th>
-									via de Recepción
-								</th>
-								<th>
-									Estatus del caso 
-								</th>
-								<th>
-									Acciones
-								</th>
-								<th>
-									Avance
-								</th>
-								
+								<th>Folio</th>
+								<th>Número Oficio</th>
+								<th>Fecha</th>
+								<th>Estado</th>
+								<th>Municipio</th>
+								<th>Vía de Recepción</th>
+								<th>Estatus del caso </th>
+								<th>Acciones</th>
+								<th>Avance</th>
 							</tr>
 							</thead>
 							<tbody>';
 				foreach ($arr_res as $row) {
 					$session  = 3;
-	
+					$fecha = new DateTime($row["can_fecha"]);
+					$fechaFormateada = $fecha->format('d-m-Y');
 					$html .= '
-								<tr class="text-11" align="center" id="l_can_inactiva' . $row["id"] . '">
-									<div class="row">
-										
-										<td class="col-md-2">
-											<div>
-											' . $row["can_numero_oficio"] . '
-											</div>
-										</td>
-										<td class="col-md-1">
-											<div>
-											' . $row["can_fecha"] . '
-											</div>
-										</td>
-										<td class="col-md-2">
-											<div>
-											
-											' . $row["estado"] . '
-											' . $row["can_otros_estados"] . '
-
-
-											</div>
-										</td>
-										<td class="col-md-1">
-											<div >
-											' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '
-
-											' . $row["can_mun_edo"] . '
-
-									
-											</div>
-										</td>							
-										<td class="col-md-2">
-											<div>
-												' . $row["can_via_rec"] . '
-											</div>
-										</td>
-										<td class="col-md-2">
-											<div >
-											
-											' . $row["estatus_expediente"] . '
-											</div>
-										</td>
-										<td class="col-md-1">								
-											<div>
-											
-												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');">
-													<i class="bi bi-pencil-square"></i>
-													<span></span>
-												</button>
-												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_canalizacion(' . $row["id"] . ',\'' . $row["can_numero"] . '\');" ' . ($session == 3 ? "" : "hidden") . '>
-													<i class="bi bi-trash"></i>
-													<span></span>
-												</button>
-												
-											
-											</div>
-										</td>   
-										<td class="col-md-1">
-											<button type="button" class="btn btn-sm btn-secondary " aria-label="Avance Canalizacion" onclick="fn_modal_avance(1,\'' . $row["can_folio_expediente"] . '\',0);">
-												<i class="bi bi-eye"></i>
-												<span></span>
-											</button>
-										</td>
-												
+							<tr class="text-11" align="center" id="l_can_inactiva' . $row["id"] . '">
+								<td>' . $row["can_folio"] . '</td>
+								<td>'.$row["can_numero_oficio"].'</td>
+								<td>'.$fechaFormateada.'</td>
+								<td>'.$row["estado"] . '' . $row["can_otros_estados"].'</td>
+								<td>'.($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '' . $row["can_mun_edo"] . '</td>							
+								<td>'.$row["can_via_rec"] . '</td>
+								<td>'.$row["estatus_expediente"] . '</td>
+								<td><div>
+										<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_canalizacion(2,' . $row["id"] . ',\'' . $row["can_folio_expediente"] . '\');"><i class="bi bi-pencil-square"></i></button>
+										<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_canalizacion(' . $row["id"] . ',\'' . $row["can_numero"] . '\');" ' . ($session == 3 ? "" : "hidden") . '><i class="bi bi-trash"></i></button>
 									</div>
-								</tr>';
+								</td>   
+								<td>
+									<button type="button" class="btn btn-sm btn-secondary " aria-label="Avance Canalizacion" onclick="fn_modal_avance(1,\'' . $row["can_folio_expediente"] . '\',0);"><i class="bi bi-eye"></i></button>
+								</td>
+							</tr>
+							';
 				}
 				$html .= '
 							</tbody>

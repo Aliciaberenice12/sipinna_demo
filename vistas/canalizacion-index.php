@@ -54,7 +54,7 @@
                                 <i class="bi bi-plus-circle"></i> Crear canalización
                             </button>
 
-                            <button type="button" class="btn btn-success hint--top" aria-label="actualizar_canalizaciones" id="actualizar_canalizaciones" onclick="fn_listar_canalizaciones();">
+                            <button type="button" class="btn btn-success hint--top" aria-label="actualizar_canalizaciones" id="actualizar_canalizaciones" onclick="fn_listar_canalizaciones('Activos');">
                                 <i class="bi bi-arrow-clockwise"></i>
                             </button>
 

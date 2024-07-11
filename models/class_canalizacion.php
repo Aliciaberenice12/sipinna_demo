@@ -12,13 +12,12 @@ class Canalizacion extends Conexion
 	public function lista_canalizaciones()
 	{
 
-		$sql = $this->dbh->prepare("
-									SELECT	
-											id,
+		$sql = $this->dbh->prepare("SELECT	
+											id,can_folio,
 											id_canalizacion,
 											can_numero,
 											can_numero_oficio,
-											date_format(can_fecha,'%d-%m-%Y') as can_fecha,
+											can_fecha,
 											activo,
 											can_otros_estados,
 											can_estado,
@@ -38,22 +37,22 @@ class Canalizacion extends Conexion
 							LEFT 	JOIN 	cat_municipios
 									ON 		tbl_can_expediente.can_municipio = cat_municipios.id_municipio)
 									WHERE 	activo = ?
+									ORDER BY can_fecha DESC
 									");
 
 		$sql->execute(array(1));
-		$row = $sql->fetchAll();
+		$row = $sql->fetchAll();	
 		return $row;
 	}
 	public function lista_can_inactivas()
 	{
 
-		$sql = $this->dbh->prepare("
-									SELECT	
-											id,
+		$sql = $this->dbh->prepare("SELECT	
+											id,can_folio,
 											id_canalizacion,
 											can_numero,
 											can_numero_oficio,
-											date_format(can_fecha,'%d-%m-%Y') as can_fecha,
+											can_fecha,
 											activo,
 											can_otros_estados,
 											can_estado,
@@ -73,6 +72,7 @@ class Canalizacion extends Conexion
 							LEFT 	JOIN 	cat_municipios
 									ON 		tbl_can_expediente.can_municipio = cat_municipios.id_municipio)
 									WHERE 	activo = ?
+								ORDER BY 	can_fecha DESC
 									");
 
 		$sql->execute(array(0));

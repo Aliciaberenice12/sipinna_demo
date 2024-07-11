@@ -773,9 +773,10 @@ function fn_listar_canalizaciones() {
     $("#ver_lista_canalizaciones").html(cargando);
     $.post("../controllers/fun_canalizacion.php", { func: 'fn_listar_canalizaciones' }, function (data) {
         $('#ver_lista_canalizaciones').html(data);
+        
         $('#tbl_can').DataTable({
             language: { "url": "../lib/datatables/Spanish.json" },
-            order: [[0, "asc"]],
+            "order": [], // Desactiva el ordenamiento inicial
             searching: true,
         });
     });
@@ -786,7 +787,7 @@ function fn_listar_canalizaciones_inactivas() {
         $('#ver_lista_canalizaciones_inactivas').html(data);
         $('#tbl_can_inactivas').DataTable({
             language: { "url": "../lib/datatables/Spanish.json" },
-            order: [[0, "asc"]],
+            "order": [], // Desactiva el ordenamiento inicial
             searching: true,
         });
     });
