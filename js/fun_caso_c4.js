@@ -132,7 +132,7 @@ function fn_listar_canalizaciones_c4_inactivas() {
         $('#ver_lista_canalizaciones_inactivas_c4').html(data);
         $('#tbl_caso_c4').DataTable({
             language: { "url": "../lib/datatables/Spanish.json" },
-            order: [[0, "asc"]],
+            "order": [], // Desactiva el ordenamiento inicial
             searching: true,
         });
     });
@@ -513,7 +513,7 @@ function fn_listar_casos_c4() {
         $('#ver_lista_casos_c4').html(data);
         $('#tbl_caso').DataTable({
             language: { "url": "../lib/datatables/Spanish.json" },
-            ordering: [[1, "asc"]],
+            "order": [], // Desactiva el ordenamiento inicial
             searching: true,
         });
     });

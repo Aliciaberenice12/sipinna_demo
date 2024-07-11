@@ -1014,105 +1014,45 @@ if (isset($_REQUEST['func'])) {
 				</center>';
 			} else {
 				$html = '  
-				<div class="row">
-					<div class="col-12" style="overflow-x:auto;">
-						<table id="tbl_caso" class="table">
-							<thead class="tbl-estadisticas">
-							<tr align="center">
-								<th>
-									Fecha
-								</th>
-								<th>
-									No.oficio
-								</th>
-								<th>
-									Folio
-								</th>
-								
-								<th>
-									Pais
-								</th>
-								<th>
-									Estado
-								</th>
-								<th>
-									Municipio
-								</th>
-								
-								<th>
-									Acciones
-								</th>
-								
-								
-							</tr>
-							</thead>
-							<tbody>';
+					<table id="tbl_caso" class="table">
+						<thead class="tbl-estadisticas">
+						<tr align="center">
+							<th>Folio</th>
+							<th>Número de Oficio</th>
+							<th>Fecha</th>
+							<th>País</th>
+							<th>Estado</th>
+							<th>Municipio</th>
+							<th>Acciones</th>
+						</tr>
+						</thead>
+						<tbody>';
 				foreach ($arr_res as $row) {
-
+					$fecha = new DateTime($row["c4_fecha_inicio"]);
+					$fechaFormateada = $fecha->format('d-m-Y');
 					$html .= '
-								<tr class="text-11" align="left" id="lc4' . $row["id"] . '">
-									<div class="row">
-										<td>	
-											' . $row["c4_fecha_inicio"] . '
-										</td>
-										<td>
-											
-											' . $row["c4_no_oficio"] . '
-											
-										</td>
-										<td>
-											
-											' . $row["c4_folio"] . '
-											
-										</td>
-										
-										<td>
-										
-											' . $row["c4_pais"] . '
-	
-										</td>
-										<td>
-										
-										' . ($row["estado"] == "Seleccionar" ? "" : $row["estado"]) . '
-										
-											' . $row["c4_otros_estados"] . '
-	
-										</td>
-										<td>
-										
-											' . ($row["municipio"] == "0" ? "" : $row["municipio"]) . '
-
-											' . $row["c4_mun_edo"] . '
-
-									
-											
-										</td>
-										
-										
-										<td>								
-											<div >
-											
-												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
-													<i class="bi bi-pencil-square"></i>
-													<span></span>
-												</button>
-												
-												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_caso_c4(' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
-													<i class="bi bi-trash"></i>
-													<span></span>
-												</button>
-											
-											</div>
-										</td>   
-										   
-									</div>
+							<tr class="text-11" align="center" id="lc4' . $row["id"] . '">
+								<td>' . $row["c4_folio"] . '</td>
+								<td>' . $row["c4_no_oficio"] . '</td>
+								<td>' . $fechaFormateada . '</td>
+								<td>' . $row["c4_pais"] . '</td>
+								<td>' . ($row["estado"] == "Seleccionar" ? "" : $row["estado"]) . '
+									' . $row["c4_otros_estados"] . '
+								</td>
+								<td>
+									' . ($row["municipio"] == "0" ? "" : $row["municipio"]) . '
+									' . $row["c4_mun_edo"] . '
+								</td>
+								<td>
+									<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');"><i class="bi bi-pencil-square"></i></button>
+									<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_caso_c4(' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');"><i class="bi bi-trash"></i></button></div>
+								</td>   
 								</tr>';
 				}
 				$html .= '
 							</tbody>
 						</table>
-					</div>
-				</div>';
+					';
 			}
 			echo $html;
 			break;
@@ -1128,105 +1068,41 @@ if (isset($_REQUEST['func'])) {
 				</center>';
 			} else {
 				$html = '  
-				<div class="row">
-					<div class="col-12" style="overflow-x:auto;">
+				
 						<table id="tbl_caso_c4" class="table">
 							<thead class="tbl-estadisticas">
 							<tr align="center">
-								<th>
-									Fecha
-								</th>
-								<th>
-									No.oficio
-								</th>
-								<th>
-									Folio
-								</th>
-								
-								<th>
-									Pais
-								</th>
-								<th>
-									Estado
-								</th>
-								<th>
-									Municipio
-								</th>
-								
-								<th>
-									Acciones
-								</th>
-								
-								
+								<th>Folio</th>
+								<th>Número de oficio</th>
+								<th>Fecha</th>
+								<th>País</th>
+								<th>Estado</th>
+								<th>Municipio</th>
+								<th>Acciones</th>
 							</tr>
 							</thead>
 							<tbody>';
 				foreach ($arr_res as $row) {
-
+					$fecha = new DateTime($row["c4_fecha_inicio"]);
+					$fechaFormateada = $fecha->format('d-m-Y');
 					$html .= '
 								<tr class="text-11" align="left" id="l_c4' . $row["id"] . '">
-									<div class="row">
-										<td>	
-											' . $row["c4_fecha_inicio"] . '
-										</td>
-										<td>
-											
-											' . $row["c4_no_oficio"] . '
-											
-										</td>
-										<td>
-											
-											' . $row["c4_folio"] . '
-											
-										</td>
-										
-										<td>
-										
-											' . $row["c4_pais"] . '
-	
-										</td>
-										<td>
-										
-										' . ($row["estado"] == "Seleccionar" ? "" : $row["estado"]) . '
-										
-											' . $row["c4_otros_estados"] . '
-	
-										</td>
-										<td>
-										
-											' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '
-
-											' . $row["c4_mun_edo"] . '
-
-									
-											
-										</td>
-										
-										
-										<td>								
-											<div >
-											
-												<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
-													<i class="bi bi-pencil-square"></i>
-													<span></span>
-												</button>
-												
-												<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_caso_c4(' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');">
-													<i class="bi bi-trash"></i>
-													<span></span>
-												</button>
-											
-											</div>
-										</td>   
-											
-									</div>
+									<td>' . $row["c4_folio"] . '</td>
+									<td>' . $row["c4_no_oficio"] . '</td>
+									<td>' . $fechaFormateada . '</td>
+									<td>' . $row["c4_pais"] . '</td>
+									<td>' . ($row["estado"] == "Seleccionar" ? "" : $row["estado"]) . '' . $row["c4_otros_estados"] . '</td>
+									<td>' . ($row["municipio"] == "Seleccionar" ? "" : $row["municipio"]) . '' . $row["c4_mun_edo"] . '</td>
+									<td>								
+										<button type="button" class="btn btn-sm btn-primary" aria-label="Editar Canalizacion" onclick="mod_caso_c4(2,' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');"><i class="bi bi-pencil-square"></i></button>
+										<button type="button" class="btn btn-sm btn-danger " aria-label="Eliminar Canalizacion" onclick="fn_eliminar_caso_c4(' . $row["id"] . ',\'' . $row["c4_exp_folio"] . '\');"><i class="bi bi-trash"></i></button>
+									</td>   
 								</tr>';
 				}
 				$html .= '
 							</tbody>
 						</table>
-					</div>
-				</div>';
+					';
 			}
 			echo $html;
 			break;

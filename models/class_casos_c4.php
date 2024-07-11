@@ -568,7 +568,6 @@ class CasosC4 extends Conexion
 											c4_fecha_inicio,
 											municipio,
 											estado,
-											date_format(c4_fecha_inicio,'%d-%m-%Y') as c4_fecha_inicio,
 											c4_pais,
 											c4_otros_estados
 									FROM	((tbl_c4_expedientes 
@@ -577,6 +576,7 @@ class CasosC4 extends Conexion
 								LEFT JOIN	cat_estados
 									ON		tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
 									WHERE	activo=?
+								ORDER BY 	c4_fecha_inicio DESC
 								");
 
 		$sql->execute(array(1));
@@ -599,7 +599,6 @@ class CasosC4 extends Conexion
 											c4_fecha_inicio,
 											municipio,
 											estado,
-											date_format(c4_fecha_inicio,'%d-%m-%Y') as c4_fecha_inicio,
 											c4_pais,
 											c4_otros_estados
 									FROM	((tbl_c4_expedientes 
@@ -608,7 +607,7 @@ class CasosC4 extends Conexion
 								LEFT JOIN	cat_estados
 									ON		tbl_c4_expedientes.c4_edo=cat_estados.id_estado)
 									WHERE	activo=?
-								");
+									ORDER BY c4_fecha_inicio DESC								");
 
 		$sql->execute(array(0));
 		$row = $sql->fetchAll();
