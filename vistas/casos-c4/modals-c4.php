@@ -320,7 +320,7 @@
                     Cancelar
                 </button>
 
-                <button type="submit" class="btn btn-success" id="btn_create_caso" onclick="fun_agregar_caso_c4();">Guardar</button>
+                <button type="submit" class="btn btn-success" id="btn_create_caso" onclick="fun_validar_campos();">Guardar</button>
             </div>
 
         </div>
@@ -472,7 +472,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-success" onclick="fun_editar_victima_c4();">Guardar</button>
+                <button type="button" class="btn btn-success" onclick="fun_validar_campos();">Guardar</button>
             </div>
 
         </div>

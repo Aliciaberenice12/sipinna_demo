@@ -704,25 +704,16 @@ function fun_agregarCanalizacion() {
             Swal.fire({ icon: 'success', title: 'Datos almacenados correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_canalizacion').modal('hide');
             fn_listar_canalizaciones();
-
         }
         else if (result.estatus === "editado") {
             Swal.fire({ icon: 'success', title: 'Datos Expediente Editado correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_canalizacion').modal('hide');
             fn_listar_canalizaciones();
-
-        }
-        else if (result.estatus === "arch_pesado") {
-            Swal.fire({ icon: 'error', title: 'Archivo pdf Muy pesado Expediente no guardado.', showConfirmButton: false, timer: 2000 });
         }
         else {
             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
-
-
             return false;
         }
-
-
     })
 }
 

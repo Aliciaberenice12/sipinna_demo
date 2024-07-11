@@ -141,6 +141,8 @@ function mod_caso_c4(origen, id, fol_c4) {
 
 
     if (origen == 1) {
+        document.getElementById('c4_ruta_sol_oficio').style.display = 'block';
+
         fn_carga_municipios('c4_mun');
         fn_carga_estados('c4_edo');
         fn_carga_delitos('c4_delitos');
@@ -233,10 +235,20 @@ function mod_caso_c4(origen, id, fol_c4) {
             $('#c4_numero').val(res.c4_numero);
             $('#c4_no_oficio').val(res.c4_no_oficio);
             $('#c4_ruta_sol_oficio_edit').val(res.c4_ruta_sol_oficio);
-            //$('#c4_ruta_sol_oficio').val(res.c4_ruta_sol_oficio);
-            imagenc4 = '<a  href="../images/casos_c4/' + res.c4_ruta_sol_oficio + '" target="_blank"><i class="bi bi-file-pdf"></i>Mostar Archivo Subido</a>';
+            let archivo=res.c4_ruta_sol_oficio;
+            if(archivo != ""){
+                document.getElementById('c4_ruta_sol_oficio').style.display = 'none';
+                document.getElementById('imagen_subida_c4').style.display = 'block';
 
-            $("#imagen_subida_c4").html(imagenc4);
+                imagenc4 = '<a  href="../images/casos_c4/' + res.c4_ruta_sol_oficio + '" target="_blank"><i class="bi bi-file-pdf"></i>Mostar Archivo Subido</a>';
+                $("#imagen_subida_c4").html(imagenc4);
+            }else{
+                document.getElementById('c4_ruta_sol_oficio').style.display = 'block';
+                document.getElementById('imagen_subida_c4').style.display = 'none';
+
+            }
+            //$('#c4_ruta_sol_oficio').val(res.c4_ruta_sol_oficio);
+            
             $('#c4_fecha_inicio').val(res.c4_fecha_inicio);
             $('#c4_pais').val(res.c4_pais);
             if (res.c4_pais == 'México') {
@@ -323,42 +335,25 @@ function mod_caso_c4(origen, id, fol_c4) {
 
 }
 
-function fun_agregar_caso_c4() {
-    const MAXIMO_TAMANIO_BYTES = 2000000; // 1MB = 1 millón de bytes
-    hoy = $('#hoy').val();
-    id = $('#id_caso').val();
-    c4_folio = $.trim($('#c4_folio').val());
-    c4_numero = $.trim($('#c4_numero').val());
-    c4_no_oficio = $.trim($('#c4_no_oficio').val());
-    c4_ruta_sol_oficio = $.trim($('#c4_ruta_sol_oficio').val());
-    c4_fecha_inicio = $.trim($('#c4_fecha_inicio').val());
-    c4_pais = $.trim($('#c4_pais').val());
-    otros_estados_c4 = $.trim($('#otros_estados_c4').val());
+function fun_validar_campos() {
+    hoy = $.trim($('#hoy').val());
+    id = $.trim($('#id_caso').val());
+    c4_dg = $.trim($('#c4_dg').val());
     c4_edo = $.trim($('#c4_edo').val());
     c4_mun = $.trim($('#c4_mun').val());
+    c4_pais = $.trim($('#c4_pais').val());
+    c4_folio = $.trim($('#c4_folio').val());
+    c4_numero = $.trim($('#c4_numero').val());
+    id_caso = $.trim($('#id_desc_caso').val());
     c4_mun_edo = $.trim($('#c4_mun_edo').val());
     c4_dirigido = $.trim($('#c4_dirigido').val());
-    c4_dg = $.trim($('#c4_dg').val());
-    file0 = document.getElementById('c4_ruta_sol_oficio');
-    file = file0.files[0];
-    id_caso = $('#id_desc_caso').val();
-    c4_ruta_sol_oficio_edit = $.trim($('#c4_ruta_sol_oficio_edit').val());
-    c4_lugar_hechos = $.trim($('#c4_lugar_hechos').val());
+    c4_no_oficio = $.trim($('#c4_no_oficio').val());
     c4_des_hechos = $.trim($('#c4_des_hechos').val());
+    c4_lugar_hechos = $.trim($('#c4_lugar_hechos').val());
+    c4_fecha_inicio = $.trim($('#c4_fecha_inicio').val());
+    otros_estados_c4 = $.trim($('#otros_estados_c4').val());
     c4_observaciones = $.trim($('#c4_observaciones').val());
 
-    if (typeof (file) != "undefined")//Si trae un archivo
-    {
-        if (file.size > MAXIMO_TAMANIO_BYTES) {
-            const tamanioEnMb = MAXIMO_TAMANIO_BYTES / 1000000;
-
-            toastr.options.timeOut = 2500;
-            toastr.warning('¡El tamaño máximo es ${tamanioEnMb} MB`!');
-            $('#c4_ruta_sol_oficio').focus();
-            return false;
-        }
-
-    }
     if (c4_folio == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Debes ingresar el número de folio!');
@@ -395,44 +390,6 @@ function fun_agregar_caso_c4() {
         $('#c4_pais').focus();
         return false;
     }
-    else if (c4_pais =='México') {
-        if (c4_edo == '') {
-            toastr.options.timeOut = 2500;
-            toastr.warning('¡Debes seleccionar un estado!');
-            $('#c4_edo').focus();
-            return false;
-        }
-        else if(c4_edo =='30'){
-            if(c4_mun == ''){
-                toastr.options.timeOut = 2500;
-                toastr.warning('¡Debes seleccionar un municipio!');
-                $('#c4_mun').focus();
-                return false;
-            }
-            
-        }
-        else if (c4_edo !='30'){
-            if(c4_mun_edo == ''){
-                toastr.options.timeOut = 2500;
-                toastr.warning('¡Debes ingresar un municipio!');
-                $('#c4_mun_edo').focus();
-                return false;
-            }
-
-        }
-    }
-    else if (c4_pais != 'México'){
-        
-        if (otros_estados_c4 == '') {
-            toastr.options.timeOut = 2500;
-            toastr.warning('¡Debes ingresar la descripción de un estado!');
-            $('#otros_estados_c4').focus();
-            return false;
-        }
-
-    }
-   
-
     if (c4_lugar_hechos == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Ingresa Lugar de los hechos!');
@@ -445,6 +402,110 @@ function fun_agregar_caso_c4() {
         $('#c4_des_hechos').focus();
         return false;
     }
+    let fileInput = document.getElementById('c4_ruta_sol_oficio');
+    let filePath = fileInput.value; // Obtenemos la ruta del archivo seleccionado
+    if (filePath !== "") {
+        // Si hay un archivo seleccionado, llamamos a la función validaPdf()
+        validaPdf().then((resultado) => {
+            if (resultado) {
+                // Lógica a ejecutar si el archivo es válido
+                console.log("El archivo PDF es válido.");
+                swal.fire({
+                    title: '¿Estás seguro que quieres guardar?',
+                    html: 'Los datos serán almacenados',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, Guardar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                        fun_agregarCanalizacion();
+                    }
+                })
+            }
+        }).catch((error) => {
+            // Manejo del error si la validación falla
+            console.error("Error al validar el archivo PDF:", error);
+            // Puedes mostrar un mensaje de error al usuario o realizar otras acciones
+        });
+    } else {
+        // Si no hay archivo seleccionado, puedes mostrar un mensaje al usuario o realizar otras acciones
+        swal.fire({
+            title: '¿Estás seguro que quieres guardar?',
+            html: 'Los datos serán almacenados',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, Guardar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.value) {
+                agregarCasoC4();
+            }
+        })
+    }
+
+}
+function validaPdf() {
+    return new Promise((resolve, reject) => {
+        let fileInput = document.getElementById('c4_ruta_sol_oficio');
+        let file = fileInput.files[0]; // Obtenemos el archivo seleccionado
+
+        // Verificamos el tamaño del archivo en bytes
+        let maxSizeInBytes = 1 * 1024 * 1024; // 1 MB en bytes
+        let fileSizeInBytes = file.size;
+        if (fileSizeInBytes > maxSizeInBytes) {
+            swal.fire({
+                title: 'Archivo demasiado grande',
+                html: 'El archivo que intentas cargar excede el tamaño máximo permitido de 1 MB.<br><br>Por favor, selecciona un archivo más pequeño.',
+                icon: 'error',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Entendido'
+            });
+            
+            // reject("El archivo excede el tamaño máximo permitido de 1 MB.");
+            return;
+        }
+
+        // Verificamos la extensión del archivo (solo permitimos archivos en formato PDF)
+        let allowedExtensions = /(.pdf)$/i;
+        if (!allowedExtensions.exec(file.name)) {
+            swal.fire({
+                title: 'El archivo no tiene el formato compatible. ',
+                html: 'Solo se permite cargar/subir archivos en formato PDF.',
+                icon: 'error'
+            });
+            // reject("El archivo no tiene el formato compatible. Solo se permite cargar/subir archivos en formato PDF.");
+            return;
+        }
+
+        // Si pasa todas las validaciones, el archivo es válido
+        resolve(true);
+    });
+}
+function agregarCasoC4(){
+    c4_dg = $.trim($('#c4_dg').val());
+    c4_edo = $.trim($('#c4_edo').val());
+    c4_mun = $.trim($('#c4_mun').val());
+    c4_pais = $.trim($('#c4_pais').val());
+    c4_folio = $.trim($('#c4_folio').val());
+    c4_numero = $.trim($('#c4_numero').val());
+    id_caso = $.trim($('#id_desc_caso').val());
+    c4_mun_edo = $.trim($('#c4_mun_edo').val());
+    c4_dirigido = $.trim($('#c4_dirigido').val());
+    c4_no_oficio = $.trim($('#c4_no_oficio').val());
+    c4_des_hechos = $.trim($('#c4_des_hechos').val());
+    c4_lugar_hechos = $.trim($('#c4_lugar_hechos').val());
+    c4_fecha_inicio = $.trim($('#c4_fecha_inicio').val());
+    otros_estados_c4 = $.trim($('#otros_estados_c4').val());
+    c4_observaciones = $.trim($('#c4_observaciones').val());
+    c4_ruta_sol_oficio_edit = $.trim($('#c4_ruta_sol_oficio_edit').val());
+    file0 = document.getElementById('c4_ruta_sol_oficio');
+    file = file0.files[0];
+    
     var data = new FormData();
     data.append('func', 'fn_guardar_caso_c4');
     data.append('id', id);
@@ -466,7 +527,6 @@ function fun_agregar_caso_c4() {
     data.append('c4_lugar_hechos', c4_lugar_hechos);
     data.append('c4_des_hechos', c4_des_hechos);
     data.append('c4_observaciones', c4_observaciones);
-
     $.ajax({
         url: "../controllers/fun_casos_c4.php",
         type: "POST",
@@ -475,38 +535,26 @@ function fun_agregar_caso_c4() {
         processData: false,
         cache: false
     }).done(function (result) {
-
         if (result.estatus === "ok") {
             Swal.fire({ icon: 'success', title: 'Expediente guardado correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_c4').modal('hide');
             fn_listar_casos_c4();
-
-
         }
         else if (result.estatus === "editado") {
             Swal.fire({ icon: 'success', title: 'Expediente Editado correctamente', showConfirmButton: false, timer: 1500 });
             $('#modal_c4').modal('hide');
             fn_listar_casos_c4();
-
-
-        }
-        else if (result.estatus === "arch_pesado") {
-            Swal.fire({ icon: 'error', title: 'Archivo PDF muy pesado prueba intentar reducirlo', showConfirmButton: false, timer: 1500 });
-
         }
         else {
-
             Swal.fire({ icon: 'error', title: 'Hubo un problema', text: 'Vuelve a intentarlo', showConfirmButton: false, timer: 1500 });
             $('#btn_create_can').prop('disabled', false);
             $('#modalCanalizacion').modal('hide');
-
-
             return false;
         }
 
     })
-
 }
+
 function fn_listar_casos_c4() {
     $("#ver_lista_casos_c4").html(cargando);
     $.post("../controllers/fun_casos_c4.php", { func: 'fn_listar_casos_c4' }, function (data) {
