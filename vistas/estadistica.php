@@ -1,13 +1,6 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (isset($_SESSION['nombre'])) {
-    $user = $_SESSION['nombre'];
-} else {
-    header('location: ../index.php');
-}
+    if (session_status() == PHP_SESSION_NONE) {session_start();}
+    if (isset($_SESSION['nombre'])) {$user = $_SESSION['nombre'];} else {header('location: ../index.php');}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,21 +41,19 @@ if (isset($_SESSION['nombre'])) {
                 <div class="row">
                     <div class="col-md-3">
                         <h6>Tipo de reporte a generar:</h6>
-
-                        <select class="form-select" name="gen_reporte" id="gen_reporte">
+                        <select class="form-select" name="gen_reporte" id="gen_reporte" onchange="camposDeBusqueda()">
                             <option value="0" selected disabled>Seleccione</option>
                             <option value="1">Canalización</option>
                             <option value="2">Casos c4</option>
-                     
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="id_reporte">Reporte a consultar:</label>
+                        <label for="id_reporte">Reporte:</label>
                         <select class="form-select" id="id_reporte" name="id_reporte">
                             <option value="0" selected disabled>Seleccione</option>
-                            <option value="1">Reporte por municipios</option>
-                            <option value="2">Reporte por General(Sin Municipios)</option>
-                            <option value="3">Reporte por General Total</option>     
+                            <!-- <option value="1">Reporte por municipios</option> -->
+                            <!-- <option value="2">Reporte por General(Sin Municipios)</option> -->
+                            <!-- <option value="3">Reporte por General Total</option>      -->
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -85,7 +76,7 @@ if (isset($_SESSION['nombre'])) {
                 <div class="col-md-12">
                     <div id="div_reportes_canalizacion">
                         <!-- <div id="consulta_sexo_municipio"></div> -->
-                       
+
                         <h5> Se muestran los datos de Canalización</h5>
                         <div class="col-md-12" align="center">
                             <div class="col-md-4"></div>
@@ -109,12 +100,12 @@ if (isset($_SESSION['nombre'])) {
                             <h5 align="center"><strong>Total de victimas por edades de todos los casos</strong></h5>
                             <h5 align="center"><strong>Total de victimas Menores de edad de todos los casos</strong></h5>
                             <div id="consulta_edad_can"></div>
-                            <h5 align="center"><strong>Total de victimas mayores  de edad de todos los casos</strong></h5>
+                            <h5 align="center"><strong>Total de victimas mayores de edad de todos los casos</strong></h5>
                             <div id="consulta_edad_mayores_can"></div>
                             <h5 align="center"><strong>Total de casos de personas vulneradas</strong></h5>
                             <div id="consulta_per_vul_can"></div>
-                        </div>                  
-                       
+                        </div>
+
                         <div id="div_consulta_casos_por_municipio_can">
                             <h5 align="center"><strong>Total de casos en cada municipio(Estado de Veracruz )</strong></h5>
                             <div id="consulta_casos_por_municipio_veracruz_can"></div>
@@ -127,7 +118,7 @@ if (isset($_SESSION['nombre'])) {
                             <h5 align="center"><strong>Total de casos en pais diferentes de Mexico</strong></h5>
                             <div id="consulta_casos_por_pais_can"></div>
                         </div>
-                       
+
 
                     </div>
                     <div id="div_reportes_casos_c4">
@@ -142,7 +133,7 @@ if (isset($_SESSION['nombre'])) {
                             <h5 align="center"><strong>Total de casos agrupados por mes </strong></h5>
                             <div id="consulta_meses_num_casos_c4"></div>
                         </div>
-                        
+
                         <div id="div_consulta_genero_c4">
                             <h5 align="center"><strong>Total de victimas por genero todos los casos</strong></h5>
                             <div id="consulta_genero_c4"></div>
@@ -159,10 +150,10 @@ if (isset($_SESSION['nombre'])) {
 
                             <div id="consulta_suma_datos_per_vul_c4"></div>
                         </div>
-                        
+
                         <div id="div_consulta_num_delitos_casos_c4">
                             <h5 align="center"><strong>Total de delitos hacia victimas todos los casos</strong></h5>
-                            
+
                             <div id="consulta_delitos_todos_casos_c4"></div>
                         </div>
                         <div id="div_consulta_casos_por_municipio_c4">
@@ -183,7 +174,7 @@ if (isset($_SESSION['nombre'])) {
                     <br>
                     <p align="center">*NOTA: Cabe hacer mención que los casos involucran a más de una niña, niño o adolescente</p>
                     <br>
-                   
+
                 </div>
 
             </div>
@@ -214,10 +205,10 @@ if (isset($_SESSION['nombre'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-             
+
             </div>
             <div class="col-md-12">
-               
+
                 <span class="" id="reporte"></span>
             </div>
             <div class="modal-footer">

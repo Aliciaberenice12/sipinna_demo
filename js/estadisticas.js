@@ -1,111 +1,31 @@
-var cargando =
-    '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
+var cargando ='<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
 
-$(document).ready(function () {
+function camposDeBusqueda() {
+    const selectTipo = document.getElementById("gen_reporte").value;
+    const selectReporte = document.getElementById("id_reporte");
+    const optionA = new Option("Reporte por municipios", "1");
+    const optionB = new Option("Reporte por General(Sin Municipios)", "2");
+    const optionC = new Option("Reporte por General Total", "3");
+    const optionD = new Option("Reporte por dependencia", "4");
 
-    $("#div_reportes_canalizacion").hide();
-    $("#div_reportes_casos_c4").hide();
-    $("#div_reportes_general").hide();
+    // Limpiar las opciones actuales del segundo select
+    while (selectReporte.options.length) {
+        selectReporte.remove(0);
+    }
+    // Añadir nuevas opciones basadas en la selección del primer select
+    if (selectTipo === "1") {
+        selectReporte.add(optionA);
+        selectReporte.add(optionB);
+        selectReporte.add(optionC);
+    } 
+    else if (selectTipo === "2") {
+        selectReporte.add(optionA);
+        selectReporte.add(optionB);
+        selectReporte.add(optionC);
+        selectReporte.add(optionD);
+    }
 
-    $("#gen_reporte").change(function () {
-        if ($(this).val() == "1") {
-           
-            $("#id_reporte").change(function () {
-                if ($(this).val() == "1") {
-                    $("#div_reportes_canalizacion").show(),
-                    $("#div_reportes_casos_c4").hide(),
-                    $("#div_consulta_general").hide(),
-                    $("#div_consulta_mes_num_casos_can").hide(),
-                    $("#div_cunsulta_genero_can").hide(),
-                    $("#div_consulta_edad_can").hide(),
-                    $("#div_consulta_casos_por_estado_dif_can").show(),                    
-                    $("#div_consulta_casos_por_pais_dif_can").show(),
-                    $("#div_consulta_casos_por_municipio_can").show()
-     
-                    
-                    
-                }
-                else if ($(this).val() == "2") {
-                    $("#div_reportes_canalizacion").show(),
-                    $("#div_reportes_casos_c4").hide(),
-                    $("#div_consulta_general").show(),
-                    $("#div_consulta_mes_num_casos_can").show(),
-                    $("#div_cunsulta_genero_can").show(),
-                    $("#div_consulta_edad_can").show(),
-                    $("#div_consulta_casos_por_municipio_can").hide(),
-                    $("#div_consulta_casos_por_edo_mun_can").hide(),
-                    $("#div_consulta_casos_por_estado_dif_can").hide(),                    
-                    $("#div_consulta_casos_por_pais_dif_can").hide()
-                  
-
-
-                }
-                else if ($(this).val() == "3") {
-                    $("#div_reportes_canalizacion").show(),
-                    $("#div_reportes_casos_c4").hide(),
-                    $("#div_consulta_general").show(),
-                    $("#div_consulta_mes_num_casos_can").show(),
-                    $("#div_cunsulta_genero_can").show(),
-                    $("#div_consulta_edad_can").show(),
-                    $("#div_consulta_casos_por_municipio_can").show(),
-                    $("#div_consulta_casos_por_edo_mun_can").show(),
-                    $("#div_consulta_casos_por_estado_dif_can").show(),                    
-                    $("#div_consulta_casos_por_pais_dif_can").show()
-                }
-            });
-        }
-        else if ($(this).val() == "2") {
-            $("#id_reporte").change(function () {
-                if ($(this).val() == "1") {
-                    $("#div_reportes_casos_c4").show(),
-                    $("#div_reportes_canalizacion").hide(),
-                    $("#div_consulta_mes_num_casos_c4").hide(),
-                    $("#div_consulta_genero_c4").hide(),
-                    $("#div_consulta_edad_c4").hide(),
-                    $("#div_consulta_num_delitos_casos_c4").hide(),
-                    $("#div_consulta_casos_por_municipio_c4").show(),
-                    $("#div_consulta_casos_por_estado_c4").show(),
-                    $("#div_consulta_casos_por_pais_c4").show()
-
-                
-
-                }
-                else if($(this).val() == "2"){
-                    $("#div_reportes_casos_c4").show(),
-                    $("#div_reportes_canalizacion").hide(),
-                    $("#div_consulta_mes_num_casos_c4").show(),
-                    $("#div_consulta_genero_c4").show(),
-                    $("#div_consulta_edad_c4").show(),
-                    $("#div_consulta_num_delitos_casos_c4").show(),
-                    $("#div_consulta_casos_por_municipio_c4").hide(),
-                    $("#div_consulta_casos_por_municipio_c4").hide(),
-                    $("#div_consulta_casos_por_estado_c4").hide(),
-                    $("#div_consulta_casos_por_pais_c4").hide()
-
-                }
-                else if($(this).val() == "3"){
-                    $("#div_reportes_casos_c4").show(),
-                    $("#div_reportes_canalizacion").hide(),
-                    $("#div_consulta_mes_num_casos_c4").show(),
-                    $("#div_consulta_genero_c4").show(),
-                    $("#div_consulta_edad_c4").show(),
-                    $("#div_consulta_num_delitos_casos_c4").show(),
-                    $("#div_consulta_casos_por_municipio_c4").show(),
-                    $("#div_consulta_casos_por_municipio_c4").show(),
-                    $("#div_consulta_casos_por_estado_c4").show(),
-                    $("#div_consulta_casos_por_pais_c4").show()
-
-                }
-            });
-           
-
-
-
-        }
-        
-    });
-    
-});
+}
 function limpiarModal(){
     $('#gen_reporte').val('0'),
     $('#id_reporte').val('0'),
