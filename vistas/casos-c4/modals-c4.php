@@ -232,7 +232,7 @@
                                 <div class="col-md-3">
                                     <label for="c4_edad_vic">Edad(Años):</label>
                                     <select name="c4_edad_vic" id="c4_edad_vic" class="form-select">
-                                        <option value="se desconoce" disabled selected>Se Desconoce</option>
+                                        <option value="se desconoce" selected>Se Desconoce</option>
                                         <option value="0">Menos de 1 año </option>
 
                                         <?php

@@ -231,6 +231,7 @@
                                         <div class="col-md-2">
                                             <label for="can_edad_vic">Edad(Años):</label>
                                             <select name="can_edad_vic" id="can_edad_vic" class="form-select">
+                                                <option value="Se desconoce" selected>Se desconoce</option>
                                                 <option value="0">Menos de 1 año</option>
                                                 <?php
                                                 for ($i = 1; $i <= 100; $i++) {
