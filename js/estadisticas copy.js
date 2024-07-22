@@ -112,40 +112,17 @@ function consulta() {
         // Limpia el contenedor antes de agregar nuevos datos
         municipiosContainer.innerHTML = '';
     
-        // Crea la tabla y los encabezados fuera del bucle
-        const table = document.createElement('table');
-
-        const thead = document.createElement('thead');
-        thead.classList.add('tbl-estadisticas');
-        const headerRow = document.createElement('tr');
-        const thMunicipio = document.createElement('th');
-        thMunicipio.textContent = 'Municipio';
-        const thNumero = document.createElement('th');
-        thNumero.textContent = 'Número';
-        headerRow.appendChild(thMunicipio);
-        headerRow.appendChild(thNumero);
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-    
-        const tbody = document.createElement('tbody');
-    
-        // Recorre los datos y crea las filas de la tabla
+        // Recorre los datos y crea elementos HTML
         municipios.forEach(function(municipio) {
-            const row = document.createElement('tr');
-    
-            const tdMunicipio = document.createElement('td');
-            tdMunicipio.textContent = municipio.municipio;
-            const tdNumero = document.createElement('td');
-            tdNumero.textContent = municipio.Numero;
-    
-            row.appendChild(tdMunicipio);
-            row.appendChild(tdNumero);
-            tbody.appendChild(row);
+            // Crea un nuevo elemento div para cada municipio
+            const municipioDiv = document.createElement('div');
+            
+            // Agrega el contenido al div
+            municipioDiv.innerHTML = `Municipio: ${municipio.municipio}, Número: ${municipio.Numero}`;
+            
+            // Agrega el div al contenedor
+            municipiosContainer.appendChild(municipioDiv);
         });
-    
-        table.appendChild(tbody);
-        municipiosContainer.appendChild(table);
-    
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.error("Error en la solicitud: ", textStatus, errorThrown);
     });

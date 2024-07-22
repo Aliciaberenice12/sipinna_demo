@@ -161,15 +161,13 @@
                                     <div id="contador">0/500</div>
                                 </div>
                                 <div class="col-md-6">
-
                                     <label for="can_ges_reporte">Gestiones realizadas por la Secretaría Ejecutiva del SIPINNA Estatal *</label>
-
                                     <textarea name="can_ges_reporte" id="can_ges_reporte" class="form-control" rows="3" maxlength="500"></textarea>
                                 </div>
                             </div>
                         </div>
-                        <!--Aqui comienza solicitantes-->
-                        <div class="card">
+                         <!--Aqui comienza solicitantes-->
+                         <div class="card">
                             <div class="row card-body" id="card_solicitante">
                                 <h5><br><strong>Datos Solicitante </strong></h5>
 
@@ -186,6 +184,27 @@
                             </div>
                         </div>
                         <!--Aqui Termina solicitantes-->
+                        <div class="card">
+                            <div class="row card-body" id="card_dependencias">
+                                <div class="col-10">
+                                    <h5><br><strong>Dependencias </strong></h5>
+                                    <select name="can_dependencia" id="can_dependencia" class="form-select">
+                                    </select>
+                                </div>
+                                
+                                <div class="col-2 mt-4 pt-2">
+                                    <br>
+                                    <button class="btn btn-success" type="button" id="agregar_dependencia" onclick="carrito_dependencia(1,0);">
+                                        <i class="bi bi-plus-circle"></i> Registar
+                                    </button>
+                                    <button class="btn btn-success" type="button" id="guardar_dependencia" onclick="guardar_dependencia();">
+                                        <i class="bi bi-plus-circle"></i> Guardar
+                                    </button>
+                                </div>
+                                <div class="col-12 mt-4"  id="lista_dependencia"></div>
+                            </div>
+                        </div>
+                       
                         <div class="card">
                             <div class="row card-body" id="car_reportantes">
                                 <div class="row col-md-12" id="datos_reportante">

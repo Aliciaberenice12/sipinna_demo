@@ -342,10 +342,8 @@ class Canalizacion extends Conexion
 	public function insertar_canalizacion($nom_archivo_can, $datos_exp_can)
 	{
 		try {
-			// print_r($datos_exp_can);
-			// die();
+			
 			$nombre_creador = $_SESSION['nombre'];
-
 			$id = $this->gen_folio_can('tbl_can_expediente', 'id');
 			$can_folio_expediente ='SE/OAyA/' . date('Y') . '/' . sprintf("%04s",$id);
 			$anio  = date('Y');
@@ -423,7 +421,34 @@ class Canalizacion extends Conexion
 				$conn->rollback();
 				$estatus = 'error_solicitante';
 			}
-				
+			//Datos de dependencia 
+
+			if(isset($_SESSION['can_dependencia']) and !empty($_SESSION['can_dependencia']))
+				{	
+					foreach ($_SESSION['can_dependencia'] as $row) {
+		
+						$sql4   = $conn->prepare("INSERT INTO 	tbl_can_dependencia
+																	 (
+																	exp_clave_caso,
+																	id_dependencia_fk,
+																	can_created_by
+																	)
+														VALUES 		(?,?,?)
+														");
+						$sql4->bindParam(1, $can_folio_expediente, PDO::PARAM_STR, 30);
+						$sql4->bindParam(2, $row["can_dependencia"], PDO::PARAM_STR, 30);
+						$sql4->bindParam(3, $nombre_creador, PDO::PARAM_STR, 30);
+						$sql4->execute();
+						if ($conn->lastInsertId() > 0) {
+						
+						} else
+						{
+							$conn->rollback();
+							$estatus = 'error_reportantes';
+						}
+							
+					}
+				}
 			//Reportante
 			
 			if(isset($_SESSION['reportante']) and !empty($_SESSION['reportante']))
@@ -454,6 +479,7 @@ class Canalizacion extends Conexion
 							
 					}
 				}
+			
 			//Victimas
 			$id_caso_reportado_victima = $id;
 			if (isset($_SESSION['victima']) and !empty($_SESSION['victima'])) {
@@ -545,7 +571,6 @@ class Canalizacion extends Conexion
 											can_municipio=? ,
 											can_mun_edo =?,
 											can_fecha = ?,
-
 											estatus_expediente =?,
 											can_ruta_sol_oficio=?,
 											can_update_by=?
@@ -555,10 +580,18 @@ class Canalizacion extends Conexion
 			$can_otros_estados,$can_estado, $can_municipio, $can_mun_edo,$can_fecha,$estatus_exp,$nom_arc,$nombre_creador,$id
 		))) {
 			$this->bitacora_canalizacion('Expediente editado ' . $id, $id);
-
+			
+		
 			return 'editado';
 		} else
 			return 'error';
+	}
+	public function insertar_dependencia($id,$folio,$nombre_creador){
+		$sql4   = $this->dbh->prepare("INSERT INTO 	tbl_can_dependencia(exp_clave_caso,id_dependencia_fk,can_created_by)VALUES(?,?,?)");
+				$sql4->bindParam(1, $folio, PDO::PARAM_STR, 30);
+				$sql4->bindParam(2, $id, PDO::PARAM_STR, 30);
+				$sql4->bindParam(3, $nombre_creador, PDO::PARAM_STR, 30);
+				$sql4->execute();
 	}
 	public function obtener_canalizacion($id)
 	{
@@ -866,6 +899,18 @@ class Canalizacion extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
+	public function lista_dependencias($folio_exp)
+	{
+		$sql = $this->dbh->prepare("SELECT  * 
+									FROM tbl_can_dependencia AS can_dep
+									INNER JOIN cat_dependencias AS cat_dep
+									ON can_dep.id_dependencia_fk = cat_dep.id_dependencia
+									WHERE can_dep.exp_clave_caso =?
+									");
+		$sql->execute(array($folio_exp));
+		$row = $sql->fetchAll();
+		return $row;
+	}
 
 	//Avances
 	public function insertar_avance($can_fecha_avance, $can_desc_avance,$nombre_creador,$folio_can)
@@ -982,11 +1027,31 @@ class Canalizacion extends Conexion
 		$row = $sql->fetchAll();
 		return $row;
 	}
+	public function fn_lista_dependencias()
+	{
+		$sql = $this->dbh->prepare("SELECT * FROM cat_dependencias");
+		$sql->execute();
+		$row = $sql->fetchAll();
+		return $row;
+	}
 	public function fn_lista_parentescos()
 	{
 		$sql = $this->dbh->prepare("select id_parentesco, parentesco FROM cat_parentescos GROUP BY id_parentesco");
 		$sql->execute();
 		$row = $sql->fetchAll();
 		return $row;
+	}
+	public function eliminar($origen,$id,$folio)
+	{
+		switch ($origen){
+			case $origen =="dependencia":
+				$sql = $this->dbh->prepare('DELETE FROM tbl_can_dependencia  where id = ? and exp_clave_caso=?');
+			break;
+		}
+		if ($sql->execute(array($id,$folio))) {
+			
+			return 'ok';
+		} else
+			return 'error';
 	}
 }

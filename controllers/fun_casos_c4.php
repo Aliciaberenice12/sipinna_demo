@@ -216,7 +216,6 @@ if (isset($_REQUEST['func'])) {
 				$estatus = $v->editar_victima_c4(
 					$_REQUEST["c4_edad_victima_edit"],
 					$_REQUEST["c4_nom_victima_edit"],
-					
 					$_REQUEST["c4_per_tercera_edad_edit"],
 					$_REQUEST["c4_per_violencia_edit"],
 					$_REQUEST["c4_per_discapacidad_edit"],
