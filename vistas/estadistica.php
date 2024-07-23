@@ -1,6 +1,13 @@
 <?php
-    if (session_status() == PHP_SESSION_NONE) {session_start();}
-    if (isset($_SESSION['nombre'])) {$user = $_SESSION['nombre'];} else {header('location: ../index.php');}
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_SESSION['nombre'])) {
+    $user = $_SESSION['nombre'];
+} else {
+    header('location: ../index.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -41,19 +48,21 @@
                 <div class="row">
                     <div class="col-md-3">
                         <h6>Tipo de reporte a generar:</h6>
-                        <select class="form-select" name="gen_reporte" id="gen_reporte" onchange="camposDeBusqueda()">
+
+                        <select class="form-select" name="gen_reporte" id="gen_reporte">
                             <option value="0" selected disabled>Seleccione</option>
                             <option value="1">Canalización</option>
                             <option value="2">Casos c4</option>
+                     
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="id_reporte">Reporte:</label>
+                        <label for="id_reporte">Reporte a consultar:</label>
                         <select class="form-select" id="id_reporte" name="id_reporte">
                             <option value="0" selected disabled>Seleccione</option>
-                            <!-- <option value="1">Reporte por municipios</option> -->
-                            <!-- <option value="2">Reporte por General(Sin Municipios)</option> -->
-                            <!-- <option value="3">Reporte por General Total</option>      -->
+                            <option value="1">Reporte por municipios</option>
+                            <option value="2">Reporte por General(Sin Municipios)</option>
+                            <option value="3">Reporte por General Total</option>     
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -73,13 +82,108 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="col-12" id="contenido">
+                <div class="col-md-12">
+                    <div id="div_reportes_canalizacion">
+                        <!-- <div id="consulta_sexo_municipio"></div> -->
+                       
+                        <h5> Se muestran los datos de Canalización</h5>
+                        <div class="col-md-12" align="center">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4" id="numero_casos"></div>
+                            <div class="col-md-4"></div>
+
+                        </div>
+                        <div id="div_consulta_general">
+                            <h5 align="center"><strong>Todos los Reportes(Sin Municipios)</strong></h5>
+                        </div>
+                        <div id="div_consulta_mes_num_casos_can">
+                            <h5 align="center"><strong>Total de casos agrupados por mes </strong></h5>
+                            <div id="consulta_meses_num_casos_can"></div>
+                        </div>
+                        <div id="div_cunsulta_genero_can">
+                            <h5 align="center"><strong>Total de victimas por genero de todos los casos</strong></h5>
+                            <div id="consulta_genero">
+                            </div>
+                        </div>
+                        <div id="div_consulta_edad_can">
+                            <h5 align="center"><strong>Total de victimas por edades de todos los casos</strong></h5>
+                            <h5 align="center"><strong>Total de victimas Menores de edad de todos los casos</strong></h5>
+                            <div id="consulta_edad_can"></div>
+                            <h5 align="center"><strong>Total de victimas mayores  de edad de todos los casos</strong></h5>
+                            <div id="consulta_edad_mayores_can"></div>
+                            <h5 align="center"><strong>Total de casos de personas vulneradas</strong></h5>
+                            <div id="consulta_per_vul_can"></div>
+                        </div>                  
+                       
+                        <div id="div_consulta_casos_por_municipio_can">
+                            <h5 align="center"><strong>Total de casos en cada municipio(Estado de Veracruz )</strong></h5>
+                            <div id="consulta_casos_por_municipio_veracruz_can"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_estado_dif_can">
+                            <h5 align="center"><strong>Total de casos en estados diferentes de veracruz</strong></h5>
+                            <div id="consulta_casos_por_municipio_edo_mun_can"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_pais_dif_can">
+                            <h5 align="center"><strong>Total de casos en pais diferentes de Mexico</strong></h5>
+                            <div id="consulta_casos_por_pais_can"></div>
+                        </div>
+                       
+
+                    </div>
+                    <div id="div_reportes_casos_c4">
+                        <h5> Se muestran los datos de Casos C4</h5>
+                        <div class="col-md-12" align="center">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4" id="numero_casos_c4"></div>
+                            <div class="col-md-4"></div>
+
+                        </div>
+                        <div id="div_consulta_mes_num_casos_c4">
+                            <h5 align="center"><strong>Total de casos agrupados por mes </strong></h5>
+                            <div id="consulta_meses_num_casos_c4"></div>
+                        </div>
+                        
+                        <div id="div_consulta_genero_c4">
+                            <h5 align="center"><strong>Total de victimas por genero todos los casos</strong></h5>
+                            <div id="consulta_genero_c4"></div>
+                        </div>
+                        <div id="div_consulta_edad_c4">
+                            <h5 align="center"><strong>Total de todas victimas por edades casos</strong></h5>
+                            <h5 align="center"><strong>Total de todas victimas Menores de edad casos</strong></h5>
+
+                            <div id="consulta_edad_c4"></div>
+                            <h5 align="center"><strong>Total de todas victimas Mayores de edad casos</strong></h5>
+
+                            <div id="consulta_edad_mayores_c4"></div>
+                            <h5 align="center"><strong>Total de victimas vulneradas de todos los casos</strong></h5>
+
+                            <div id="consulta_suma_datos_per_vul_c4"></div>
+                        </div>
+                        
+                        <div id="div_consulta_num_delitos_casos_c4">
+                            <h5 align="center"><strong>Total de delitos hacia victimas todos los casos</strong></h5>
+                            
+                            <div id="consulta_delitos_todos_casos_c4"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_municipio_c4">
+                            <h5 align="center"><strong>Total casos en cada municipio</strong></h5>
+                            <div id="consulta_casos_por_municipio_veracruz_c4"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_estado_c4">
+                            <h5 align="center"><strong>Total casos en cada Estado diferente a veracruz</strong></h5>
+                            <div id="consulta_casos_por_edo_dif_c4"></div>
+                        </div>
+                        <div id="div_consulta_casos_por_pais_c4">
+                            <h5 align="center"><strong>Total casos en cada pais diferente a México</strong></h5>
+                            <div id="consulta_casos_por_pais_dif_c4"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <br>
                     <p align="center">*NOTA: Cabe hacer mención que los casos involucran a más de una niña, niño o adolescente</p>
                     <br>
-
+                   
                 </div>
 
             </div>
@@ -110,10 +214,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
+             
             </div>
             <div class="col-md-12">
-
+               
                 <span class="" id="reporte"></span>
             </div>
             <div class="modal-footer">

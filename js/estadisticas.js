@@ -1,31 +1,111 @@
-var cargando ='<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
+var cargando =
+    '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
 
-function camposDeBusqueda() {
-    const selectTipo = document.getElementById("gen_reporte").value;
-    const selectReporte = document.getElementById("id_reporte");
-    const optionA = new Option("Reporte por municipios", "1");
-    const optionB = new Option("Reporte por General(Sin Municipios)", "2");
-    const optionC = new Option("Reporte por General Total", "3");
-    const optionD = new Option("Reporte por dependencia", "4");
+$(document).ready(function () {
 
-    // Limpiar las opciones actuales del segundo select
-    while (selectReporte.options.length) {
-        selectReporte.remove(0);
-    }
-    // Añadir nuevas opciones basadas en la selección del primer select
-    if (selectTipo === "1") {
-        selectReporte.add(optionA);
-        selectReporte.add(optionB);
-        selectReporte.add(optionC);
-    } 
-    else if (selectTipo === "2") {
-        selectReporte.add(optionA);
-        selectReporte.add(optionB);
-        selectReporte.add(optionC);
-        selectReporte.add(optionD);
-    }
+    $("#div_reportes_canalizacion").hide();
+    $("#div_reportes_casos_c4").hide();
+    $("#div_reportes_general").hide();
 
-}
+    $("#gen_reporte").change(function () {
+        if ($(this).val() == "1") {
+           
+            $("#id_reporte").change(function () {
+                if ($(this).val() == "1") {
+                    $("#div_reportes_canalizacion").show(),
+                    $("#div_reportes_casos_c4").hide(),
+                    $("#div_consulta_general").hide(),
+                    $("#div_consulta_mes_num_casos_can").hide(),
+                    $("#div_cunsulta_genero_can").hide(),
+                    $("#div_consulta_edad_can").hide(),
+                    $("#div_consulta_casos_por_estado_dif_can").show(),                    
+                    $("#div_consulta_casos_por_pais_dif_can").show(),
+                    $("#div_consulta_casos_por_municipio_can").show()
+     
+                    
+                    
+                }
+                else if ($(this).val() == "2") {
+                    $("#div_reportes_canalizacion").show(),
+                    $("#div_reportes_casos_c4").hide(),
+                    $("#div_consulta_general").show(),
+                    $("#div_consulta_mes_num_casos_can").show(),
+                    $("#div_cunsulta_genero_can").show(),
+                    $("#div_consulta_edad_can").show(),
+                    $("#div_consulta_casos_por_municipio_can").hide(),
+                    $("#div_consulta_casos_por_edo_mun_can").hide(),
+                    $("#div_consulta_casos_por_estado_dif_can").hide(),                    
+                    $("#div_consulta_casos_por_pais_dif_can").hide()
+                  
+
+
+                }
+                else if ($(this).val() == "3") {
+                    $("#div_reportes_canalizacion").show(),
+                    $("#div_reportes_casos_c4").hide(),
+                    $("#div_consulta_general").show(),
+                    $("#div_consulta_mes_num_casos_can").show(),
+                    $("#div_cunsulta_genero_can").show(),
+                    $("#div_consulta_edad_can").show(),
+                    $("#div_consulta_casos_por_municipio_can").show(),
+                    $("#div_consulta_casos_por_edo_mun_can").show(),
+                    $("#div_consulta_casos_por_estado_dif_can").show(),                    
+                    $("#div_consulta_casos_por_pais_dif_can").show()
+                }
+            });
+        }
+        else if ($(this).val() == "2") {
+            $("#id_reporte").change(function () {
+                if ($(this).val() == "1") {
+                    $("#div_reportes_casos_c4").show(),
+                    $("#div_reportes_canalizacion").hide(),
+                    $("#div_consulta_mes_num_casos_c4").hide(),
+                    $("#div_consulta_genero_c4").hide(),
+                    $("#div_consulta_edad_c4").hide(),
+                    $("#div_consulta_num_delitos_casos_c4").hide(),
+                    $("#div_consulta_casos_por_municipio_c4").show(),
+                    $("#div_consulta_casos_por_estado_c4").show(),
+                    $("#div_consulta_casos_por_pais_c4").show()
+
+                
+
+                }
+                else if($(this).val() == "2"){
+                    $("#div_reportes_casos_c4").show(),
+                    $("#div_reportes_canalizacion").hide(),
+                    $("#div_consulta_mes_num_casos_c4").show(),
+                    $("#div_consulta_genero_c4").show(),
+                    $("#div_consulta_edad_c4").show(),
+                    $("#div_consulta_num_delitos_casos_c4").show(),
+                    $("#div_consulta_casos_por_municipio_c4").hide(),
+                    $("#div_consulta_casos_por_municipio_c4").hide(),
+                    $("#div_consulta_casos_por_estado_c4").hide(),
+                    $("#div_consulta_casos_por_pais_c4").hide()
+
+                }
+                else if($(this).val() == "3"){
+                    $("#div_reportes_casos_c4").show(),
+                    $("#div_reportes_canalizacion").hide(),
+                    $("#div_consulta_mes_num_casos_c4").show(),
+                    $("#div_consulta_genero_c4").show(),
+                    $("#div_consulta_edad_c4").show(),
+                    $("#div_consulta_num_delitos_casos_c4").show(),
+                    $("#div_consulta_casos_por_municipio_c4").show(),
+                    $("#div_consulta_casos_por_municipio_c4").show(),
+                    $("#div_consulta_casos_por_estado_c4").show(),
+                    $("#div_consulta_casos_por_pais_c4").show()
+
+                }
+            });
+           
+
+
+
+        }
+        
+    });
+    
+});
 function limpiarModal(){
     $('#gen_reporte').val('0'),
     $('#id_reporte').val('0'),
@@ -91,134 +171,74 @@ function consulta() {
         processData: false,
         cache: false
     }).done(function (res) {
-        // Parsea la respuesta JSON
-        var response = JSON.parse(res);
-    
-        // Parsea las cadenas JSON internas
-        const listaMunStr = response.lista_mun;
-    
-        // Convierte la cadena JSON en un objeto
-        const listaMun = JSON.parse(listaMunStr);
-    
-        // Accede a los datos específicos
-        const municipios = listaMun.data_1;
-    
-        // Muestra los resultados en la consola (opcional)
-        console.log(municipios);
-    
-        // Obtén el contenedor donde se mostrarán los municipios
-        const municipiosContainer = document.getElementById('contenido');
-    
-        // Limpia el contenedor antes de agregar nuevos datos
-        municipiosContainer.innerHTML = '';
-    
-        // Crea la tabla y los encabezados fuera del bucle
-        const table = document.createElement('table');
 
-        const thead = document.createElement('thead');
-        thead.classList.add('tbl-estadisticas');
-        const headerRow = document.createElement('tr');
-        const thMunicipio = document.createElement('th');
-        thMunicipio.textContent = 'Municipio';
-        const thNumero = document.createElement('th');
-        thNumero.textContent = 'Número';
-        headerRow.appendChild(thMunicipio);
-        headerRow.appendChild(thNumero);
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-    
-        const tbody = document.createElement('tbody');
-    
-        // Recorre los datos y crea las filas de la tabla
-        municipios.forEach(function(municipio) {
-            const row = document.createElement('tr');
-    
-            const tdMunicipio = document.createElement('td');
-            tdMunicipio.textContent = municipio.municipio;
-            const tdNumero = document.createElement('td');
-            tdNumero.textContent = municipio.Numero;
-    
-            row.appendChild(tdMunicipio);
-            row.appendChild(tdNumero);
-            tbody.appendChild(row);
-        });
-    
-        table.appendChild(tbody);
-        municipiosContainer.appendChild(table);
-    
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.error("Error en la solicitud: ", textStatus, errorThrown);
-    });
-        // if (res.estatus === "consul_mun") {
-        //     fn_listar_municipio_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_numero_casos(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edo_mun_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha), 
-        //     fn_listar_pais_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
-        //     // limpiarModal()
-        // }
-        // else if (res.estatus === "consul_edades") {
-        //     fn_listar_mes_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_numero_casos(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_gen_can(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edad_can(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edad_mayores_can(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_per_vul_can(id_reporte,desde_fecha,hasta_fecha)
-        //     // limpiarModal()
+        if (res.estatus === "consul_mun") {
+            fn_listar_municipio_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_numero_casos(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edo_mun_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha), 
+            fn_listar_pais_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
+            // limpiarModal()
+        }
+        else if (res.estatus === "consul_edades") {
+            fn_listar_mes_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_numero_casos(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_gen_can(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edad_can(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edad_mayores_can(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_per_vul_can(id_reporte,desde_fecha,hasta_fecha)
+            // limpiarModal()
            
        
-        // }
-        // else if (res.estatus === "consul_mes") {
-        //     fn_listar_numero_casos(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_mes_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_municipio_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_gen_can(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edad_can(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edad_mayores_can(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_per_vul_can(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edo_mun_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha), 
-        //     fn_listar_pais_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
-        //     // limpiarModal()
-        // }
-        // else if (res.estatus === "consul_mun_c4") {
-        //     fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_municipio_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_estado_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_pais_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
+        }
+        else if (res.estatus === "consul_mes") {
+            fn_listar_numero_casos(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_mes_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_municipio_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_gen_can(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edad_can(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edad_mayores_can(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_per_vul_can(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edo_mun_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha), 
+            fn_listar_pais_can(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
+            // limpiarModal()
+        }
+        else if (res.estatus === "consul_mun_c4") {
+            fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_municipio_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_estado_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_pais_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
             
 
-        //     // limpiarModal()
-        // }
-        // else if (res.estatus === "consul_genero_c4") {
-        //     fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_mes_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_gen_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edad_c4(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edad_mayores_c4(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_per_vul_c4(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_delitos_c4(id_reporte,desde_fecha,hasta_fecha)
-        //     fn_carga_delitos()
-        //     // limpiarModal()
-        // }
-        // else if (res.estatus === "consul_mes_c4") {
-        //     fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_mes_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_gen_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edad_c4(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_edad_mayores_c4(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_per_vul_c4(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_listar_delitos_c4(id_reporte,desde_fecha,hasta_fecha),
-        //     fn_carga_delitos(),
-        //     fn_listar_municipio_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
-        //     // limpiarModal()
-        // }
- 
+            // limpiarModal()
+        }
+        else if (res.estatus === "consul_genero_c4") {
+            fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_mes_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_gen_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edad_c4(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edad_mayores_c4(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_per_vul_c4(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_delitos_c4(id_reporte,desde_fecha,hasta_fecha)
+            fn_carga_delitos()
+            // limpiarModal()
+        }
+        else if (res.estatus === "consul_mes_c4") {
+            fn_listar_numero_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_mes_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_gen_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edad_c4(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_edad_mayores_c4(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_per_vul_c4(id_reporte,desde_fecha,hasta_fecha),
+            fn_listar_delitos_c4(id_reporte,desde_fecha,hasta_fecha),
+            fn_carga_delitos(),
+            fn_listar_municipio_c4(gen_reporte,id_reporte,desde_fecha,hasta_fecha)
+            // limpiarModal()
+        }
+        
+       
+    })
 }
-function paintTable(datos){
-    const contenidoDiv = document.getElementById('contenido');
-    // Crear la tabla
-    const tabla = document.createElement('table');
-    tabla.id = 'listXMun';
-}
+
 function modal_pdf(gen_reporte,id_reporte,desde,hasta){
  if(gen_reporte =='1'){
     if(id_reporte=='1'){
