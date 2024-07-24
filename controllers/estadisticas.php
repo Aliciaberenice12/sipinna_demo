@@ -99,10 +99,25 @@ if (isset($_POST['func'])) {
 			break;
 
 		case 'fn_obtener_reporte':
+			
+			$id_reporte=$_POST["id_reporte"];
+
+			switch($_POST["gen_reporte"]){
+				case "1":
+					if ($id_reporte == 1) {
+						$result = $v->obtener_consul_mun($_POST["estatus_caso"],$_POST["desde_fecha"], $_POST["hasta_fecha"]);
+						echo $result;
+					}
+
+					break;
+				case "2":
+					break;
+			}
+
 			if ($_POST["gen_reporte"] == 1) { //Canalizacion 
 				if ($_POST["id_reporte"] == 1) {
 
-					$estatus = $v->obtener_consul_mun($_POST["desde_fecha"], $_POST["hasta_fecha"]);
+					// $estatus = $v->obtener_consul_mun($_POST["desde_fecha"], $_POST["hasta_fecha"]);
 					// $estatus2=$v->obtener_total_mun($_POST["desde_fecha"],$_POST["hasta_fecha"]);
 				} else if ($_POST["id_reporte"] == 2) {
 					// echo' tipos de delitos';
@@ -120,7 +135,7 @@ if (isset($_POST['func'])) {
 			} else if ($_POST["gen_reporte"] == 2) {
 				if ($_POST["id_reporte"] == 1) { //Casos de c4
 
-					$estatus = $v->obtener_consul_mun_c4($_POST["desde_fecha"], $_POST["hasta_fecha"]);
+					// $estatus = $v->obtener_consul_mun_c4($_POST["desde_fecha"], $_POST["hasta_fecha"]);
 					// $estatus2=$v->obtener_total_mun($_POST["desde_fecha"],$_POST["hasta_fecha"]);
 				} else if ($_POST["id_reporte"] == 2) { //Casos de c4 General sin municipio
 
@@ -132,13 +147,14 @@ if (isset($_POST['func'])) {
 					// $estatus2=$v->obtener_total_mun($_POST["desde_fecha"],$_POST["hasta_fecha"]);
 				}
 			}
-			header('Content-Type: application/json');
-			$datos = array('estatus' => $estatus);
-			echo json_encode($datos, JSON_FORCE_OBJECT);
+			// header('Content-Type: application/json');
+			// $datos = array('estatus' => $estatus);
+			// echo json_encode($datos, JSON_FORCE_OBJECT);
 			break;
 			///Numero de casos 
 		case 'fun_listar_numero_casos':
 			if ($_POST['gen_reporte'] == '1') {
+				
 				$gen_reporte = $_POST['gen_reporte'];
 				$id_reporte = $_POST['id_reporte'];
 				$desde = $_POST['desde_fecha'];

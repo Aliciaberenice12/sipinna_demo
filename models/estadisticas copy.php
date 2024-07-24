@@ -396,45 +396,23 @@ class Estadisticas extends Conexion
 	public function obtener_consul_mun($fecha_in,$fecha_fin)
 	{
 	
-		$consulta=("SELECT 
-					can_pais,estado,municipio, can_municipio,COUNT(*) AS Numero
-					FROM 		((tbl_can_expediente
-					LEFT JOIN 	cat_municipios
-					ON 			tbl_can_expediente.can_municipio= cat_municipios.id_municipio)
-					LEFT JOIN 	cat_estados
-					ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
-					WHERE 		can_fecha 
-					BETWEEN 	? AND ?
-					AND			activo = ?
-					GROUP BY 	municipio
-					ORDER BY	municipio
-					");
-		try {
-			$stmt = $this->dbh->prepare($consulta);
-			$stmt->execute(array($fecha_in, $fecha_fin,1));
-			$filas = $stmt->rowCount();
-			if ($filas > 0) {
-				$result = $stmt->fetchAll(PDO::FETCH_CLASS);
-				                    
-				$aData = array(
-					"status"    => 200,
-					"message"   => "Proceso completado",
-					"data"      => $result
-				);
-			} else {
-    
-				$aData = array(
-					"status"    => 400,
-					"message"   => "Sin datos que mostrar"
-				);
-			}
-		} catch (PDOException $e) {
-			$aData = array(
-				"status"    => 400,
-				"message"   => $e->getMessage()
-			);
-		}
-		return json_encode($aData);
+			$sql = $this->dbh->prepare("SELECT 		can_pais,estado,municipio, can_municipio,COUNT(*) AS Numero
+										FROM 		((tbl_can_expediente
+										LEFT JOIN 	cat_municipios
+										ON 			tbl_can_expediente.can_municipio= cat_municipios.id_municipio)
+										LEFT JOIN 	cat_estados
+										ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
+										WHERE 		can_fecha 
+										BETWEEN 	? AND ?
+										AND			activo = ?
+										GROUP BY 	municipio
+										ORDER BY	municipio
+										");
+		if ($sql->execute(array($fecha_in,$fecha_fin,1))) {
+			return 'consul_mun';
+			
+		} else
+			return 'error';	
 
 	}
 	public function obtener_total_mun($fecha_in,$fecha_fin)
