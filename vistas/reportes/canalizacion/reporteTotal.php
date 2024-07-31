@@ -7,6 +7,8 @@ require "../../../config/class.pdo.php";
 header("charset=utf-8");
 $desde=$_GET['desde'];
 $hasta=$_GET['hasta'];
+$estatus=$_GET['estatus'];
+
 class PDF extends FPDF{
 	var $widths;
 	var $aligns;
@@ -94,16 +96,19 @@ class PDF extends FPDF{
 		$mes_ex=explode("-",$_GET['desde']);
 		$mes_desde=$Meses[$mes_ex['1']-1];
 		$anio_desde=$mes_ex['0'];
+		$dia_desde=$mes_ex['2'];
 		$mes_ex_hasta=explode("-",$_GET['hasta']);
 		$mes_hasta=$Meses[$mes_ex_hasta['1']-1];
 		$anio_hasta=$mes_ex_hasta['0'];
+		$dia_hasta=$mes_ex_hasta['2'];
+
 		$this->Image('../../../images/imagen.png', 50, 3, 110, 16);
 		$this->SetTextColor(0);
 		$this->SetFont('Arial', 'B', 10);
 		$this->SetLeftMargin(5);
 		$this->SetY(20);
 		$this->SetFillColor(239, 239, 239);
-		$this->MultiCell(0, 5, (utf8_decode("Secretaría Ejecutiva del SIPINNA Estatal \r\n* Reporte Total Canalización* \nSecretaría de Seguridad Pública\nNúm. de denuncias: $mes_desde de $anio_desde a $mes_hasta de $anio_hasta")), 0, 'C');
+		$this->MultiCell(0, 5, (utf8_decode("Secretaría Ejecutiva del SIPINNA Estatal \r\n* Reporte Total Canalización* \nSecretaría de Seguridad Pública\nNúm. de denuncias:$dia_desde $mes_desde de $anio_desde a $dia_hasta $mes_hasta de $anio_hasta")), 0, 'C');
 		//$this->Text(175, 30, 'Fecha: ' . date('d/m/Y'));
 		$this->Ln();
 		/*$this->SetY(45);
@@ -189,213 +194,222 @@ if ($stmtMun->rowCount() > 0) {
 	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
 	$pdf->Ln();
 }
-
-
-// Datos por Edades <18
+// Datos por Municipio
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5,  'Tabla de casos por edades', 1, 0, 'C', true);
+$pdf->Cell(204, 5,  'Tabla de casos por Municipio', 1, 0, 'C', true);
 $pdf->Ln();//Salto de Linea
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
 $pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(102, 5, utf8_decode('Edad de niños(as)'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Municipio'), 1, 0, 'C', true);
 $pdf->Cell(102, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
+$pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
+$pdf->SetFillColor(255);
+$pdf->SetAligns(array('C','C'));
+$pdf->SetTextColor(0);
+$pdf->Ln();
+
+$queryMun = "SELECT 		municipio,COUNT(*) AS Numero
+			FROM 		((tbl_can_expediente
+			LEFT JOIN 	cat_municipios
+			ON 			tbl_can_expediente.can_municipio= cat_municipios.id_municipio)
+			LEFT JOIN 	cat_estados
+			ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
+			WHERE 		can_fecha 
+			BETWEEN 	? AND ?
+			AND			activo = 1
+			AND 		can_estado =30
+			AND			estatus_expediente=?	
+			GROUP BY 	municipio
+			ORDER BY	Numero desc
+			";
+$stmtMun = $conexion->dbh->prepare($queryMun);
+$stmtMun->execute(array($desde,$hasta,$estatus));
+
+// Inicializa variables para contar filas y sumar números
+$totalMun = 0;
+$totalSumnaMun = 0;
+while ($rows = $stmtMun->fetch(PDO::FETCH_ASSOC)) {
+    $pdf->Row(array(utf8_decode($rows['municipio']), utf8_decode($rows['Numero'])));
+    $totalMun++;
+    $totalSumnaMun += $rows['Numero'];
+}
+
+$pdf->SetFillColor(255); // Color de la celda de la tabla
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(102, 5,  utf8_decode('Total Municipios:') . $totalMun, 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Total: ' . $totalSumnaMun), 1, 0, 'C', true);
+$pdf->Ln();
+$pdf->Ln();
+
+
+// Datos por Estado
+$pdf->Ln();
+$pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
+$pdf->SetTextColor(255);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(204, 5,  'Tabla de casos por Estado diferente de veracruz', 1, 0, 'C', true);
+$pdf->Ln();//Salto de Linea
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
+$pdf->SetTextColor(255);//Color del texto
+$pdf->Cell(102, 5, utf8_decode('Estado'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
 $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
 $pdf->SetFillColor(255);
 $pdf->SetTextColor(0);
 $pdf->SetAligns(array('C','C'));
 $pdf->Ln();
 
-$queryEdad = "SELECT 			can_edad_vic AS Edad ,COUNT(*) AS Numero
-							
-								FROM 			(tbl_can_victimas
-								LEFT JOIN		tbl_can_expediente
-								ON				tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente)
-								WHERE 			can_fecha 
-								BETWEEN			?
-								AND 			?
-								AND 		activo = ?
-								GROUP BY 		can_edad_vic
-								ORDER BY 		can_edad_vic ASC
-				";
-$stmtEdad = $conexion->dbh->prepare($queryEdad);
-$stmtEdad->execute(array($desde,$hasta,1));
-
-$queryTotal = "SELECT 		sum(Case When 	can_edad_vic <=18 then 1 ELSE 0 END) AS Total
-				FROM 		(tbl_can_victimas 
-				LEFT JOIN 	tbl_can_expediente 
-				ON 			tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente) 
+$queryEdo = "	SELECT 		estado,COUNT(*) AS Numero			
+				FROM 		(tbl_can_expediente
+				LEFT JOIN 	cat_estados
+				ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
 				WHERE 		can_fecha 
-				BETWEEN 	? 
-				AND 		? 
-				AND 		activo = ?
-				";
-$stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta,1));
-$total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
-if ($stmtEdad->rowCount() > 0) {
-	while ($edades = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
-		if($edades["Edad"]<='18'){
-		$pdf->Row(array(utf8_decode($edades["Edad"].' Años'), utf8_decode($edades["Numero"])));
-		}
-	}
+				BETWEEN 	? AND ?
+				AND			activo =1
+				AND 		estatus_expediente=?
+				AND			can_estado !=30	
+				AND			can_pais='México'				
+				GROUP BY 	can_estado
+				ORDER BY	Numero desc
+			";
+$stmtEdo = $conexion->dbh->prepare($queryEdo);
+$stmtEdo->execute(array($desde,$hasta,$estatus));
 
+// Inicializa variables para contar filas y sumar números
+$totalEdo = 0;
+$totalSumnaEdo = 0;
+while ($rows = $stmtEdo->fetch(PDO::FETCH_ASSOC)) {
 	
-	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'].' NNA', 1, 0, 'C', true);
-	$pdf->Ln();
-	$pdf->Ln();
-} else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-	$pdf->Ln();
+    $pdf->Row(array(utf8_decode($rows['estado']), utf8_decode($rows['Numero'])));
+    $totalEdo++;
+    $totalSumnaEdo += $rows['Numero'];
 }
 
-// Datos por Edades >18
+$pdf->SetFillColor(255); // Color de la celda de la tabla
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(102, 5,  utf8_decode('Total Estados:') . $totalEdo, 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Total: ' . $totalSumnaEdo), 1, 0, 'C', true);
+$pdf->Ln();
+$pdf->Ln();
+
+
+// Datos por Pais
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5, utf8_decode ('Tabla de casos por edades mayores de 18 años'), 1, 0, 'C', true);
+$pdf->Cell(204, 5,  utf8_decode('Tabla de casos por país diferente de México'), 1, 0, 'C', true);
 $pdf->Ln();//Salto de Linea
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
 $pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(102, 5, utf8_decode('Edades > 18'), 1, 0, 'C', true);
-$pdf->Cell(102, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Pais'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
 $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
 $pdf->SetFillColor(255);
 $pdf->SetTextColor(0);
 $pdf->SetAligns(array('C','C'));
 $pdf->Ln();
 
-$queryEdad = "SELECT 			can_edad_vic AS Edad ,COUNT(*) AS Numero
-							
-								FROM 			(tbl_can_victimas
-								LEFT JOIN		tbl_can_expediente
-								ON				tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente)
-								WHERE 			can_fecha 
-								BETWEEN			?
-								AND 			?
-								AND 		activo = ?
-								GROUP BY 		can_edad_vic
-								ORDER BY 		can_edad_vic ASC
-				";
-$stmtEdad = $conexion->dbh->prepare($queryEdad);
-$stmtEdad->execute(array($desde,$hasta,1));
-
-$queryTotal = "SELECT 		sum(Case When 	can_edad_vic >=19 then 1 ELSE 0 END) AS Total
-				FROM 		(tbl_can_victimas 
-				LEFT JOIN 	tbl_can_expediente 
-				ON 			tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente) 
+$queryPais = "	SELECT 		can_pais,COUNT(*) AS Numero			
+				FROM 		(tbl_can_expediente
+				LEFT JOIN 	cat_estados
+				ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
 				WHERE 		can_fecha 
-				BETWEEN 	? 
-				AND 		? 
-				AND 		activo = ?
-				";
-$stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta,1));
-$total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
-if ($stmtEdad->rowCount() > 0) {
-	while ($edades = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
-		if($edades["Edad"]>='19'){
-		$pdf->Row(array(utf8_decode($edades["Edad"].' Años'), utf8_decode($edades["Numero"])));
-		}
-	}
-
+				BETWEEN 	? AND ?
+				AND			activo =1
+				AND 		estatus_expediente=?
+				AND			can_pais != 'México'				
+				GROUP BY 	can_pais
+				ORDER BY	numero desc
+			";
+$stmtPais = $conexion->dbh->prepare($queryPais);
+$stmtPais->execute(array($desde,$hasta,$estatus));
+// Inicializa variables para contar filas y sumar números
+$totalPais = 0;
+$totalSumaPais = 0;
+while ($rows = $stmtPais->fetch(PDO::FETCH_ASSOC)) {
 	
-	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'].' NNA', 1, 0, 'C', true);
-	$pdf->Ln();
-} else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-	$pdf->Ln();
+    $pdf->Row(array(utf8_decode($rows['can_pais']), utf8_decode($rows['Numero'])));
+    $totalPais++;
+    $totalSumaPais += $rows['Numero'];
 }
 
+$pdf->SetFillColor(255); // Color de la celda de la tabla
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(102, 5,  utf8_decode('Total País:') . $totalPais, 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Total: ' . $totalSumnaEdo), 1, 0, 'C', true);
+$pdf->Ln();
+$pdf->Ln();
 
-
-//Datos por Personas Vulneradas
+// Datos por mes
 $pdf->Ln();
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5,  'Tabla de casos Personas Vulneradas', 1, 0, 'C', true);
+$pdf->Cell(204, 5,  'Tabla de casos por mes', 1, 0, 'C', true);
 $pdf->Ln();//Salto de Linea
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
 $pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(102, 5, utf8_decode('Personas Vulneradas'), 1, 0, 'C', true);
-$pdf->Cell(102, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Mes'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
 $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
 $pdf->SetFillColor(255);
 $pdf->SetTextColor(0);
 $pdf->SetAligns(array('C','C'));
 $pdf->Ln();
 
-$queryPerVul = "SELECT 			sum(Case When 	can_per_tercera_edad then 1 ELSE 0 END) AS persona_tercera,
-				sum(Case When 	can_per_violencia then 1 ELSE 0 END) AS persona_violencia,
-				sum(Case When 	can_per_discapacidad then 1 ELSE 0 END) AS persona_discapacidad,
-				sum(Case When 	can_per_indigena then 1 ELSE 0 END) AS persona_indigena,
-				sum(Case When 	can_per_transgenero then 1 ELSE 0 END) AS persona_transgenero
-				FROM 			(tbl_can_victimas
-				LEFT JOIN		tbl_can_expediente
-				ON				tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente)
-				WHERE 			can_fecha 
-				BETWEEN			?
-				AND 			?	
-				AND 		activo = ?	
-
-";
-$stmtPerVul = $conexion->dbh->prepare($queryPerVul);
-$stmtPerVul->execute(array($desde,$hasta,1));
-
-$queryTotal = "	SELECT persona_tercera,persona_violencia,persona_discapacidad,persona_indigena,persona_transgenero,
-						(persona_tercera+persona_violencia+persona_discapacidad+persona_indigena+persona_transgenero) AS Total
-				FROM
-				(SELECT			sum(Case When 	can_per_tercera_edad then 1 ELSE 0 END) AS persona_tercera,
-								sum(Case When 	can_per_violencia then 1 ELSE 0 END) AS persona_violencia,
-								sum(Case When 	can_per_discapacidad then 1 ELSE 0 END) AS persona_discapacidad,
-								sum(Case When 	can_per_indigena then 1 ELSE 0 END) AS persona_indigena,
-								SUM(Case When 	can_per_transgenero then 1 ELSE 0 END) AS persona_transgenero
-				FROM 			(tbl_can_victimas 
-				LEFT JOIN 	tbl_can_expediente 
-				ON 			tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente) 
-				WHERE 		can_fecha 
-				BETWEEN 		?
-				AND 			?
-				AND 		activo = ?
-				) AS tabla_Z	
-				";
-$stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta,1));
-$total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
-if ($stmtPerVul->rowCount() > 0) {
-	while ($perVul = $stmtPerVul->fetch(PDO::FETCH_ASSOC)) {
-		$pdf->Cell(102, 5,  'Otros (personas de la tercera edad) ', 1, 0, 'C', true);
-		$pdf->Cell(102, 5,  $perVul['persona_tercera'], 1, 0, 'C', true);
-		$pdf->Ln();
-		$pdf->Cell(102, 5,  'Persona Indigena ', 1, 0, 'C', true);
-		$pdf->Cell(102, 5,  $perVul['persona_indigena'], 1, 0, 'C', true);
-		$pdf->Ln();
-		$pdf->Cell(102, 5,  'Persona Trangenero', 1, 0, 'C', true);
-		$pdf->Cell(102, 5,  $perVul['persona_transgenero'], 1, 0, 'C', true);
-		$pdf->Ln();
-		$pdf->Cell(102, 5,  'Persona Con alguna discapacidad', 1, 0, 'C', true);
-		$pdf->Cell(102, 5,  $perVul['persona_discapacidad'], 1, 0, 'C', true);
-		$pdf->Ln();
-		$pdf->Cell(102, 5,  'Violencia contra la mujer', 1, 0, 'C', true);
-		$pdf->Cell(102, 5,  $perVul['persona_violencia'], 1, 0, 'C', true);
-		$pdf->Ln();
-		
-	}
+$queryMes = "	SELECT 
+						CASE MONTH(can_fecha)
+							WHEN 1 THEN 'Enero'
+							WHEN 2 THEN 'Febrero'
+							WHEN 3 THEN 'Marzo'
+							WHEN 4 THEN 'Abril'
+							WHEN 5 THEN 'Mayo'
+							WHEN 6 THEN 'Junio'
+							WHEN 7 THEN 'Julio'
+							WHEN 8 THEN 'Agosto'
+							WHEN 9 THEN 'Septiembre'
+							WHEN 10 THEN 'Octubre'
+							WHEN 11 THEN 'Noviembre'
+							WHEN 12 THEN 'Diciembre'
+						END AS Mes,
+						COUNT(*) AS Numero
+					FROM tbl_can_expediente
+					WHERE can_fecha BETWEEN ? AND ?
+					AND		estatus_expediente=?
+					AND		activo = 1
 	
-	$pdf->Cell(102, 5,  'Total de personas vulneradas: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
-	$pdf->Ln();
-} else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-	$pdf->Ln();
+					GROUP BY MONTH(can_fecha)
+					ORDER BY MONTH(can_fecha);
+			";
+$stmtMes = $conexion->dbh->prepare($queryMes);
+$stmtMes->execute(array($desde,$hasta,$estatus));
+
+// Inicializa variables para contar filas y sumar números
+$totalFilasMes = 0;
+$totalNumeroMes = 0;
+while ($rows = $stmtMes->fetch(PDO::FETCH_ASSOC)) {
+    $pdf->Row(array(utf8_decode($rows['Mes']), utf8_decode($rows['Numero'])));
+    $totalFilasMes++;
+    $totalNumeroMes += $rows['Numero'];
 }
+
+$pdf->SetFillColor(255); // Color de la celda de la tabla
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(102, 5, 'Total de Meses: ' . $totalFilasMes, 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Total: ' . $totalNumeroMes), 1, 0, 'C', true);
+$pdf->Ln();
+$pdf->Ln();
+
 
 //Datos por Genero
 $pdf->Ln();
@@ -422,295 +436,219 @@ $queryGenero = "SELECT 		can_sexo_victima As Genero,
 				WHERE 		can_fecha 
 				BETWEEN 	? 
 				AND 		?
-				AND 		activo = ?
+				AND 		activo = 1
+				AND		estatus_expediente=?
 				GROUP BY 	can_sexo_victima";
 //Se prepara la sentecia para hacer la busqueda en el servidor
 $stmtGenero = $conexion->dbh->prepare($queryGenero);
-$stmtGenero->execute(array($desde,$hasta,1));
+$stmtGenero->execute(array($desde,$hasta,$estatus));
 
-$queryTotal = "SELECT 		COUNT(*) AS Total 
-				FROM 		(tbl_can_victimas 
-				LEFT JOIN 	tbl_can_expediente 
-				ON 			tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente) 
-				WHERE 		can_fecha 
-				BETWEEN 	? 
-				AND 		? 
-				AND 		activo = ?
-				";
-$stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta,1));
-$total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
-
-
-//Hace un recorrido en la tabla para buscar todos los datos que contenga
-if($stmtGenero->rowCount() > 0){
-	while ($genero = $stmtGenero->fetch(PDO::FETCH_ASSOC)) {
-			$pdf->Row(array(utf8_decode($genero["Genero"]), utf8_decode($genero["Numero"])));		
-	}
-	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'].' ', 1, 0, 'C', true);
-	$pdf->Ln();
-} else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-	$pdf->Ln(); 
+// Inicializa variables para contar filas y sumar números
+$totalFilasGenero = 0;
+$totalNumeroGenero = 0;
+while ($rows = $stmtGenero->fetch(PDO::FETCH_ASSOC)) {
+    $pdf->Row(array(utf8_decode($rows['Genero']), utf8_decode($rows['Numero'])));
+    $totalFilasGenero++;
+    $totalNumeroGenero += $rows['Numero'];
 }
 
-
-// Datos por mes
-$pdf->Ln();
-$pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
-$pdf->SetTextColor(255);
-$pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5,  'Tabla de casos por mes', 1, 0, 'C', true);
-$pdf->Ln();//Salto de Linea
-$pdf->SetFont('Arial', 'B', 8);
-$pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
-$pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(102, 5, utf8_decode('Mes'), 1, 0, 'C', true);
-$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
-$pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
-$pdf->SetFillColor(255);
+$pdf->SetFillColor(255); // Color de la celda de la tabla
 $pdf->SetTextColor(0);
-$pdf->SetAligns(array('C','C'));
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(102, 5, 'Total de Genero: ' . $totalFilasGenero, 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Total: ' . $totalNumeroGenero), 1, 0, 'C', true);
+$pdf->Ln();
 $pdf->Ln();
 
-$queryMes = "	SELECT 		can_fecha,MONTH(can_fecha)Mes , COUNT(*) AS Numero
-			FROM 		tbl_can_expediente
-			WHERE		can_fecha BETWEEN ? 
-			AND 		?
-			AND 		activo = ?
-			GROUP BY 	Mes
-			ORDER BY	Mes ASC;
-			";
-$stmtMes = $conexion->dbh->prepare($queryMes);
-$stmtMes->execute(array($desde,$hasta,1));
-$queryTotal = "SELECT 		COUNT(*) AS Total 
-				FROM 		tbl_can_expediente 
-				WHERE 		can_fecha 
-				BETWEEN 	? 
-				AND 		? 
-				AND 		activo = ?
-				";
-$stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta,1));
-$total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
-
-
-if ($stmtMes->rowCount() > 0) {
-	while ($mes = $stmtMes->fetch(PDO::FETCH_ASSOC)) {
-		$Meses = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio','Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
-
-		$Mes=$Meses[$mes["Mes"]-1];
-		$pdf->Row(array(utf8_decode($Mes), utf8_decode($mes["Numero"])));
-	}
-	
-	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
-	$pdf->Ln();
-	$pdf->Ln();
-} else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-	$pdf->Ln();
-}
-
-
-// Datos por Municipio
+// Datos por Edades <18
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5,  'Tabla de casos por Municipio', 1, 0, 'C', true);
+$pdf->Cell(204, 5,  utf8_decode('Tabla de casos por menores de 18 años'), 1, 0, 'C', true);
 $pdf->Ln();//Salto de Linea
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
 $pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(102, 5, utf8_decode('Municipio'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Edad de niños(as)'), 1, 0, 'C', true);
 $pdf->Cell(102, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
 $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
 $pdf->SetFillColor(255);
-$pdf->SetAligns(array('C','C'));
 $pdf->SetTextColor(0);
+$pdf->SetAligns(array('C','C'));
 $pdf->Ln();
 
-$queryMun = "SELECT 	can_pais,can_estado,can_otros_estados,estado,can_mun_edo,can_municipio,municipio,COUNT(*) AS Numero
-			FROM 		((tbl_can_expediente
-			LEFT JOIN 	cat_municipios
-			on			tbl_can_expediente.can_municipio=cat_municipios.id_municipio)
-			LEFT JOIN 	cat_estados
-			ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
-			WHERE 		can_fecha 
-			BETWEEN 	? AND ?
-			AND 		activo=?
-			GROUP BY 	can_municipio	
-			ORDER BY	can_municipio	
-			";
-$stmtMun = $conexion->dbh->prepare($queryMun);
-$stmtMun->execute(array($desde,$hasta,1));
-
-$queryTotal = 	"SELECT 	sum(Case When can_municipio then 1 ELSE 0 END) AS Total 
-				FROM 		(tbl_can_expediente 
-				LEFT JOIN 	cat_municipios 
-				ON 			tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
-				WHERE 		can_fecha 
-				BETWEEN 	? 
-				AND 		?
-				AND 		activo = ? 
+$queryEdad = "SELECT 			can_edad_vic AS Edad ,COUNT(*) AS Numero
+							
+								FROM 			(tbl_can_victimas
+								LEFT JOIN		tbl_can_expediente
+								ON				tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente)
+								WHERE 			can_fecha 
+								BETWEEN			?
+								AND 			?
+								And				can_edad_vic<=18
+								AND 			activo = 1
+								AND		estatus_expediente=?
+								GROUP BY 		can_edad_vic
+								ORDER BY 		can_edad_vic ASC
 				";
-$stmtTotal = $conexion->dbh->prepare($queryTotal);
-$stmtTotal->execute(array($desde,$hasta,1));
-$total = $stmtTotal->fetch(PDO::FETCH_ASSOC);
-
-if ($stmtMun->rowCount() > 0) {
-	while ($municipio = $stmtMun->fetch(PDO::FETCH_ASSOC)) {
-		if($municipio["can_municipio"] == '0')
-		{
-
-		}
-		else{
-			$pdf->Row(array(utf8_decode($municipio["municipio"]), utf8_decode($municipio["Numero"])));
-
-		}
-	}
-	
-	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
-	$pdf->Ln();
-} else {
-	if($municipio["can_municipio"] == '0')
-		{
-
-		}
-		else{
-			$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-
-		}
-	$pdf->Ln();
+$stmtEdad = $conexion->dbh->prepare($queryEdad);
+$stmtEdad->execute(array($desde,$hasta,$estatus));
+// Inicializa variables para contar filas y sumar números
+$totalFilasEdad = 0;
+$totalNumeroEdad = 0;
+while ($rows = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
+    $pdf->Row(array(utf8_decode($rows['Edad']), utf8_decode($rows['Numero'])));
+    $totalFilasEdad++;
+    $totalNumeroEdad += $rows['Numero'];
 }
 
-// Datos por Estado
+$pdf->SetFillColor(255); // Color de la celda de la tabla
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(102, 5, 'Total de Menores: ' . $totalFilasEdad, 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Total: ' . $totalNumeroEdad), 1, 0, 'C', true);
 $pdf->Ln();
+$pdf->Ln();
+
+// Datos por Edades >18
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5,  'Tabla de casos por Estado diferente de veracruz', 1, 0, 'C', true);
+$pdf->Cell(204, 5, utf8_decode ('Tabla de casos por edades mayores de 18 años'), 1, 0, 'C', true);
 $pdf->Ln();//Salto de Linea
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
 $pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(102, 5, utf8_decode('Estado'), 1, 0, 'C', true);
-$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Edades > 18'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
 $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
 $pdf->SetFillColor(255);
 $pdf->SetTextColor(0);
 $pdf->SetAligns(array('C','C'));
 $pdf->Ln();
 
-$queryEdo = "	SELECT 		can_pais,can_estado,estado,can_mun_edo,COUNT(*) AS Numero			
-				FROM 		(tbl_can_expediente
-				LEFT JOIN 	cat_estados
-				ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
-				WHERE 		can_fecha 
-				BETWEEN 	? AND ?
-				AND			activo =?
-				GROUP BY 	can_estado
-ORDER BY	can_estado
-			";
-$stmtEdo = $conexion->dbh->prepare($queryEdo);
-$stmtEdo->execute(array($desde,$hasta,1));
-$queryTotalEdo = "SELECT 		SUM(can_mun_edo !='') AS Total ,can_mun_edo
-				FROM 		tbl_can_expediente 
-				WHERE 		can_fecha 
-				BETWEEN 	? 
-				AND 		? 
-				AND 		activo=?
+$queryEdad = "SELECT 			can_edad_vic AS Edad ,COUNT(*) AS Numero
+							
+								FROM 			(tbl_can_victimas
+								LEFT JOIN		tbl_can_expediente
+								ON				tbl_can_victimas.can_exp_folio_victima=tbl_can_expediente.can_folio_expediente)
+								WHERE 			can_fecha 
+								BETWEEN			?
+								AND 			?
+								AND 			activo = 1
+								AND		estatus_expediente=?
+								And				can_edad_vic>=18
+								GROUP BY 		can_edad_vic
+								ORDER BY 		can_edad_vic ASC
 				";
-$stmtTotalEdo = $conexion->dbh->prepare($queryTotalEdo);
-$stmtTotalEdo->execute(array($desde,$hasta,1));
-$total = $stmtTotalEdo->fetch(PDO::FETCH_ASSOC);
-
-
-if ($stmtEdo->rowCount() > 0) {
-	while ($estado_dif = $stmtEdo->fetch(PDO::FETCH_ASSOC)) {
-		if($estado_dif["can_estado"] != '30' & $estado_dif["can_estado"] != '0'){
-			$pdf->Row(array(utf8_decode($estado_dif["estado"]), utf8_decode($estado_dif["Numero"])));
-		}
-		else{
-			
-		}
-	}
-	
-	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
-	$pdf->Ln();
-	$pdf->Ln();
-} else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-	$pdf->Ln();
+$stmtEdad = $conexion->dbh->prepare($queryEdad);
+$stmtEdad->execute(array($desde,$hasta,$estatus));
+// Inicializa variables para contar filas y sumar números
+$totalFilasMayores = 0;
+$totalNumeroMenores = 0;
+while ($rows = $stmtEdad->fetch(PDO::FETCH_ASSOC)) {
+    $pdf->Row(array(utf8_decode($rows['Edad']), utf8_decode($rows['Numero'])));
+    $totalFilasMayores++;
+    $totalNumeroMenores += $rows['Numero'];
 }
 
-// Datos por Pais
+$pdf->SetFillColor(255); // Color de la celda de la tabla
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(102, 5, 'Total de Mayores: ' . $totalFilasMayores, 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Total: ' . $totalNumeroMenores), 1, 0, 'C', true);
+$pdf->Ln();
+$pdf->Ln();
+
+//Datos por Personas Vulneradas
+$pdf->Ln();
 $pdf->SetFillColor(166, 45, 45);//Color del la Celda de la tabla
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(204, 5,  'Tabla de casos por Pais diferente de México', 1, 0, 'C', true);
+$pdf->Cell(204, 5,  'Tabla de casos Personas Vulneradas', 1, 0, 'C', true);
 $pdf->Ln();//Salto de Linea
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetFillColor(98, 98, 98);//Relleno de los encabezados
 $pdf->SetTextColor(255);//Color del texto
-$pdf->Cell(102, 5, utf8_decode('Pais'), 1, 0, 'C', true);
-$pdf->Cell(102, 5, utf8_decode('Número de Casos'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Personas Vulneradas'), 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Número de casos'), 1, 0, 'C', true);
 $pdf->SetWidths(array(102,102)); //Especifica el tamaño que tendran las columnas de la tabla a mostrar
 $pdf->SetFillColor(255);
 $pdf->SetTextColor(0);
 $pdf->SetAligns(array('C','C'));
 $pdf->Ln();
 
-$queryPais = "	SELECT 		can_pais,can_estado,can_otros_estados,estado,can_mun_edo,can_municipio,municipio,COUNT(*) AS Numero
-				FROM 		((tbl_can_expediente
-				LEFT JOIN 	cat_municipios
-				on			tbl_can_expediente.can_municipio=cat_municipios.id_municipio)
-				LEFT JOIN 	cat_estados
-				ON 			tbl_can_expediente.can_estado=cat_estados.id_estado)
-				WHERE 		can_fecha 
-				BETWEEN 	? AND ?
-				AND 		activo= ?
-				GROUP BY 	can_pais	
-				ORDER BY	can_pais
-			";
-$stmtPais = $conexion->dbh->prepare($queryPais);
-$stmtPais->execute(array($desde,$hasta,1));
-$queryTotalPais = "	SELECT 		can_pais as pais, SUM(can_pais != 'Mexico') AS Total 
-					FROM 		(tbl_can_expediente 
-					LEFT JOIN 	cat_municipios 
-					ON 			tbl_can_expediente.can_municipio=cat_municipios.id_municipio) 
-					WHERE 		can_fecha 
-					BETWEEN 	? 
-					AND 		? 
-					AND 		activo =?
-				";
-$stmtTotalPais = $conexion->dbh->prepare($queryTotalPais);
-$stmtTotalPais->execute(array($desde,$hasta,1));
-$total = $stmtTotalPais->fetch(PDO::FETCH_ASSOC);
+$queryPerVul = "SELECT 'can_per_tercera_edad' AS column_name, SUM(CASE WHEN can_per_tercera_edad != 0 THEN 1 ELSE 0 END) AS count_non_zero
+						FROM (
+							SELECT tcv.can_per_tercera_edad
+							FROM tbl_can_victimas tcv
+							INNER JOIN tbl_can_expediente tce ON tcv.can_exp_folio_victima = tce.can_folio_expediente
+							WHERE tce.can_fecha BETWEEN ? AND ?
+							AND tce.estatus_expediente = ?
+							AND tce.activo = 1
+						) AS subquery
+						UNION ALL
+						SELECT 'can_per_violencia' AS column_name, SUM(CASE WHEN can_per_violencia != 0 THEN 1 ELSE 0 END) AS count_non_zero
+						FROM (
+							SELECT tcv.can_per_violencia
+							FROM tbl_can_victimas tcv
+							INNER JOIN tbl_can_expediente tce ON tcv.can_exp_folio_victima = tce.can_folio_expediente
+							WHERE tce.can_fecha BETWEEN ? AND ?
+							AND tce.estatus_expediente = ?
+							AND tce.activo = 1
+						) AS subquery
+						UNION ALL
+						SELECT 'can_per_discapacidad' AS column_name, SUM(CASE WHEN can_per_discapacidad != 0 THEN 1 ELSE 0 END) AS count_non_zero
+						FROM (
+							SELECT tcv.can_per_discapacidad
+							FROM tbl_can_victimas tcv
+							INNER JOIN tbl_can_expediente tce ON tcv.can_exp_folio_victima = tce.can_folio_expediente
+							WHERE tce.can_fecha BETWEEN ? AND ?
+							AND tce.estatus_expediente = ?
+							AND tce.activo = 1
+						) AS subquery
+						UNION ALL
+						SELECT 'can_per_indigena' AS column_name, SUM(CASE WHEN can_per_indigena != 0 THEN 1 ELSE 0 END) AS count_non_zero
+						FROM (
+							SELECT tcv.can_per_indigena
+							FROM tbl_can_victimas tcv
+							INNER JOIN tbl_can_expediente tce ON tcv.can_exp_folio_victima = tce.can_folio_expediente
+							WHERE tce.can_fecha BETWEEN ? AND ?
+							AND tce.estatus_expediente = ?
+							AND tce.activo = 1
+						) AS subquery
+						UNION ALL
+						SELECT 'can_per_transgenero' AS column_name, SUM(CASE WHEN can_per_transgenero != 0 THEN 1 ELSE 0 END) AS count_non_zero
+						FROM (
+							SELECT tcv.can_per_transgenero
+							FROM tbl_can_victimas tcv
+							INNER JOIN tbl_can_expediente tce ON tcv.can_exp_folio_victima = tce.can_folio_expediente
+							WHERE tce.can_fecha BETWEEN ? AND ?
+							AND tce.estatus_expediente = ?
+							AND tce.activo = 1
+						) AS subquery 
+						ORDER BY count_non_zero desc;
 
-
-if ($stmtPais->rowCount() > 0) {
-	while ($estado_dif = $stmtPais->fetch(PDO::FETCH_ASSOC)) {
-		if($estado_dif['can_pais'] != 'México'){
-			$pdf->Row(array(utf8_decode($estado_dif["can_pais"]), utf8_decode($estado_dif["Numero"])));
-		}
-		else{
-			
-		}
-	}
+";
+$stmtPerVul = $conexion->dbh->prepare($queryPerVul);
+$stmtPerVul->execute(array($desde,$hasta,$estatus,$desde,$hasta,$estatus,$desde,$hasta,$estatus,$desde,$hasta,$estatus,$desde,$hasta,$estatus));
+// Inicializa variables para contar filas y sumar números
+$totalFilasVulneradas = 0;
+$totalNumeroVulneradas = 0;
+while ($rows = $stmtPerVul->fetch(PDO::FETCH_ASSOC)) {
 	
-	$pdf->Cell(102, 5,  'Total: ', 1, 0, 'C', true);
-	$pdf->Cell(102, 5,  $total['Total'], 1, 0, 'C', true);
-	$pdf->Ln();
-	$pdf->Ln();
-} else {
-	$pdf->Cell(204, 5,  'No tiene datos', 1, 0, 'C', true);
-	$pdf->Ln();
+    $pdf->Row(array(utf8_decode($rows['column_name']), utf8_decode($rows['count_non_zero'])));
+    $totalFilasVulneradas++;
+    $totalNumeroVulneradas += $rows['count_non_zero'];
 }
 
+$pdf->SetFillColor(255); // Color de la celda de la tabla
+$pdf->SetTextColor(0);
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(102, 5,  utf8_decode('Total tipos agresión extraordinaria:') . $totalFilasVulneradas, 1, 0, 'C', true);
+$pdf->Cell(102, 5, utf8_decode('Total: ' . $totalNumeroVulneradas), 1, 0, 'C', true);
+$pdf->Ln();
+$pdf->Ln();
 
 /// con true se indica que el archivo esta codificado en UTF-8
 $pdf->Output('Informe Sipina ' . date('d/m/Y').'.pdf', 'I', true); 

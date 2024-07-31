@@ -1,155 +1,101 @@
-var cargando =
-    '<div class="row"><div class="col-12" align="center"><div class="sk-cube-grid"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube3"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube5"></div><div class="sk-cube sk-cube6"></div><div class="sk-cube sk-cube7"></div><div class="sk-cube sk-cube8"></div><div class="sk-cube sk-cube9"></div></div> Cargando...</div></div>';
-document.addEventListener('DOMContentLoaded', function () {
-    var desdeFecha = document.getElementById('desde_fecha');
-    var hastaFecha = document.getElementById('hasta_fecha');
-    var errorMessage = document.getElementById('error-message');
-    var btnConsultar = document.getElementById('btn-consultar');
+$(document).ready(function () {
+    const opciones = {
+        1: [
+            { valor: "1", texto: "Reporte por municipios" },
+            { valor: "2", texto: "Reporte por General(Sin Municipios)" },
+            { valor: "3", texto: "Reporte por General Total" },
+            { valor: "4", texto: "Reporte por Dependencias" }
 
-    function validaFechas() {
-        var desdeValue = new Date(desdeFecha.value);
-        var hastaValue = new Date(hastaFecha.value);
+        ],
+        2: [
+            { valor: "1", texto: "Reporte por municipios" },
+            { valor: "2", texto: "Reporte por General(Sin Municipios)" },
+            { valor: "3", texto: "Reporte por General Total" }
+        ]
+    };
 
-        if (hastaValue < desdeValue) {
+    $('#gen_reporte').on('change', function () {
+        const valorSeleccionado = $(this).val();
+        const opcionesSegundo = opciones[valorSeleccionado] || [];
 
-            errorMessage.textContent = "La fecha hasta no puede ser menor que la fecha desde.";
-            hastaFecha.setCustomValidity("La fecha hasta no puede ser menor que la fecha desde.");
-            btnConsultar.disabled = true; // Deshabilitar el botón
+        const segundoSelect = $('#id_reporte');
+        segundoSelect.empty(); // Limpiar las opciones existentes
 
-        } else {
-            errorMessage.textContent = "";
-            hastaFecha.setCustomValidity("");
-            btnConsultar.disabled = false; // Habilitar el botón
+        // Agregar opción por defecto
+        segundoSelect.append('<option value="0" selected disabled>Seleccione...</option>');
 
+        // Agregar nuevas opciones
+        opcionesSegundo.forEach(function (opcion) {
+            segundoSelect.append(new Option(opcion.texto, opcion.valor));
+        });
+    });
+
+    function cambiarTextoElemento(idElemento, texto) {
+        document.getElementById(idElemento).textContent = texto;
+    }
+
+    function removerElemento(idElemento) {
+        const elemento = document.getElementById(idElemento);
+        while (elemento.firstChild) {
+            elemento.removeChild(elemento.firstChild);
         }
     }
 
-    desdeFecha.addEventListener('change', validaFechas);
-    hastaFecha.addEventListener('change', validaFechas);
-});
-$(document).ready(function () {
-
-    $("#div_reportes_canalizacion").hide();
-    $("#div_reportes_casos_c4").hide();
-    $("#div_reportes_general").hide();
-    $("#div_estatus").hide();
-
-    $("#gen_reporte").change(function () {
-        if ($(this).val() == "1") {
-            $("#div_estatus").show();
-
-            $("#id_reporte").change(function () {
-                if ($(this).val() == "1") {
-                    $("#div_reportes_canalizacion,#div_consulta_casos_por_estado_dif_can,#div_consulta_casos_por_pais_dif_can,#div_consulta_casos_por_municipio_can").show(),
-                        $("#div_reportes_casos_c4,#div_consulta_general,#div_consulta_mes_num_casos_can,#div_cunsulta_genero_can,#div_consulta_edad_can").hide()
-
-                }
-                else if ($(this).val() == "2") {
-                    $("#div_reportes_canalizacion,#div_consulta_general,#div_consulta_mes_num_casos_can,#div_cunsulta_genero_can,#div_consulta_edad_can").show(),
-                        $("#div_reportes_casos_c4,#div_consulta_casos_por_municipio_can,#div_consulta_casos_por_pais_dif_can,#div_consulta_casos_por_edo_mun_can,#div_consulta_casos_por_estado_dif_can").hide()
-
-                }
-                else if ($(this).val() == "3") {
-                    $("#div_reportes_canalizacion").show(),
-                        $("#div_reportes_casos_c4").hide(),
-                        $("#div_consulta_general").show(),
-                        $("#div_consulta_mes_num_casos_can").show(),
-                        $("#div_cunsulta_genero_can").show(),
-                        $("#div_consulta_edad_can").show(),
-                        $("#div_consulta_casos_por_municipio_can").show(),
-                        $("#div_consulta_casos_por_edo_mun_can").show(),
-                        $("#div_consulta_casos_por_estado_dif_can").show(),
-                        $("#div_consulta_casos_por_pais_dif_can").show()
-                }
-            });
+    document.getElementById('gen_reporte').addEventListener('change', function () {
+        var div = document.getElementById('div_estatus');
+        if (this.value === '1') {
+            div.style.display = 'block';
+            cambiarTextoElemento('tituloReporte', 'Se muestran los datos de Canalización');
+            removerElemento('div_reportes');
+        } else {
+            div.style.display = 'none';
+            $('#estatus').val("0");
+            cambiarTextoElemento('tituloReporte', 'Se muestran los datos de Casos C4');
+            removerElemento('div_reportes');
         }
-        else if ($(this).val() == "2") {
-            $("#div_estatus").hide();
-            $("#id_reporte").change(function () {
-                if ($(this).val() == "1") {
-                    $("#div_reportes_casos_c4").show(),
-                        $("#div_reportes_canalizacion").hide(),
-                        $("#div_consulta_mes_num_casos_c4").hide(),
-                        $("#div_consulta_genero_c4").hide(),
-                        $("#div_consulta_edad_c4").hide(),
-                        $("#div_consulta_num_delitos_casos_c4").hide(),
-                        $("#div_consulta_casos_por_municipio_c4").show(),
-                        $("#div_consulta_casos_por_estado_c4").show(),
-                        $("#div_consulta_casos_por_pais_c4").show()
-
-                }
-                else if ($(this).val() == "2") {
-                    $("#div_reportes_casos_c4").show(),
-                        $("#div_reportes_canalizacion").hide(),
-                        $("#div_consulta_mes_num_casos_c4").show(),
-                        $("#div_consulta_genero_c4").show(),
-                        $("#div_consulta_edad_c4").show(),
-                        $("#div_consulta_num_delitos_casos_c4").show(),
-                        $("#div_consulta_casos_por_municipio_c4").hide(),
-                        $("#div_consulta_casos_por_municipio_c4").hide(),
-                        $("#div_consulta_casos_por_estado_c4").hide(),
-                        $("#div_consulta_casos_por_pais_c4").hide()
-
-                }
-                else if ($(this).val() == "3") {
-                    $("#div_reportes_casos_c4").show(),
-                        $("#div_reportes_canalizacion").hide(),
-                        $("#div_consulta_mes_num_casos_c4").show(),
-                        $("#div_consulta_genero_c4").show(),
-                        $("#div_consulta_edad_c4").show(),
-                        $("#div_consulta_num_delitos_casos_c4").show(),
-                        $("#div_consulta_casos_por_municipio_c4").show(),
-                        $("#div_consulta_casos_por_municipio_c4").show(),
-                        $("#div_consulta_casos_por_estado_c4").show(),
-                        $("#div_consulta_casos_por_pais_c4").show()
-
-                }
-            });
-
-
-
-
-        }
-
     });
 
+    document.getElementById('id_reporte').addEventListener('change', function () {
+        removerElemento('div_reportes');
+    });
+    document.getElementById('estatus').addEventListener('change', function () {
+        removerElemento('div_reportes');
+    });
+    document.getElementById('desde_fecha').addEventListener('change', function () {
+        removerElemento('div_reportes');
+    });
+    document.getElementById('hasta_fecha').addEventListener('change', function () {
+        removerElemento('div_reportes');
+    });
 });
-function limpiarModal() {
-    $('#gen_reporte').val('0'),
-        $('#id_reporte').val('0'),
-        $('#desde_fecha').val(""),
-        $('#hasta_fecha').val("")
-}
-
-function consulta() {
+function valida() {
     hoy = $('#hoy').val();
     gen_reporte = $.trim($('#gen_reporte').val());
     id_reporte = $.trim($('#id_reporte').val());
     desde_fecha = $.trim($('#desde_fecha').val());
     hasta_fecha = $.trim($('#hasta_fecha').val());
-    estatus_caso = $.trim($('#estatus_caso').val());
-
-
     if (gen_reporte == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('Seleccione Reporte !');
         $('#gen_reporte').focus();
         return false;
     }
-    else if (id_reporte == '') {
+    if (id_reporte == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('Seleccione Reporte a consultar!');
         $('#id_reporte').focus();
         return false;
     }
-    else if (gen_reporte == '1') {
-        if (estatus_caso == '' || estatus_caso == '0') {
-            toastr.warning('¡Seleccione El estatus del caso');
-            $('#estatus_caso').focus();
+    if (gen_reporte == "1") {
+        estatus = $.trim($('#estatus').val());
+        if (estatus == '') {
+            toastr.options.timeOut = 2500;
+            toastr.warning('Seleccione Estatus!');
+            $('#estatus').focus();
             return false;
         }
-
     }
+
     else if (desde_fecha == '') {
         toastr.options.timeOut = 2500;
         toastr.warning('¡Seleccione rango de fecha desde la fecha inicio a consultar!');
@@ -174,299 +120,598 @@ function consulta() {
         $('#hasta_fecha').focus();
         return false;
     }
-
-    var data = new FormData();
-    data.append('func', 'fn_obtener_reporte');
-    data.append('gen_reporte', gen_reporte);
-    data.append('id_reporte', id_reporte);
-    data.append('desde_fecha', desde_fecha);
-    data.append('hasta_fecha', hasta_fecha);
-    data.append('estatus_caso', estatus_caso);
-
-    $.ajax({
-        url: "../controllers/estadisticas.php",
-        type: "POST",
-        data: data,
-        contentType: false,
-        processData: false,
-        cache: false
-    }).done(function (res) {
-        let response = JSON.parse(res);
-        if (response.status == 200) {
-            try {
-                res = JSON.parse(res); // Convierte la cadena JSON en un objeto
-                if (typeof res === 'object' && res.data && Array.isArray(res.data)) {
-
-                    pintarTabla(res.data); // Pasa los datos a la función pintarTabla
-                } else {
-                    console.error("El objeto res no tiene la estructura esperada");
-                }
-            } catch (e) {
-                console.error("No se pudo convertir res a objeto:", e);
-            }
-        }
-        else {
-            let datos = `
-            <h4 class="mt-4 est-titulo">Total de casos en cada municipio(Estado de Veracruz )</h4>
-            <h4 class="mt-4 est-titulo">Sin resultados</h4>`;
-            $('#tablaContainer').html(datos);
-        }
-    })
 }
-function pintarTabla(data) {
+function consulta() {
+    if (valida() != false) {
+        obtiene_resultados();
+    }
+}
+async function obtiene_resultados() {
+    let result;
+    let gen_reporte = $('#gen_reporte').val();
+    let id_reporte = $('#id_reporte').val();
+    let estatus = $('#estatus').val();
+    let desde_fecha = $('#desde_fecha').val();
+    let hasta_fecha = $('#hasta_fecha').val();
+    let datos = { "gen_reporte": gen_reporte, "id_reporte": id_reporte, "estatus": estatus, "desde_fecha": desde_fecha, "hasta_fecha": hasta_fecha };
+    const data = { "func": 'listar', "datos": datos };
+    try {
+        result = await $.ajax({
+            type: 'POST',
+            url: `../controllers/estadisticas.php`,
+            dataType: "json",
+            data: { data },
+        });
 
-    let encabezadoTabla = `
-    <h4 class="mt-4 est-titulo">Total de casos en cada municipio(Estado de Veracruz )</h4>
-    <table class="table" id="municipio">    
-    <thead class="tbl-estadisticas" align="center">
-        <tr>
-            <th>Municipio</th>
-            <th>Número</th>
-        </tr>
-    </thead>
-    <tbody id="mun_veracruz" align="center"></tbody>
-    <tfoot id="total_mun_ver" align="center"></tfoot>
-    </table`;
-    $('#tablaContainer').html(encabezadoTabla);
-    let total = 0;
-    let htmldatos, htmlTotal;
+        if (result.status == "200") {
+            let datos = result.data;
+            if (gen_reporte == '1')//canalizacion
+            {
+                if (id_reporte == '1') {
+                    reporte1(datos);
 
-    for (let i = 0; i < data.length; i++) {
-        htmldatos += `  <tr>
-                            <td>${data[i].municipio}</td>
-                            <td>${data[i].Numero}</td>
-                        </tr>`;
-        total += data[i].Numero; // Sumar los valores de Numero al total
+                } else if (id_reporte == '2') {
+                    reporte2(datos);
+                }
+                else if (id_reporte == '3') {
+                    reporte3(datos);
+                }
+                else if (id_reporte == '4') {
+                    reporte6(datos);
+                }
+            }
+            else {
+                if (id_reporte == '1') {
+                    reporte1(datos);
+                } else if (id_reporte == '2') {
+                    reporte4(datos);
+                }
+                else if (id_reporte == '3') {
+                    reporte5(datos);
+                }
+            }
+            var pdf = document.getElementById("btn_pdf");
+            pdf.addEventListener("click", async function () {
+                modal_pdf(gen_reporte, id_reporte, desde_fecha, hasta_fecha, estatus)
+            });
+
+        } else if (result.status == "204") {
+            $('#div_reportes').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+        }
+
+    } catch (error) {
+        return error.responseJSON;
+    }
+}
+function reporte1(datos) {
+    let encabezados = `
+    <div><button type="button" id="btn_pdf" class="btn btn-secondary">Ver pdf</button></div>
+    <h5 id="div1" align="center" class="mb-4"><strong >Total de casos en cada municipio(Estado de Veracruz )</strong></h5>
+    <div class="col-12" id="mun"></div>
+    <h5 id="div2"align="center" class="mb-4"><strong>Total de casos en estados diferentes de veracruz</strong></h5>
+    <div class="col-12" id="edo"></div>
+    <h5 id="div3"align="center" class="mb-4"><strong>Total de casos en pais diferentes de México</strong></h5>
+    <div class="col-12" id="pais"></div>
+     `;
+    $('#div_reportes').html(encabezados);
+
+    if (datos.consulta1 != "n/a") {
+        let datosMun = datos.consulta1;
+        pinta(datosMun, 'Municipio', 'mun');
+    }
+    else {
+        removerElemento('mun'); // Vacía el contenido del div con id "mun"
+    }
+    if (datos.consulta2 != "n/a") {
+        let datosEdo = datos.consulta2;
+        pinta(datosEdo, 'Estado', 'edo')
+    }
+    else {
+        removerElemento('edo'); // Vacía el contenido del div con id "edo"
+        $('#edo').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+    if (datos.consulta3 != "n/a") {
+        let datosPais = datos.consulta3;
+        pinta(datosPais, 'País', 'pais');
+    }
+    else {
+        removerElemento('pais'); // Vacía el contenido del div con id "mun"
+        $('#pais').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+}
+function reporte2(datos) {
+    let encabezados = `
+        <div><button type="button" id="btn_pdf" class="btn btn-secondary">Ver pdf</button></div>
+
+        <h5 id="div4"align="center" class="mb-4"><strong >Total de casos por mes </strong></h5>
+        <div class="col-12" id="mes"></div>
+        <h5 id="div5"align="center" class="mb-4"><strong>Total de victimas por género de todos los casos</strong></h5>
+        <div class="col-12" id="genero"></div>
+        <h5 id="div6"align="center" class="mb-4"><strong>Total de victimas menores de edad todos los casos </strong></h5>
+        <div class="col-12" id="menos_edad"></div>
+        <h5 id="div7"align="center" class="mb-4"><strong>Total de victimas mayores de edad todos los casos </strong></h5>
+        <div class="col-12" id="mayor_edad"></div>
+        <h5 id="div8"align="center" class="mb-4"><strong>Total de victimas de agresión extraordinaria </strong></h5>
+        <div class="col-12" id="agresion"></div>
+    `;
+    $('#div_reportes').html(encabezados);
+
+    if (datos.consulta1 != "n/a") {
+        let datoMes = datos.consulta1;
+        pinta(datoMes, 'MES', 'mes');
+    }
+    else {
+        removerElemento('mes');
+        $('#mes').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
 
     }
-    $('#mun_veracruz').append(htmldatos);
-    htmlTotal += `<tr>
-                <td><strong>Total de municipios: ${data.length}</strong></td>
-                    <td>${total}</td>
-                </tr>
+    if (datos.consulta2 != "n/a") {
+        let genero = datos.consulta2;
+        pinta(genero, 'Género', 'genero');
+    }
+    else {
+        removerElemento('genero');
+        $('#genero').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+
+    }
+    if (datos.consulta3 != "n/a") {
+        let genero = datos.consulta3;
+        pinta(genero, 'Edad(Años)', 'menos_edad');
+    }
+    else {
+        removerElemento('menos_edad');
+        $('#menos_edad').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+
+    }
+    if (datos.consulta4 != "n/a") {
+        let genero = datos.consulta4;
+        pinta(genero, 'Edad(Años)', 'mayor_edad');
+
+    }
+    else {
+        removerElemento('mayor_edad');
+        $('#mayor_edad').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+
+    }
+    if (datos.consulta5 != "n/a") {
+        let genero = datos.consulta5;
+        pintaAgresion(genero, 'Agresión Extraordinaria', 'agresion');
+    }
+    else {
+        removerElemento('agresion');
+        $('#agresion').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+
+    }
+
+}
+function reporte3(datos) {
+    let encabezados = `
+    <div><button type="button" id="btn_pdf" class="btn btn-secondary">Ver pdf</button></div>
+    <h5 id="div1" align="center" class="mb-4"><strong >Total de casos en cada municipio(Estado de Veracruz )</strong></h5>
+    <div class="col-12" id="mun"></div>
+    <h5 id="div2"align="center" class="mb-4"><strong>Total de casos en estados diferentes de veracruz</strong></h5>
+    <div class="col-12" id="edo"></div>
+    <h5 id="div3"align="center" class="mb-4"><strong>Total de casos en pais diferentes de México</strong></h5>
+    <div class="col-12" id="pais"></div>
+    <h5 id="div4"align="center" class="mb-4"><strong >Total de casos por mes </strong></h5>
+    <div class="col-12" id="mes"></div>
+    <h5 id="div5"align="center" class="mb-4"><strong>Total de victimas por género de todos los casos</strong></h5>
+    <div class="col-12" id="genero"></div>
+    <h5 id="div6"align="center" class="mb-4"><strong>Total de victimas menores de edad todos los casos </strong></h5>
+    <div class="col-12" id="menos_edad"></div>
+    <h5 id="div7"align="center" class="mb-4"><strong>Total de victimas mayores de edad todos los casos </strong></h5>
+    <div class="col-12" id="mayor_edad"></div>
+    <h5 id="div8"align="center" class="mb-4"><strong>Total de victimas de agresión extraordinaria </strong></h5>
+    <div class="col-12" id="agresion"></div>
     `;
-    $('#total_mun_ver').append(htmlTotal);
+    $('#div_reportes').html(encabezados);
+    if (datos.consulta1 != "n/a") {
+        let datosMun = datos.consulta1;
+        pinta(datosMun, 'Municipio', 'mun');
+    }
+    else {
+        removerElemento('mun');
+        $('#mun').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+
+    }
+    if (datos.consulta2 != "n/a") {
+        let datosEdo = datos.consulta2;
+        pinta(datosEdo, 'Estado', 'edo')
+
+    }
+    else {
+        removerElemento('edo');
+        $('#edo').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+    if (datos.consulta3 != "n/a") {
+        let datosPais = datos.consulta3;
+        pinta(datosPais, 'País', 'pais');
+    } else {
+        removerElemento('pais');
+        $('#pais').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+    if (datos.consulta4 != "n/a") {
+        let datoMes = datos.consulta4;
+        pinta(datoMes, 'MES', 'mes');
+    } else {
+        removerElemento('mes');
+        $('#edo').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+    if (datos.consulta5 != "n/a") {
+        let genero = datos.consulta5;
+        pinta(genero, 'Género', 'genero');
+    } else {
+        removerElemento('genero');
+        $('#genero').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+    if (datos.consulta6 != "n/a") {
+        let genero = datos.consulta6;
+        pinta(genero, 'Edad(Años)', 'menos_edad');
+    } else {
+        removerElemento('menos_edad');
+        $('#menos_edad').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+    if (datos.consulta7 != "n/a") {
+        let genero = datos.consulta7;
+        pinta(genero, 'Edad(Años)', 'mayor_edad');
+    } else {
+        removerElemento('mayor_edad');
+        $('#mayor_edad').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+    if (datos.consulta8 != "n/a") {
+        let genero = datos.consulta8;
+        pintaAgresion(genero, 'Agresión Extraordinaria', 'agresion');
+    }
+    else {
+        removerElemento('agresion');
+        $('#agresion').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+    }
+
+}
+function reporte4(datos) {
+    let encabezados = `
+    <div><button type="button" id="btn_pdf" class="btn btn-secondary">Ver pdf</button></div>
+    <h5 id="div4"align="center" class="mb-4"><strong >Total de casos por mes </strong></h5>
+    <div class="col-12" id="mes"></div>
+    <h5 id="div5"align="center" class="mb-4"><strong>Total de victimas por género de todos los casos</strong></h5>
+    <div class="col-12" id="genero"></div>
+    <h5 id="div6"align="center" class="mb-4"><strong>Total de victimas menores de edad todos los casos </strong></h5>
+    <div class="col-12" id="menos_edad"></div>
+    <h5 id="div7"align="center" class="mb-4"><strong>Total de victimas mayores de edad todos los casos </strong></h5>
+    <div class="col-12" id="mayor_edad"></div>
+    <h5 id="div8"align="center" class="mb-4"><strong>Total de victimas de agresión extraordinaria </strong></h5>
+    <div class="col-12" id="agresion"></div>
+    <h5 id="div9"align="center" class="mb-4"><strong>Total de delitos en todos los casos </strong></h5>
+    <div class="col-12" id="delito"></div>
+    `;
+    $('#div_reportes').html(encabezados);
+
+
+    if (datos.consulta3 != "n/a") {
+        let datoMes = datos.consulta3;
+        pinta(datoMes, 'MES', 'mes');
+    }
+    else {
+        removerElemento('mes');
+    }
+    if (datos.consulta4 != "n/a") {
+        let genero = datos.consulta4;
+        pinta(genero, 'Género', 'genero');
+    }
+    else {
+        removerElemento('genero');
+    }
+    if (datos.consulta5 != "n/a") {
+        let genero = datos.consulta5;
+        pinta(genero, 'Edad(Años)', 'menos_edad');
+    }
+    else {
+        removerElemento('menos_edad');
+    }
+    if (datos.consulta6 != "n/a") {
+        let genero = datos.consulta6;
+        pinta(genero, 'Edad(Años)', 'mayor_edad');
+    }
+    else {
+        removerElemento('mayor_edad');
+    }
+    if (datos.consulta7 != "n/a") {
+        let delito = datos.consulta7;
+        pinta(delito, 'Delito', 'delito');
+    }
+    else {
+        removerElemento('delito');
+    }
+    if (datos.consulta8 != "n/a") {
+        let genero = datos.consulta8;
+        pintaAgresion(genero, 'Agresión Extraordinaria', 'agresion');
+    }
+    else {
+        removerElemento('agresion');
+    }
+
+}
+function reporte5(datos) {
+    let encabezados = `
+    <div><button type="button" id="btn_pdf" class="btn btn-secondary">Ver pdf</button></div>
+    <h5 id="div1" align="center" class="mb-4"><strong >Total de casos en cada municipio(Estado de Veracruz )</strong></h5>
+    <div class="col-12" id="mun"></div>
+    <h5 id="div2"align="center" class="mb-4"><strong>Total de casos en estados diferentes de veracruz</strong></h5>
+    <div class="col-12" id="edo"></div>
+    <h5 id="div3"align="center" class="mb-4"><strong>Total de casos en pais diferentes de México</strong></h5>
+    <div class="col-12" id="pais"></div>
+    <h5 id="div4"align="center" class="mb-4"><strong >Total de casos por mes </strong></h5>
+    <div class="col-12" id="mes"></div>
+    <h5 id="div5"align="center" class="mb-4"><strong>Total de victimas por género de todos los casos</strong></h5>
+    <div class="col-12" id="genero"></div>
+    <h5 id="div6"align="center" class="mb-4"><strong>Total de victimas menores de edad todos los casos </strong></h5>
+    <div class="col-12" id="menos_edad"></div>
+    <h5 id="div7"align="center" class="mb-4"><strong>Total de victimas mayores de edad todos los casos </strong></h5>
+    <div class="col-12" id="mayor_edad"></div>
+    <h5 id="div8"align="center" class="mb-4"><strong>Total de victimas de agresión extraordinaria </strong></h5>
+    <div class="col-12" id="agresion"></div>
+    <h5 id="div9"align="center" class="mb-4"><strong>Total de delitos en todos los casos </strong></h5>
+    <div class="col-12" id="delito"></div>
+    `;
+    $('#div_reportes').html(encabezados);
+    if (datos.consulta1 != "n/a") {
+        let datoMun = datos.consulta1;
+        pinta(datoMun, 'Municipio', 'mun');
+    }
+    else {
+        removerElemento('mes');
+    }
+    if (datos.consulta2 != "n/a") {
+        let datoEdo = datos.consulta2;
+        pinta(datoEdo, 'Estado', 'edo');
+    }
+    else {
+        removerElemento('edo');
+    }
+    if (datos.consulta3 != "n/a") {
+        let datoPais = datos.consulta3;
+        pinta(datoPais, 'País', 'pais');
+    }
+    else {
+        removerElemento('pais');
+    }
+    if (datos.consulta4 != "n/a") {
+        let datoMes = datos.consulta4;
+        pinta(datoMes, 'MES', 'mes');
+    }
+    else {
+        removerElemento('mes');
+    }
+    if (datos.consulta5 != "n/a") {
+        let genero = datos.consulta5;
+        pinta(genero, 'Género', 'genero');
+    }
+    else {
+        removerElemento('genero');
+    }
+    if (datos.consulta6 != "n/a") {
+        let genero = datos.consulta6;
+        pinta(genero, 'Edad(Años)', 'menos_edad');
+    }
+    else {
+        removerElemento('menos_edad');
+    }
+    if (datos.consulta7 != "n/a") {
+        let genero = datos.consulta7;
+        pinta(genero, 'Edad(Años)', 'mayor_edad');
+    }
+    else {
+        removerElemento('mayor_edad');
+    }
+    if (datos.consulta8 != "n/a") {
+        let delito = datos.consulta8;
+        pinta(delito, 'Delito', 'delito');
+    }
+    else {
+        removerElemento('delito');
+    }
+    if (datos.consulta9 != "n/a") {
+        let genero = datos.consulta9;
+        pintaAgresion(genero, 'Agresión Extraordinaria', 'agresion');
+    }
+    else {
+        removerElemento('agresion');
+    }
+
+}
+function reporte6(datos) {
+    let encabezados = `
+    <div><button type="button" id="btn_pdf" class="btn btn-secondary">Ver pdf</button></div>
+    <h5 id="div1" align="center" class="mb-4"><strong >Total de canalizaciones a dependencias</strong></h5>
+    <div class="col-12" id="dep"></div>
+
+     `;
+    $('#div_reportes').html(encabezados);
+
+    if (datos.consulta1 != "n/a") {
+        let datosMun = datos.consulta1;
+        pinta(datosMun, 'Dependencia', 'dep');
+    }
+    else {
+        removerElemento('dep'); // Vacía el contenido del div con id "mun"
+    }
+}
+function pinta(datos, origen, contenedor) {
+    let suma = datos.reduce((acumulador, objeto) => acumulador + objeto.Numero, 0);
+    let encabezadoTabla = `
+    <table class="table" >
+        <thead class="tbl-estadisticas">
+            <tr align="center">
+                <th>${origen}</th>
+                <th>Número</th> 
+            </tr>
+        </thead>
+        <tbody id="lista_${contenedor}" align="center">                    
+        </tbody>
+        <tfoot id="total_${contenedor}" align="center">
+        
+            <tr>
+                <th>${datos.length}</th>
+                <th>${suma}</th>
+            </tr>
+            
+        </tfoot>
+    </table>`;
+    $('#' + contenedor).html(encabezadoTabla);
+
+    for (let i = 0; i < datos.length; i++) {
+
+        llena(datos[i], contenedor)
+    }
+}
+function llena(datos, contenedor) {
+    // Obtener las claves del objeto
+    const keys = Object.keys(datos);
+
+    // Acceder a los valores basados en las claves
+    const dato1 = datos[keys[0]];
+    const dato2 = datos[keys[1]];
+
+    // Inicializar htmlDatos como una cadena vacía
+    let htmlDatos = '';
+
+    // Construir el HTML
+    htmlDatos +=
+        `<tr>
+            <td width="60%">${dato1}</td>
+            <td width="40%">${dato2}</td>
+        </tr>`;
+
+    // Agregar el HTML al contenedor
+    $(`#lista_${contenedor}`).append(htmlDatos);
+}
+function pintaAgresion(datos, origen, contenedor) {
+
+    // Convertir los valores de count_non_zero a números y sumarlos
+    let suma = datos.reduce((acumulador, objeto) => acumulador + parseInt(objeto.count_non_zero, 10), 0);
+    if (isNaN(suma)) {
+        removerElemento('agresion');
+        $('#agresion').html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+
+    } else {
+        let encabezadoTabla = `
+    <table class="table" >
+        <thead class="tbl-estadisticas">
+            <tr align="center">
+                <th>${origen}</th>
+                <th>Número</th> 
+            </tr>
+        </thead>
+        <tbody id="lista_${contenedor}" align="center">                    
+        </tbody>
+        <tfoot id="total_${contenedor}" align="center">
+        
+            <tr>
+                <th>${datos.length}</th>
+                <th>${suma}</th>
+            </tr>
+            
+        </tfoot>
+    </table>`;
+        $('#' + contenedor).html(encabezadoTabla);
+
+        for (let i = 0; i < datos.length; i++) {
+
+            llenaAgresion(datos[i], contenedor)
+        }
+    }
+
+}
+function llenaAgresion(datos, contenedor) {
+    // Obtener las claves del objeto
+    const keys = Object.keys(datos);
+    // Acceder a los valores basados en las claves
+    const dato1 = datos[keys[0]];
+    const dato2 = datos[keys[1]];
+
+    let nombre = '';
+    // Asignar un valor a nombre basado en dato1
+    if (dato1 === 'can_per_tercera_edad' || dato1 === 'c4_per_tercera_edad') {
+        nombre = "(Otros)Persona de tercera edad";
+    } else if (dato1 == "can_per_violencia" || dato1 === 'c4_per_violencia') {
+        nombre = "Violencia contra la mujer";
+    } else if (dato1 == "can_per_discapacidad" || dato1 === 'c4_per_discapacidad') {
+        nombre = "Persona con alguna discapacidad";
+    } else if (dato1 == "can_per_indigena" || dato1 === 'c4_per_indigena') {
+        nombre = "Persona indigena";
+    } else if (dato1 == "can_per_transgenero" || dato1 === 'c4_per_transgenero') {
+        nombre = "Persona transgenero";
+    }
+
+    // Construir el HTML
+    let htmlDatos = `
+        <tr>
+            <td width="60%">${nombre}</td>
+            <td width="40%">${dato2}</td>
+        </tr>`;
+
+    // Agregar el HTML al contenedor
+    $(`#lista_${contenedor}`).append(htmlDatos);
+}
+function removerElemento(id) {
+    $('#' + id).empty(); // Elimina todo el contenido del elemento con el ID especificado
+    $('#' + id).html('<p align="center"><u>Sin resultados para la búsqueda<u></p>');
+
 }
 
-function modal_pdf(gen_reporte, id_reporte, desde, hasta) {
+function modal_pdf(gen_reporte, id_reporte, desde, hasta, estatus) {
+
     if (gen_reporte == '1') {
         if (id_reporte == '1') {
             $('#tit_modal_pdf').html('Reporte de consulta por municipio canalización');
             $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
             $('#modal_pdf').modal('show');
-            ref_pdf = '<iframe  src="../vistas/reportes/canalizacion/reporteMunicipios.php?desde=' + desde + '&hasta=' + hasta + '" width="100%" height="600px"></iframe>';
+            ref_pdf = '<iframe src="../vistas/reportes/canalizacion/reporteMunicipios.php?desde=' + desde + '&hasta=' + hasta + '&estatus=' + estatus + '" width="100%" height="600px"></iframe>';
             $("#reporte").html(ref_pdf);
-        }
-        else if (id_reporte == '2') {
-            $('#tit_modal_pdf').html('Reporte general de canalización(sin municipio)');
+        } else if (id_reporte == '2') {
+            $('#tit_modal_pdf').html('Reporte general de canalización (sin municipio)');
             $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
             $('#modal_pdf').modal('show');
-            fn_carga_delitos(),
-                ref_pdf = '<iframe  src="../vistas/reportes/canalizacion/reporteGeneral.php?desde=' + desde + '&hasta=' + hasta + '" width="100%" height="600px"></iframe>';
+            ref_pdf = '<iframe src="../vistas/reportes/canalizacion/reporteGeneral.php?desde=' + desde + '&hasta=' + hasta +'&estatus=' + estatus + '" width="100%" height="600px"></iframe>';
             $("#reporte").html(ref_pdf);
-        }
-        else if (id_reporte == '3') {
+        } else if (id_reporte == '3') {
             $('#tit_modal_pdf').html('Reporte Total de Canalización');
             $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
             $('#modal_pdf').modal('show');
-            ref_pdf = '<iframe  src="../vistas/reportes/canalizacion/reporteTotal.php?desde=' + desde + '&hasta=' + hasta + '" width="100%" height="600px"></iframe>';
+            ref_pdf = '<iframe src="../vistas/reportes/canalizacion/reporteTotal.php?desde=' + desde + '&hasta=' + hasta + '&estatus=' + estatus +'" width="100%" height="600px"></iframe>';
             $("#reporte").html(ref_pdf);
         }
-
-
+        else if (id_reporte == '4') {
+            $('#tit_modal_pdf').html('Reporte por dependencias de Canalización');
+            $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
+            $('#modal_pdf').modal('show');
+            ref_pdf = '<iframe src="../vistas/reportes/canalizacion/reporteDependencias.php?desde=' + desde + '&hasta=' + hasta + '&estatus=' + estatus + '" width="100%" height="600px"></iframe>';
+            $("#reporte").html(ref_pdf);
+        }
     }
     else if (gen_reporte == '2') {
         if (id_reporte == '1') {
             $('#tit_modal_pdf').html('Reporte Municipio Casos C4');
             $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
             $('#modal_pdf').modal('show');
-            ref_pdf = '<iframe  src="../vistas/reportes/casos_c4/reporteMunicipios.php?desde=' + desde + '&hasta=' + hasta + '" width="100%" height="600px"></iframe>';
+            ref_pdf = '<iframe  src="../vistas/reportes/casos_c4/reporteMunicipios.php?desde=' + desde + '&hasta=' + hasta + '&estatus=' + estatus + '" width="100%" height="600px"></iframe>';
             $("#reporte").html(ref_pdf);
         }
         else if (id_reporte == '2') {
             $('#tit_modal_pdf').html('Reporte General Sin Municipio Casos C4');
             $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
             $('#modal_pdf').modal('show');
-            ref_pdf = '<iframe  src="../vistas/reportes/casos_c4/reporteGeneral.php?desde=' + desde + '&hasta=' + hasta + '" width="100%" height="600px"></iframe>';
+            ref_pdf = '<iframe  src="../vistas/reportes/casos_c4/reporteGeneral.php?desde=' + desde + '&hasta=' + hasta + '&estatus=' + estatus + '" width="100%" height="600px"></iframe>';
             $("#reporte").html(ref_pdf);
         }
         else if (id_reporte == '3') {
             $('#tit_modal_pdf').html('Reporte Total Casos C4');
             $('#modal_pdf').modal({ backdrop: 'static', keyboard: false });
             $('#modal_pdf').modal('show');
-            ref_pdf = '<iframe  src="../vistas/reportes/casos_c4/reporteTotal.php?desde=' + desde + '&hasta=' + hasta + '" width="100%" height="600px"></iframe>';
+            ref_pdf = '<iframe  src="../vistas/reportes/casos_c4/reporteTotal.php?desde=' + desde + '&hasta=' + hasta + '&estatus=' + estatus +'" width="100%" height="600px"></iframe>';
             $("#reporte").html(ref_pdf);
         }
 
     }
 }
-function fn_carga_delitos() {
-    $.post("../controllers/estadisticas.php", { func: 'fn_carga_delitos' }, function (data) {
 
-
-    });
-}
-function fn_listar_numero_casos(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#numero_casos").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_numero_casos', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#numero_casos').html(data);
-    });
-}
-function fn_listar_numero_c4(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#numero_casos_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_numero_casos_c4', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#numero_casos_c4').html(data);
-    });
-}
-///Canalización
-
-function fn_listar_consulta_sexo_municipio() {
-    $("#consulta_sexo_municipio").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fn_listar_consulta_sexo_municipio' }, function (data) {
-        $('#consulta_sexo_municipio').html(data);
-        $('#tbl_con_sexo').DataTable({
-            language: { "url": "../lib/datatables/Spanish.json" },
-            order: [[0, "asc"]],
-            searching: true,
-        });
-
-    });
-}
-function fn_listar_municipio_can(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_casos_por_municipio_veracruz_can").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_mun', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_casos_por_municipio_veracruz_can').html(data);
-
-    });
-}
-function fn_listar_edo_mun_can(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_casos_por_municipio_edo_mun_can").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edo_mun', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_casos_por_municipio_edo_mun_can').html(data);
-
-    });
-}
-function fn_listar_pais_can(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_casos_por_pais_can").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_pais_can', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_casos_por_pais_can').html(data);
-
-    });
-}
-function fn_listar_mes_can(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_meses_num_casos_can").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_mes', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_meses_num_casos_can').html(data);
-        // $('#tbl_con_sexo').DataTable({
-        //     language: { "url": "../lib/datatables/Spanish.json" },
-        //     order: [[0, "asc"]],
-        //     searching: true,
-        // });
-
-    });
-}
-function fn_listar_gen_can(id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_genero").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fn_listar_consulta_genero', id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_genero').html(data);
-        // $('#tbl_con_sexo').DataTable({
-        //     language: { "url": "../lib/datatables/Spanish.json" },
-        //     order: [[0, "asc"]],
-        //     searching: true,
-        // });
-
-    });
-}
-function fn_listar_edad_can(id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_edad_can").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edades', id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_edad_can').html(data);
-
-
-    });
-}
-function fn_listar_edad_mayores_can(id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_edad_mayores_can").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edades_mayores', id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_edad_mayores_can').html(data);
-
-    });
-}
-function fn_listar_per_vul_can(id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_per_vul_can").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_agresion', id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_per_vul_can').html(data);
-    });
-}
-
-///Casos c4
-function fn_listar_pais_c4(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_casos_por_pais_dif_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_pais_c4', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_casos_por_pais_dif_c4').html(data);
-    });
-}
-function fn_listar_estado_c4(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_casos_por_edo_dif_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edo_c4', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_casos_por_edo_dif_c4').html(data);
-    });
-}
-function fn_listar_municipio_c4(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_casos_por_municipio_veracruz_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_mun_c4', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_casos_por_municipio_veracruz_c4').html(data);
-
-
-    });
-}
-function fn_listar_mes_c4(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_meses_num_casos_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_mes_c4', gen_reporte: gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_meses_num_casos_c4').html(data);
-
-    });
-}
-function fn_listar_gen_c4(gen_reporte, id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_genero_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_gen_c4', gen_reporte, gen_reporte, id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_genero_c4').html(data);
-
-
-    });
-}
-function fn_listar_edad_c4(id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_edad_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edades_c4', id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_edad_c4').html(data);
-
-    });
-}
-function fn_listar_edad_mayores_c4(id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_edad_mayores_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_edades_mayores_c4', id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_edad_mayores_c4').html(data);
-
-    });
-}
-function fn_listar_per_vul_c4(id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_suma_datos_per_vul_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_per_vul_c4', id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_suma_datos_per_vul_c4').html(data);
-
-
-    });
-}
-function fn_listar_delitos_c4(id_reporte, desde_fecha, hasta_fecha) {
-    $("#consulta_delitos_todos_casos_c4").html(cargando);
-    $.post("../controllers/estadisticas.php", { func: 'fun_listar_consulta_delito_c4', id_reporte: id_reporte, desde_fecha: desde_fecha, hasta_fecha: hasta_fecha }, function (data) {
-        $('#consulta_delitos_todos_casos_c4').html(data);
-
-
-    });
-}
-function fn_carga_delitos() {
-    $.post("../controllers/estadisticas.php", { func: 'fn_carga_delitos' }, function (data) {
-
-    });
-}
